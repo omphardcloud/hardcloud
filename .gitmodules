@@ -1,9 +1,17 @@
 [submodule "intel-fpga-bbb"]
-	path = intel-fpga-bbb
-	url = https://github.com/OPAE/intel-fpga-bbb
+  path = intel-fpga-bbb
+  url = https://github.com/OPAE/intel-fpga-bbb
 [submodule "opae-sdk"]
-	path = opae-sdk
-	url = https://github.com/OPAE/opae-sdk
+  path = opae-sdk
+  url = https://github.com/OPAE/opae-sdk
 [submodule "llvm"]
-	path = llvm
-	url = https://github.com/lsc-openmp/llvm
+  path = llvm
+  url = https://github.com/lsc-openmp/llvm
+[submodule "openmp"]
+  path = openmp
+  url = https://github.com/lsc-openmp/openmp
+  branch = feature-opae
+[submodule "clang"]
+  path = clang
+  url = https://github.com/lsc-openmp/clang
+  branch = feature-parallel-hrw
