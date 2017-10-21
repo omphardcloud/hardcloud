@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# configure hardcloud, opae-sdk and intel-fpga-bbb
+export INSTALL_DIR=  # TODO: put install directory here!
+export LLVM=${INSTALL_DIR}/llvm
+export OPAE_BASEDIR=${INSTALL_DIR}/opae-sdk
+export FPGA_BBB_CCI_SRC=${INSTALL_DIR}/intel-fpga-bbb
+export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+
+# configure quartus
+export QUARTUS_HOME= # TODO: put quartus directory here!
+export QUARTUS_ROOTDIR=$QUARTUS_HOME
+export QUARTUS_64BIT=1
+export QUARTUS_ROOTDIR_OVERRIDE=$QUARTUS_HOME
+
+# configure modelsim
+export MTI_HOME= # TODO: put modelsim_ae directory here!
+export QUESTA_HOME=${MTI_HOME}/bin
+export PATH="${PATH}:$QUARTUS_HOME/bin:$QUESTA_HOME"
+
+# configure license
+export QUARTUS_LICENSE=""
+export MGLS_LICENSE=""
+export LM_LICENSE_FILE="${QUARTUS_LICENSE}:${MGLS_LICENSE}"
+
