@@ -77,7 +77,7 @@ ln -s $BASE_DIR/openmp llvm/projects/
 
 mkdir llvm/build
 cd llvm/build
-cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON -DCMAKE_BUILD_TYPE="release" -DCMAKE_INSTALL_PREFIX={INSTALL_PATH} ..
+cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON -DCMAKE_BUILD_TYPE="release" -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
 sudo make install
 
