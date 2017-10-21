@@ -62,12 +62,14 @@ echo ''
 cd ${BASE_DIR}
 mkdir opae-sdk/build
 cd opae-sdk/build
-cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
+cmake -DBUILD_ASE=1 -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
 echo ''
 sudo make install
 
-echo '\n[HardCloud] installing LLVM/Clang LSC-OpenMP\n'
+echo''
+echo '[HardCloud] installing LLVM/Clang LSC-OpenMP'
+echo''
 
 cd $BASE_DIR
 
@@ -79,6 +81,7 @@ mkdir llvm/build
 cd llvm/build
 cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON -DCMAKE_BUILD_TYPE="release" -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
+echo ''
 sudo make install
 
 # taf!
