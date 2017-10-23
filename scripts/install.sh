@@ -21,39 +21,22 @@ fi
 echo '[HardCloud] checking libraries'
 echo ''
 
-CHECK_LIBUUID=$(ldconfig -p | grep 'libuuid.so$')
-CHECK_LIBJSON_C=$(ldconfig -p | grep 'libjson-c.so$')
-CHECK_LIBBOOST_PROGRAM_OPTIONS=$(ldconfig -p | grep 'libboost_program_options.so$')
+check_lib() {
+  LIB_FILE=$1.'so'
+  CHECK=$(ldconfig -p | grep ${LIB_FILE})
 
-if [[ ${CHECK_LIBUUID} != *'libuuid.so'* ]]
-then
-  tput setaf 1; echo '[HardCloud][error] libuuid.so is not installed!'
-  exit 1
-fi
+  if [[ ${CHECK} != *${LIB_FILE}* ]]
+  then
+    tput setaf 1; echo '[HardCloud][error] '${LIB_FILE}' is not installed!'
+    exit 1
+  fi
+}
 
-if [[ ${CHECK_LIBJSON_C} != *'libjson-c.so'* ]]
-then
-  tput setaf 1; echo '[HardCloud][error] libjson-c.so is not installed!'
-  exit 1
-fi
-
-if [[ ${CHECK_LIBBOOST_PROGRAM_OPTIONS} != *'libboost_program_options'* ]]
-then
-  tput setaf 1; echo '[HardCloud][error] libboost_program_options.so is not installed!'
-  exit 1
-fi
-
-echo ''
-echo '[HardCloud] installing Intel BBB cci mpf'
-echo ''
-
-cd ${BASE_DIR}
-mkdir intel-fpga-bbb/BBB_cci_mpf/sw/build
-cd intel-fpga-bbb/BBB_cci_mpf/sw/build
-cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
-make
-echo ''
-sudo make install
+check_lib libuuid
+check_lib libjson-c
+check_lib libboost_program_options
+check_lib libelf
+check_lib libffi
 
 echo ''
 echo '[HardCloud] installing Intel OPAE SDK'
@@ -63,6 +46,20 @@ cd ${BASE_DIR}
 mkdir opae-sdk/build
 cd opae-sdk/build
 cmake -DBUILD_ASE=1 -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
+make
+echo ''
+sudo make install
+
+echo ''
+echo '[HardCloud] installing Intel BBB cci mpf'
+echo ''
+
+cd ${BASE_DIR}
+mkdir intel-fpga-bbb/BBB_cci_mpf/sw/build
+cd intel-fpga-bbb/BBB_cci_mpf/sw/build
+cmake -DOPAELIB_INC_PATH=${INSTALL_PREFIX}/include \
+  -DOPAELIB_LIBS_PATH=${INSTALL_PREFIX}/lib \
+  -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
 echo ''
 sudo make install
@@ -79,7 +76,11 @@ ln -s $BASE_DIR/openmp llvm/projects/
 
 mkdir llvm/build
 cd llvm/build
-cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON -DCMAKE_BUILD_TYPE="release" -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
+cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON \
+  -DCMAKE_BUILD_TYPE="release" \
+  -DOPAE=${INSTALL_PATH}/ \
+  -DBBB_CCI_MPF=${INSTALL_PATH} \
+  -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
 echo ''
 sudo make install
