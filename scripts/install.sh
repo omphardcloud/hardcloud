@@ -5,19 +5,25 @@ echo 'Welcome to HardCloud Setup Wizard.'
 echo ''
 echo 'For more information about HardCloud, go to http://www.hardcloud.org.'
 echo '----------------------------------------------------------------------------'
-echo ''
-read -p "Installation Directory[/usr/local/]: " x
-echo ''
 
 BASE_DIR=$PWD
 
-if [ $x ]
+if [ $1 ]
 then
-  INSTALL_PATH=$x
+  INSTALL_PATH=$1
 else
-  INSTALL_PATH='/usr/local/'
+  echo ''
+  read -p "Installation Directory[/usr/local/]: " x
+
+  if [ $x ]
+  then
+    INSTALL_PATH=$x
+  else
+    INSTALL_PATH='/usr/local/'
+  fi
 fi
 
+echo ''
 echo '[HardCloud] checking libraries'
 echo ''
 
