@@ -2,10 +2,11 @@
 
 # configure hardcloud, opae-sdk and intel-fpga-bbb
 export INSTALL_DIR=  # TODO: put install directory here!
-export LLVM=${INSTALL_DIR}/llvm
-export OPAE_BASEDIR=${INSTALL_DIR}/opae-sdk
-export FPGA_BBB_CCI_SRC=${INSTALL_DIR}/intel-fpga-bbb
+export LLVM=${INSTALL_DIR}
+export FPGA_BBB_CCI_SRC=${INSTALL_DIR}
 export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+
+export OPAE_BASEDIR=${INSTALL_DIR}/opae-sdk
 
 # configure quartus
 export QUARTUS_HOME= # TODO: put quartus directory here!
@@ -22,4 +23,7 @@ export PATH="${PATH}:$QUARTUS_HOME/bin:$QUESTA_HOME"
 export QUARTUS_LICENSE=""
 export MGLS_LICENSE=""
 export LM_LICENSE_FILE="${QUARTUS_LICENSE}:${MGLS_LICENSE}"
+
+# configure simulator
+export ASE_WORKDIR= # TODO: put ase_workdir here!
 

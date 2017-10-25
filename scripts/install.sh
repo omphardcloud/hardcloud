@@ -55,6 +55,8 @@ cmake -DBUILD_ASE=1 -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 make
 echo ''
 sudo make install
+cd ../; rm -rf build/
+cd ../; sudo mv opae-sdk/ ${INSTALL_PREFIX}
 
 echo ''
 echo '[HardCloud] installing Intel BBB cci mpf'
