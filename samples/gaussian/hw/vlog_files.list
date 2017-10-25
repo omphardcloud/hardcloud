@@ -1,7 +1,6 @@
 ${PWD}/../../${AFU}/hw/include_files/common/sys_cfg_pkg.svh
-${PWD}/../../${AFU}/hw/rgb2luma.sv
-${PWD}/../../${AFU}/hw/sobel_unit.sv
-${PWD}/../../${AFU}/hw/sobel.sv
+${PWD}/../../${AFU}/hw/gaussian_unit.sv
+${PWD}/../../${AFU}/hw/gaussian.sv
 ${PWD}/../../${AFU}/hw/requestor.sv
 ${PWD}/../../${AFU}/hw/ccip_std_afu.sv
 ${PWD}/../../${AFU}/hw/arbiter.sv

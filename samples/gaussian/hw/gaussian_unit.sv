@@ -1,10 +1,10 @@
-module sobel_unit
+module gaussian_unit
 (
   input              clk,
   input              rst_b,
   input              valid_in,
   input      [127:0] data_in,
-  output reg [511:0] data_out
+  output reg [127:0] data_out
 );
 
   localparam DELAY          = 31;
@@ -16,7 +16,7 @@ module sobel_unit
   reg [15:0] data_in_q;
   reg [15:0] row_buffer_q[2];
 
-  reg [511:0] data_out_q[DELAY];
+  reg [127:0] data_out_q[DELAY];
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
@@ -54,10 +54,6 @@ module sobel_unit
       for (int i = 0; i < PARALELL_UNITS; i++) begin
         reg [7:0] data[3][3];
         reg [7:0] tmp;
-        reg [7:0] dir_x;
-        reg [7:0] dir_y;
-        reg [15:0] data_x;
-        reg [15:0] data_y;
 
         data[0][0] = row_buffer[1][(KERNEL_SIZE - 15)*8 - 1 + 8*(i - 0) -: 8];
         data[1][0] = row_buffer[0][(KERNEL_SIZE - 15)*8 - 1 + 8*(i - 0) -: 8];
@@ -85,26 +81,17 @@ module sobel_unit
           data[2][2] = data_in[8*(i - 2) +: 8];
         end
 
-        data_x  = -1*data[0][0];
-        data_x += data[0][2];
-        data_x += -2*data[1][0];
-        data_x += data[1][2] << 1;
-        data_x += -1*data[2][0];
-        data_x += data[2][2];
+        tmp  = data[0][0] >> 4;
+        tmp += data[0][1] >> 3;
+        tmp += data[0][2] >> 4;
+        tmp += data[1][0] >> 3;
+        tmp += data[1][1] >> 2;
+        tmp += data[1][2] >> 3;
+        tmp += data[2][0] >> 4;
+        tmp += data[2][1] >> 3;
+        tmp += data[2][2] >> 4;
 
-        data_y  = data[0][0];
-        data_y += data[0][1] << 1;
-        data_y += data[0][2];
-        data_y += -1*data[2][0];
-        data_y += -2*data[2][1];
-        data_y += -1*data[2][2];
-
-        dir_x = data_x[7] ? ~data_x + 1 : data_x;
-        dir_y = data_y[7] ? ~data_y + 1 : data_y;
-
-        tmp = dir_x + dir_y;
-
-        data_out_q[0][32*i +: 32] <= {8'h00, tmp, tmp, tmp};
+        data_out_q[0][8*i +: 8] <= tmp;
       end
     end
   end
@@ -126,4 +113,4 @@ module sobel_unit
     end
   end
 
-endmodule : sobel_unit
+endmodule : gaussian_unit

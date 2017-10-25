@@ -207,12 +207,6 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
     localparam              WRITE      = 2'b10;
     localparam              WRITE_DONE = 2'b11;
 
-    logic                   my_RdRspValid;
-    logic [15:0]            my_RdRsp;
-    logic [1:0]             my_RdRspCLnum;
-    logic [ADDR_LMT-1:0]    my_RdRspAddr;
-    logic [511:0]           my_RdData;
-
     logic                   my_WrEn;
     logic                   my_WrSop;
     logic [1:0]             my_WrLen;
@@ -220,23 +214,7 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
     logic [511:0]           my_WrDin;
     logic [15:0]            my_WrTID;
 
-    rgb2luma uu_rgb2luma
-    (
-      .Clk_400        (Clk_400),
-      .Resetb         (1'b1), // (test_Resetb),
-      .RdRsp_in       (ab2l1_RdRsp_T0),
-      .RdRspCLnum_in  (ab2l1_RdRspCLnum_T0),
-      .RdRspAddr_in   (ab2l1_RdRspAddr_T0),
-      .RdRspValid_in  (ab2l1_RdRspValid_T0),
-      .RdData_in      (ab2l1_RdData_T0),
-      .RdRsp_out      (my_RdRsp),
-      .RdRspCLnum_out (my_RdRspCLnum),
-      .RdRspAddr_out  (my_RdRspAddr),
-      .RdRspValid_out (my_RdRspValid),
-      .RdData_out     (my_RdData)
-    );
-
-    sobel uu_sobel
+    gaussian uu_gaussian
     (
       .Clk_400        (Clk_400),
       .Resetb         (1'b1), // (test_Resetb),
@@ -264,11 +242,11 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
       ab2l1_WrRspAddr    <= ab2l1_WrRspAddr_T0;
       ab2l1_WrRspFormat  <= ab2l1_WrRspFormat_T0;
       ab2l1_WrRspValid   <= ab2l1_WrRspValid_T0;
-      ab2l1_RdRsp        <= my_RdRsp;
-      ab2l1_RdRspCLnum   <= my_RdRspCLnum;
-      ab2l1_RdRspAddr    <= my_RdRspAddr;
-      ab2l1_RdData       <= my_RdData;
-      ab2l1_RdRspValid   <= my_RdRspValid;
+      ab2l1_RdRsp        <= ab2l1_RdRsp_T0;
+      ab2l1_RdRspCLnum   <= ab2l1_RdRspCLnum_T0;
+      ab2l1_RdRspAddr    <= ab2l1_RdRspAddr_T0;
+      ab2l1_RdData       <= ab2l1_RdData_T0;
+      ab2l1_RdRspValid   <= ab2l1_RdRspValid_T0;
     end
 
     // ----------------------------------------------------------------------------

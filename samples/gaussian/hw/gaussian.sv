@@ -1,4 +1,4 @@
-module sobel #(parameter ADDR_LMT = 20)
+module gaussian #(parameter ADDR_LMT = 20)
 (
   input                       Clk_400,
   input                       Resetb,
@@ -23,20 +23,34 @@ module sobel #(parameter ADDR_LMT = 20)
   reg [ADDR_LMT - 1:0]  WrAddr[DELAY];
   reg [15:0]            WrTID[DELAY];
 
-  reg [127:0]           data_in;
+  reg [127:0]           data_in[3];
+  reg [127:0]           data_out[3];
 
   always_ff@(posedge Clk_400) begin
     if (!Resetb) begin
       for (int i = 0; i < 16; i++) begin
-        data_in[8*i +: 8] <= 0;
+        data_in[0][8*i +: 8] <= 0;
+        data_in[1][8*i +: 8] <= 0;
+        data_in[2][8*i +: 8] <= 0;
       end
     end
     else begin
       if (WrEn_in) begin
         for (int i = 0; i < 16; i++) begin
-          data_in[8*i +: 8] <= WrDin_in[32*i +: 8];
+          data_in[0][8*i +: 8] <= WrDin_in[32*i +: 8];
+          data_in[1][8*i +: 8] <= WrDin_in[32*i +  8 +: 8];
+          data_in[2][8*i +: 8] <= WrDin_in[32*i + 16 +: 8];
         end
       end
+    end
+  end
+
+  always_comb begin
+    for (int i = 0; i < 16; i++) begin
+      WrDin_out[32*i      +: 8] = data_out[0][8*i +: 8];
+      WrDin_out[32*i +  8 +: 8] = data_out[1][8*i +: 8];
+      WrDin_out[32*i + 16 +: 8] = data_out[2][8*i +: 8];
+      WrDin_out[32*i + 24 +: 8] = 8'h00;
     end
   end
 
@@ -84,13 +98,31 @@ module sobel #(parameter ADDR_LMT = 20)
     end
   end
 
-  sobel_unit uu_sobel_unit
+  gaussian_unit uu_gaussian_r_unit
   (
-    .clk           (Clk_400),
-    .rst_b         (Resetb),
-    .valid_in      (WrEn_in),
-    .data_in       (data_in),
-    .data_out      (WrDin_out)
+    .clk      (Clk_400),
+    .rst_b    (Resetb),
+    .valid_in (WrEn_in),
+    .data_in  (data_in[0]),
+    .data_out (data_out[0])
   );
 
-endmodule : sobel
+  gaussian_unit uu_gaussian_g_unit
+  (
+    .clk      (Clk_400),
+    .rst_b    (Resetb),
+    .valid_in (WrEn_in),
+    .data_in  (data_in[1]),
+    .data_out (data_out[1])
+  );
+
+  gaussian_unit uu_gaussian_b_unit
+  (
+    .clk      (Clk_400),
+    .rst_b    (Resetb),
+    .valid_in (WrEn_in),
+    .data_in  (data_in[2]),
+    .data_out (data_out[2])
+  );
+
+endmodule : gaussian
