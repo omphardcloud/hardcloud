@@ -1,0 +1,17 @@
+${PWD}/../../${AFU}/hw/include_files/common/sys_cfg_pkg.svh
+${PWD}/../../${AFU}/hw/rgb2luma.sv
+${PWD}/../../${AFU}/hw/requestor.sv
+${PWD}/../../${AFU}/hw/ccip_std_afu.sv
+${PWD}/../../${AFU}/hw/arbiter.sv
+${PWD}/../../${AFU}/hw/nlb_csr.sv
+${PWD}/../../${AFU}/hw/test_lpbk1.sv
+${PWD}/../../${AFU}/hw/nlb_lpbk.sv
+${PWD}/../../${AFU}/hw/test_sw1.sv
+${PWD}/../../${AFU}/hw/test_rdwr.sv
+${PWD}/../../${AFU}/hw/nlb_gram_sdp.v
+${PWD}/../../${AFU}/hw/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160/sim/lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a.v
+${PWD}/../../${AFU}/hw/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/sim/lpbk1_RdRspRAM2PORT.v
+${PWD}/../../${AFU}/hw/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/sim/req_C1TxRAM2PORT_ram_2port_160_nfprwsy.v
+${PWD}/../../${AFU}/hw/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/req_C1TxRAM2PORT.v
+${PWD}/../../${AFU}/hw/nlb_C1Tx_fifo.v
+
