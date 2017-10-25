@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="ram_2port_160/sim/req_C1TxRAM2PORT_ram_2port_160_nfprwsy.v"
+   type="VERILOG"
+   library="ram_2port_160" />
+ <file
+   path="sim/req_C1TxRAM2PORT.v"
+   type="VERILOG"
+   hasInlineConfiguration="true" />
+ <topLevel name="req_C1TxRAM2PORT" />
+ <deviceFamily name="arria10" />
+</simPackage>

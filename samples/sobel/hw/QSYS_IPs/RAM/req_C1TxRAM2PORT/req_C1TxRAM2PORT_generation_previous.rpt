@@ -1,0 +1,89 @@
+Info: Starting: Create simulation model
+Info: qsys-generate /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT.qsys --simulation=VERILOG --output-directory=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT --family="Arria 10" --part=10AX115U3F45E2SGE3
+Progress: Loading RAM/req_C1TxRAM2PORT.qsys
+Progress: Reading input file
+Progress: Adding ram_2port_0 [ram_2port 15.1]
+Progress: Parameterizing module ram_2port_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+: req_C1TxRAM2PORT.ram_2port_0: Targeting device family: Arria 10.
+: req_C1TxRAM2PORT.ram_2port_0: 'q_a' output bus width will be ignored while using one read port and one write port mode.
+: req_C1TxRAM2PORT.ram_2port_0: Tab Output2 is unavailable while using one read port and one write port.
+Info: req_C1TxRAM2PORT: "Transforming system: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: Running transform generation_view_transform
+Info: req_C1TxRAM2PORT: Running transform generation_view_transform took 0.000s
+Info: ram_2port_0: Running transform generation_view_transform
+Info: ram_2port_0: Running transform generation_view_transform took 0.000s
+Info: req_C1TxRAM2PORT: Running transform merlin_avalon_transform
+Info: req_C1TxRAM2PORT: Running transform merlin_avalon_transform took 0.028s
+Info: req_C1TxRAM2PORT: "Naming system components in system: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: "Processing generation queue"
+Info: req_C1TxRAM2PORT: "Generating: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: "Generating: req_C1TxRAM2PORT_ram_2port_151_t3axzby"
+Info: req_C1TxRAM2PORT: Done "req_C1TxRAM2PORT" with 2 modules, 2 files
+Info: qsys-generate succeeded.
+Info: Finished: Create simulation model
+Info: Starting: Create Modelsim Project.
+Info: sim-script-gen --spd=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/req_C1TxRAM2PORT.spd --output-directory=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ --use-relative-paths=true
+Info: Doing: ip-make-simscript --spd=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/req_C1TxRAM2PORT.spd --output-directory=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ --use-relative-paths=true
+Info: Generating the following file(s) for MODELSIM simulator in /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ directory:
+Info: 	mentor/msim_setup.tcl
+Info: Generating the following file(s) for VCS simulator in /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ directory:
+Info: 	synopsys/vcs/vcs_setup.sh
+Info: Generating the following file(s) for VCSMX simulator in /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ directory:
+Info: 	synopsys/vcsmx/synopsys_sim.setup
+Info: 	synopsys/vcsmx/vcsmx_setup.sh
+Info: Generating the following file(s) for NCSIM simulator in /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ directory:
+Info: 	cadence/cds.lib
+Info: 	cadence/hdl.var
+Info: 	cadence/ncsim_setup.sh
+Info: 	1 .cds.lib files in cadence/cds_libs/ directory
+Info: Generating the following file(s) for RIVIERA simulator in /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/ directory:
+Info: 	aldec/rivierapro_setup.tcl
+Info: For information on how to simulate your IP, see the explanatory comments in the simulator-specific subdirectories under /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT/sim/.
+Info: Finished: Create Modelsim Project.
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT.qsys --block-symbol-file --output-directory=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT --family="Arria 10" --part=10AX115U3F45E2SGE3
+Progress: Loading RAM/req_C1TxRAM2PORT.qsys
+Progress: Reading input file
+Progress: Adding ram_2port_0 [ram_2port 15.1]
+Progress: Parameterizing module ram_2port_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+: req_C1TxRAM2PORT.ram_2port_0: Targeting device family: Arria 10.
+: req_C1TxRAM2PORT.ram_2port_0: 'q_a' output bus width will be ignored while using one read port and one write port mode.
+: req_C1TxRAM2PORT.ram_2port_0: Tab Output2 is unavailable while using one read port and one write port.
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate /nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT.qsys --synthesis=VERILOG --output-directory=/nfs/pdx/disks/atp.08/users/nravicha/dev_narayanan/cpt_bdx_shell-bdx_fpga_piu/design/afu/nlb_400/QSYS_IPs/RAM/req_C1TxRAM2PORT --family="Arria 10" --part=10AX115U3F45E2SGE3
+Progress: Loading RAM/req_C1TxRAM2PORT.qsys
+Progress: Reading input file
+Progress: Adding ram_2port_0 [ram_2port 15.1]
+Progress: Parameterizing module ram_2port_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+: req_C1TxRAM2PORT.ram_2port_0: Targeting device family: Arria 10.
+: req_C1TxRAM2PORT.ram_2port_0: 'q_a' output bus width will be ignored while using one read port and one write port mode.
+: req_C1TxRAM2PORT.ram_2port_0: Tab Output2 is unavailable while using one read port and one write port.
+Info: req_C1TxRAM2PORT: "Transforming system: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: Running transform generation_view_transform
+Info: req_C1TxRAM2PORT: Running transform generation_view_transform took 0.000s
+Info: ram_2port_0: Running transform generation_view_transform
+Info: ram_2port_0: Running transform generation_view_transform took 0.000s
+Info: req_C1TxRAM2PORT: Running transform merlin_avalon_transform
+Info: req_C1TxRAM2PORT: Running transform merlin_avalon_transform took 0.008s
+Info: req_C1TxRAM2PORT: "Naming system components in system: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: "Processing generation queue"
+Info: req_C1TxRAM2PORT: "Generating: req_C1TxRAM2PORT"
+Info: req_C1TxRAM2PORT: "Generating: req_C1TxRAM2PORT_ram_2port_151_t3axzby"
+Info: req_C1TxRAM2PORT: Done "req_C1TxRAM2PORT" with 2 modules, 2 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

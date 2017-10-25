@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="ram_2port_160/sim/lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a.v"
+   type="VERILOG"
+   library="ram_2port_160" />
+ <file
+   path="sim/lpbk1_RdRspRAM2PORT.v"
+   type="VERILOG"
+   hasInlineConfiguration="true" />
+ <topLevel name="lpbk1_RdRspRAM2PORT" />
+ <deviceFamily name="arria10" />
+</simPackage>
