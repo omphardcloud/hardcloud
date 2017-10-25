@@ -8,20 +8,47 @@ echo '--------------------------------------------------------------------------
 
 BASE_DIR=$PWD
 
-if [ $1 ]
-then
-  INSTALL_PATH=$1
-else
-  echo ''
-  read -p "Installation Directory[/usr/local/]: " x
+# read command line args
+USER='sudo '
+INSTALL_PATH='/usr/local/'
+JOBS=''
 
-  if [ $x ]
-  then
-    INSTALL_PATH=$x
-  else
-    INSTALL_PATH='/usr/local/'
-  fi
-fi
+for i in "$@"
+do
+case $i in
+  -h|--help)
+  echo ''
+  echo 'Usage: bash scripts/install.sh [OPTION]'
+  echo ''
+  echo '-h  , --help         show arguments'
+  echo '      --prefix=PATH  override default install location' 
+  echo '      --non-root     root user is not necessary to install the applications' 
+  echo '-j=N, --jobs=N       specifies the number of jobs to run simultaneously'
+  exit 0
+  shift # past argument=value
+  ;;
+  --prefix=*)
+  INSTALL_PATH="${i#*=}"
+  shift # past argument=value
+  ;;
+  --non-root)
+  USER=''
+  shift # past argument with no value
+  ;;
+  -j=*|--jobs=*)
+  JOBS="-j${i#*=}"
+  shift # past argument=value
+  ;;
+  *)
+  # unknown option
+  echo ''
+  echo 'scripts/install.sh: invalid option!'
+  echo ''
+  echo "Try: 'bash scripts/install.sh --help' for more information."
+  exit 1
+  ;;
+esac
+done
 
 echo ''
 echo '[HardCloud] checking libraries'
@@ -52,11 +79,12 @@ cd ${BASE_DIR}
 mkdir opae-sdk/build
 cd opae-sdk/build
 cmake -DBUILD_ASE=1 -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
-make
+make ${JOBS}
 echo ''
-sudo make install
-cd ../; rm -rf build/
-cd ../; sudo mv opae-sdk/ ${INSTALL_PREFIX}
+${IS_SUDO} make install
+rm -rf ${BASE_DIR}/opae-sdk/build/
+cd ${BASE_DIR}
+${IS_SUDO} cp -r opae-sdk/ ${INSTALL_PATH}
 
 echo ''
 echo '[HardCloud] installing Intel BBB cci mpf'
@@ -65,12 +93,12 @@ echo ''
 cd ${BASE_DIR}
 mkdir intel-fpga-bbb/BBB_cci_mpf/sw/build
 cd intel-fpga-bbb/BBB_cci_mpf/sw/build
-cmake -DOPAELIB_INC_PATH=${INSTALL_PREFIX}/include \
-  -DOPAELIB_LIBS_PATH=${INSTALL_PREFIX}/lib \
+cmake -DOPAELIB_INC_PATH=${INSTALL_PATH}/include \
+  -DOPAELIB_LIBS_PATH=${INSTALL_PATH}/lib \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
-make
+make ${JOBS}
 echo ''
-sudo make install
+${IS_SUDO} make install
 
 echo''
 echo '[HardCloud] installing LLVM/Clang LSC-OpenMP'
@@ -89,8 +117,8 @@ cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON \
   -DOPAE=${INSTALL_PATH}/ \
   -DBBB_CCI_MPF=${INSTALL_PATH} \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
-make
+make ${JOBS}
 echo ''
-sudo make install
+${IS_SUDO} make install
 
 # taf!
