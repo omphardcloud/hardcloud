@@ -1,0 +1,11 @@
+	component req_C1TxRAM2PORT is
+		port (
+			data      : in  std_logic_vector(555 downto 0) := (others => 'X'); -- datain
+			wraddress : in  std_logic_vector(8 downto 0)   := (others => 'X'); -- wraddress
+			rdaddress : in  std_logic_vector(8 downto 0)   := (others => 'X'); -- rdaddress
+			wren      : in  std_logic                      := 'X';             -- wren
+			clock     : in  std_logic                      := 'X';             -- clock
+			q         : out std_logic_vector(555 downto 0)                     -- dataout
+		);
+	end component req_C1TxRAM2PORT;
+

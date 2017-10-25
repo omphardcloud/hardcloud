@@ -1,0 +1,18 @@
+# system info lpbk1_RdRspRAM2PORT on 2016.07.21.09:42:54
+system_info:
+name,value
+DEVICE,10AX115U3F45E2SGE3
+DEVICE_FAMILY,Arria 10
+GENERATION_ID,1469119374
+#
+#
+# Files generated for lpbk1_RdRspRAM2PORT on 2016.07.21.09:42:54
+files:
+filepath,kind,attributes,module,is_top
+sim/lpbk1_RdRspRAM2PORT.v,VERILOG,CONTAINS_INLINE_CONFIGURATION,lpbk1_RdRspRAM2PORT,true
+ram_2port_160/sim/lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a.v,VERILOG,,lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+lpbk1_RdRspRAM2PORT.ram_2port_0,lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a
