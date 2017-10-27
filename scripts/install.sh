@@ -21,8 +21,8 @@ case $i in
   echo 'Usage: bash scripts/install.sh [OPTION]'
   echo ''
   echo '-h  , --help         show arguments'
-  echo '      --prefix=PATH  override default install location' 
-  echo '      --non-root     root user is not necessary to install the applications' 
+  echo '      --prefix=PATH  override default install location'
+  echo '      --non-root     root user is not necessary to install the applications'
   echo '-j=N, --jobs=N       specifies the number of jobs to run simultaneously'
   exit 0
   shift # past argument=value
