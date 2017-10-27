@@ -29,7 +29,7 @@ ARGS_HOST =
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!
-all: folder host harp harpsim
+all: folder host harpsim
 
 host:
 	$(COMPILE) $(ARGS_HOST) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HOST)
