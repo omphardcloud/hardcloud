@@ -49,8 +49,8 @@ module ccip_std_afu
 
 
     // register map to HardCloud
-    localparam HC_AFU_ID_LOW       = 16'h002; // 64b - R   Constant: 0xC000C9660D824272.
-    localparam HC_AFU_ID_HIGH      = 16'h004; // 64b - R   Constant: 0x9AEFFE5F84570612.
+    localparam HC_AFU_ID_LOW       = 16'h002; // 64b - RO  Constant: 0xC000C9660D824272.
+    localparam HC_AFU_ID_HIGH      = 16'h004; // 64b - RO  Constant: 0x9AEFFE5F84570612.
     localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
     localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
     localparam HC_BUFFER_ADDRESS_0 = 16'h130; // 64b - RW  Reads are targetted to this region
