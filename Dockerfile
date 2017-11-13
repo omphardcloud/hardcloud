@@ -51,4 +51,7 @@ RUN yum install -y libgcc.i686 \
   libXext-devel*i686 \
   ncurses-devel*i686
 
+# libpng for the examples
+RUN yum install libpng-devel
+
 # taf!
