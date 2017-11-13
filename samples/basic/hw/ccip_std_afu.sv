@@ -54,10 +54,10 @@ module ccip_std_afu
     localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
     localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
     localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
-    localparam HC_BUFFER_ADDRESS_0 = 16'h130; // 64b - RW  Reads are targetted to this region
-    localparam HC_BUFFER_SIZE_0    = 16'h138; // 32b - RW  Numbers of cache lines to be rd
-    localparam HC_BUFFER_ADDRESS_1 = 16'h160; // 64b - RW  Writes are targetted to this region
-    localparam HC_BUFFER_SIZE_1    = 16'h168; // 32b - RW  Numbers of cache lines to be wr
+    localparam HC_BUFFER_ADDRESS_0 = 16'h120; // 64b - RW  Reads are targetted to this region
+    localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines to be rd
+    localparam HC_BUFFER_ADDRESS_1 = 16'h130; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines to be wr
 
     // HC_CONTROL actions
     localparam HC_CONTROL_ASSERT_RST   = 32'h0000;
