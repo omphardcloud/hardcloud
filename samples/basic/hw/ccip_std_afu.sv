@@ -47,17 +47,29 @@ module ccip_std_afu
     output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-
     // register map to HardCloud
     localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
     localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
     localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
     localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
     localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
+
     localparam HC_BUFFER_ADDRESS_0 = 16'h120; // 64b - RW  Reads are targetted to this region
-    localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines to be rd
+    localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines
     localparam HC_BUFFER_ADDRESS_1 = 16'h130; // 64b - RW  Writes are targetted to this region
-    localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines to be wr
+    localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_2 = 16'h140; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_2    = 16'h148; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_3 = 16'h150; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_3    = 16'h158; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_4 = 16'h160; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_4    = 16'h168; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_5 = 16'h170; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_5    = 16'h178; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_6 = 16'h180; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_6    = 16'h188; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_7 = 16'h190; // 64b - RW  Writes are targetted to this region
+    localparam HC_BUFFER_SIZE_7    = 16'h198; // 32b - RW  Numbers of cache lines
 
     // HC_CONTROL actions
     localparam HC_CONTROL_ASSERT_RST   = 32'h0000;
@@ -193,22 +205,22 @@ module ccip_std_afu
     // csr_read: src address
     logic is_mem_addr_csr_read;
     assign is_mem_addr_csr_read = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_0 >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_1 >> 2));
 
     // src_num_lines: source number of cache lines
     logic is_src_num_lines;
     assign is_src_num_lines = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_0 >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_1 >> 2));
 
     // csr_write: dst address
     logic is_mem_addr_csr_write;
     assign is_mem_addr_csr_write = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_1 >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_0 >> 2));
 
     // dst_num_lines: destination number of cache lines
     logic is_dst_num_lines;
     assign is_dst_num_lines = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_1 >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_0 >> 2));
 
     // ctl: block control
     logic is_ctl;
