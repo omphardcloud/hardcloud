@@ -39,7 +39,7 @@ module nlb_csr #(parameter CCIP_VERSION_NUMBER=0)
     SoftReset,                      //                              rst:        ACTIVE HIGH soft reset
     re2cr_wrlock_n,
     // MMIO Requests from CCI-P
-    cp2cr_MmioHdr,                // [31:0]                       CSR Request Hdr 
+    cp2cr_MmioHdr,                // [31:0]                       CSR Request Hdr
     cp2cr_MmioDin,                   // [63:0]                       CSR read data
     cp2cr_MmioWrEn,                  //                              CSR write strobe
     cp2cr_MmioRdEn,                  //                              CSR read strobe
@@ -68,12 +68,12 @@ module nlb_csr #(parameter CCIP_VERSION_NUMBER=0)
 input  wire          Clk_400;               // 400MHz clock
 input  wire          SoftReset;
 input  wire          re2cr_wrlock_n;
-// MMIO Requests                           
+// MMIO Requests
 input  t_ccip_c0_ReqMmioHdr  cp2cr_MmioHdr;        //   CSR Request Hdr
 input  t_ccip_mmioData       cp2cr_MmioDin;           //   CSR read data
 input  logic                 cp2cr_MmioWrEn;          //   CSR write enable
 input  logic                 cp2cr_MmioRdEn;          //   CSR read enable
-// MMIO Response                         
+// MMIO Response
 output t_ccip_c2_RspMmioHdr  cr2cp_MmioHdr;        //   CSR Response Hdr
 output t_ccip_mmioData       cr2cp_MmioDout;          //   CSR read data
 output logic                 cr2cp_MmioDout_v;        //   CSR read data valid
@@ -112,9 +112,6 @@ localparam       RsvdZ   = 3'h6;
 //---------------------------------------------------------
 // CSR Address Map ***** DO NOT MODIFY *****
 //---------------------------------------------------------
-localparam      CSR_AFH_DFH_BASE     = 16'h000;                 // RO - Start for the DFH info for this AFU
-localparam      CSR_AFH_ID_L         = 16'h008;                 // RO - Lower 64 bits of the AFU ID
-localparam      CSR_AFH_ID_H         = 16'h010;                 // RO - Upper 64 bits of the AFU ID
 localparam      CSR_DFH_RSVD0        = 16'h018;                 // RO - Offset to next AFU
 localparam      CSR_DFH_RSVD1        = 16'h020;                 // RO - Reserved space for DFH managment(?)
 
@@ -122,21 +119,56 @@ localparam      CSR_SCRATCHPAD0      = 16'h100;    // 32b
 localparam      CSR_SCRATCHPAD1      = 16'h104;    // 32b
 localparam      CSR_SCRATCHPAD2      = 16'h108;    // 64b
 
-localparam      CSR_AFU_DSM_BASEL    = 16'h110;    // 32b             // RW - Lower 32-bits of AFU DSM base address. The lower 6-bbits are 4x00 since the address is cache aligned.
 localparam      CSR_AFU_DSM_BASEH    = 16'h114;    // 32b             // RW - Upper 32-bits of AFU DSM base address.
 
-localparam      CSR_CTL              = 16'h118;    // 32b             // RW   Control CSR to start n stop the test
-localparam      CSR_NUM_LINES        = 16'h128;    // 32b             // RW   Numbers of cache lines to be read/write
-localparam      CSR_DST_ADDR         = 16'h120;    // 64b             // RW   Writes are targetted to this region
-localparam      CSR_SRC_ADDR         = 16'h130;    // 64b             // RW   Reads are targetted to this region 
 localparam      CSR_CFG              = 16'h140;    // 32b             // RW   Configures test mode, wrthru, cont and delay mode
 localparam      CSR_INACT_THRESH     = 16'h148;    // 32b             // RW   set the threshold limit for inactivity trigger
 
-localparam      CSR_SWTEST_MSG       = 16'h158;    // 32b             // RW   Write to this serves as a notification to SW test   
+localparam      CSR_SWTEST_MSG       = 16'h158;    // 32b             // RW   Write to this serves as a notification to SW test
 localparam      CSR_STATUS0          = 16'h160;    // 32b                RO   num_read, num_writes
-localparam      CSR_STATUS1          = 16'h168;    // 32b                RO   num_Rdpend, num_Wrpend 
+localparam      CSR_STATUS1          = 16'h168;    // 32b                RO   num_Rdpend, num_Wrpend
 localparam      CSR_ERROR            = 16'h170;    // 32b                RO   error
- 
+
+//---------------------------------------------------------
+// HardCloud Address Map ***** DO NOT MODIFY *****
+//---------------------------------------------------------
+// The original registers address and name were modified,
+// below is the map:
+//
+// CSR_AFH_DFH_BASE  -> HC_DEVICE_HEADER
+// CSR_AFH_ID_L      -> HC_AFU_ID_LOW
+// CSR_AFH_ID_H      -> HC_AFU_ID_HIGH
+// CSR_AFU_DSM_BASEL -> HC_DSM_BASE_LOW
+// CSR_CTL           -> HC_CONTROL
+// CSR_DST_ADDR      -> HC_BUFFER_ADDRESS_0
+// CSR_SRC_ADDR      -> HC_BUFFER_ADDRESS_1
+// CSR_NUM_LINES     -> HC_BUFFER_SIZE_0
+//
+//---------------------------------------------------------
+
+// original registers address and name
+//
+// localparam CSR_AFH_DFH_BASE  = 16'h000;        // RO - Start for the DFH info for this AFU
+// localparam CSR_AFH_ID_L      = 16'h008;        // RO - Lower 64 bits of the AFU ID
+// localparam CSR_AFH_ID_H      = 16'h010;        // RO - Upper 64 bits of the AFU ID
+// localparam CSR_AFU_DSM_BASEL = 16'h110; // 32b // RW - Lower 32-bits of AFU DSM base address. The lower 6-bbits are 4x00 since the address is cache aligned.
+// localparam CSR_CTL           = 16'h118; // 32b // RW   Control CSR to start n stop the test
+// localparam CSR_DST_ADDR      = 16'h120; // 64b // RW   Writes are targetted to this region
+// localparam CSR_SRC_ADDR      = 16'h130; // 64b // RW   Reads are targetted to this region
+// localparam CSR_NUM_LINES     = 16'h128; // 32b // RW   Numbers of cache lines to be read/write
+
+// new version - register map to HardCloud
+localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
+localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
+localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
+localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
+localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
+localparam HC_BUFFER_ADDRESS_0 = 16'h120; // 64b - RW  Reads are targetted to this region
+localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines to be rd
+localparam HC_BUFFER_ADDRESS_1 = 16'h130; // 64b - RW  Writes are targetted to this region
+localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines to be wr
+
+
 //---------------------------------------------------------
 localparam      NO_STAGED_CSR  = 16'hXXX;       // used for NON late action CSRs
 localparam      CFG_SEG_SIZE   = 16'h180>>3;    // Range specified in number of 8B CSRs
@@ -170,7 +202,7 @@ localparam      FEATURE_0_BEG  = 18'h0000;
     localparam       NLB_AFU_ID_L    = 64'h967D_22E8_37CD_2182;
     `else
         ** Select a valid NLB Test Mode
-    `endif	
+    `endif
 `else   // SIM_MODE
     // Temporary Workaround
     // Simulation tests are always expecting same AFU ID
@@ -204,12 +236,12 @@ initial begin
         csr_reg[i] = 64'h0;
 end
 
-assign     cr2re_ctl             = func_csr_connect_4B(CSR_CTL,csr_reg[CSR_CTL>>3]);
-assign     cr2re_dsm_base[31:0]  = func_csr_connect_4B(CSR_AFU_DSM_BASEL,csr_reg[CSR_AFU_DSM_BASEL>>3]);
+assign     cr2re_ctl             = func_csr_connect_4B(HC_CONTROL,csr_reg[HC_CONTROL>>3]);
+assign     cr2re_dsm_base[31:0]  = func_csr_connect_4B(HC_DSM_BASE_LOW,csr_reg[HC_DSM_BASE_LOW>>3]);
 assign     cr2re_dsm_base[63:32] = func_csr_connect_4B(CSR_AFU_DSM_BASEH,csr_reg[CSR_AFU_DSM_BASEH>>3]);
-assign     cr2re_src_address     = csr_reg[CSR_SRC_ADDR>>3];
-assign     cr2re_dst_address     = csr_reg[CSR_DST_ADDR>>3];
-assign     cr2re_num_lines       = func_csr_connect_4B(CSR_NUM_LINES, csr_reg[CSR_NUM_LINES>>3]);
+assign     cr2re_src_address     = csr_reg[HC_BUFFER_ADDRESS_1>>3];
+assign     cr2re_dst_address     = csr_reg[HC_BUFFER_ADDRESS_0>>3];
+assign     cr2re_num_lines       = func_csr_connect_4B(HC_BUFFER_SIZE_0, csr_reg[HC_BUFFER_SIZE_0>>3]);
 assign     cr2re_inact_thresh    = func_csr_connect_4B(CSR_INACT_THRESH,csr_reg[CSR_INACT_THRESH>>3]);
 assign     cr2re_cfg             = 0;
 
@@ -308,33 +340,33 @@ begin
         //      [39:16] 24'h0 because no other DFHs
         //      [15:12] 4b User defined AFU major version #
         //      [11:0]  12'h001 CCI-P version #
-        set_attr(CSR_AFH_DFH_BASE,
+        set_attr(HC_DEVICE_HEADER,
                  NO_STAGED_CSR,
                  1'b1,
                  {64{RW}},
                  {4'b0001,      // Type=AFU
-                  8'h0, 
+                  8'h0,
                   4'h0,         // AFU minor version #
                   7'h0,
                   END_OF_LIST,
-                  NEXT_DFH_BYTE_OFFSET, 
+                  NEXT_DFH_BYTE_OFFSET,
                   4'h1,         // AFU major version #
                   CCIP_VERSION_NUMBER});    // CCI-P version #
 
         // The AFU ID
-        set_attr(CSR_AFH_ID_L,
+        set_attr(HC_AFU_ID_LOW,
                  NO_STAGED_CSR,
                  1'b1,
                  {64{RO}},
                  NLB_AFU_ID_L);
 
-        set_attr(CSR_AFH_ID_H,
+        set_attr(HC_AFU_ID_HIGH,
                  NO_STAGED_CSR,
                  1'b1,
                  {64{RO}},
                  NLB_AFU_ID_H);
-                                
-       
+
+
         set_attr(CSR_DFH_RSVD0,
                  NO_STAGED_CSR,
                  1'b1,
@@ -367,7 +399,7 @@ begin
                  );
 
 
-         set_attr(CSR_AFU_DSM_BASEL,        // + CSR_AFU_DSM_BASEH
+         set_attr(HC_DSM_BASE_LOW,        // + CSR_AFU_DSM_BASEH
                   NO_STAGED_CSR,
                   1'b1,
                   {64{RW}},
@@ -376,27 +408,27 @@ begin
 
          if(SoftReset)
              cr2re_dsm_base_valid <= 1'b0;
-         else if(afu_csr_wren_T1 
-                && afu_csr_offset_8B_T1==CSR_AFU_DSM_BASEL[3+:L_CFG_SEG_SIZE] 
-                && afu_csr_dw_enable_T1==2'b01 
+         else if(afu_csr_wren_T1
+                && afu_csr_offset_8B_T1==HC_DSM_BASE_LOW[3+:L_CFG_SEG_SIZE]
+                && afu_csr_dw_enable_T1==2'b01
                 )
              cr2re_dsm_base_valid <= 1'b1;
 
-         set_attr(CSR_SRC_ADDR,
+         set_attr(HC_BUFFER_ADDRESS_1,
                   NO_STAGED_CSR,
                   re2cr_wrlock_n,
                   {64{RW}},
                   64'h0
                  );
 
-         set_attr(CSR_DST_ADDR,
+         set_attr(HC_BUFFER_ADDRESS_0,
                   NO_STAGED_CSR,
                   re2cr_wrlock_n,
                   {64{RW}},
                   64'h0
                  );
 
-          set_attr(CSR_NUM_LINES,
+          set_attr(HC_BUFFER_SIZE_0,
                   NO_STAGED_CSR,
                   1'b1,
                   {
@@ -406,7 +438,7 @@ begin
                   64'h0
                  );
 
-          set_attr(CSR_CTL,
+          set_attr(HC_CONTROL,
                   NO_STAGED_CSR,
                   1'b1,
                   {{32{RW}},
@@ -463,18 +495,18 @@ begin
             cr2s1_csr_write <= 0;
         else
         begin
-            if(  afu_csr_wren_T1 
+            if(  afu_csr_wren_T1
               && afu_csr_offset_8B_T1==CSR_SWTEST_MSG[3+:L_CFG_SEG_SIZE]
               )
                 cr2s1_csr_write <= 1'b1;
-            else 
+            else
                 cr2s1_csr_write <= 1'b0;
         end
 end
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
-task automatic set_attr; 
+task automatic set_attr;
     input  [15:0]       csr_id;                           // byte aligned CSR address
     input  [15:0]       staged_csr_id;                    // byte aligned CSR address for late action staged register
     input               conditional_wr;                   // write condition for RW, RWS, RWDL attributes
@@ -516,7 +548,7 @@ task automatic set_attr;
                     csr_reg[csr_offset_8B][i]      <= default_val[i];    // set default value
             end
 
-            endcase 
+            endcase
         end
     end
 endtask

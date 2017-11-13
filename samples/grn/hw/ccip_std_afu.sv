@@ -49,18 +49,22 @@ module ccip_std_afu
 
 
     // register map to HardCloud
-    localparam CSR_AFU_DSM_BASEL = 16'h110; // 32b - RW  Lower 32-bits of AFU DSM base address
-    localparam CSR_CTL           = 16'h118; // 32b - RW  Control CSR to start n stop the test
-    localparam CSR_SRC_ADDR      = 16'h130; // 64b - RW  Reads are targetted to this region
-    localparam CSR_SRC_NUM_LINES = 16'h138; // 32b - RW  Numbers of cache lines to be rd
-    localparam CSR_DST_ADDR      = 16'h120; // 64b - RW  Writes are targetted to this region
-    localparam CSR_DST_NUM_LINES = 16'h128; // 32b - RW  Numbers of cache lines to be wr
+    localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
+    localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
+    localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
+    localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
+    localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
 
-    // CSR_CTL actions
-    localparam CTL_ASSERT_RST   = 32'h0000;
-    localparam CTL_DEASSERT_RST = 32'h0001;
-    localparam CTL_START        = 32'h0003;
-    localparam CTL_STOP         = 32'h0007;
+    localparam HC_BUFFER_ADDRESS_0 = 16'h120; // 64b - RW  Reads are targetted to this region
+    localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines
+    localparam HC_BUFFER_ADDRESS_1 = 16'h130; // 64b - RW  Reads are targetted to this region
+    localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines
+
+    // HC_CONTROL actions
+    localparam HC_CONTROL_ASSERT_RST   = 32'h0000;
+    localparam HC_CONTROL_DEASSERT_RST = 32'h0001;
+    localparam HC_CONTROL_START        = 32'h0003;
+    localparam HC_CONTROL_STOP         = 32'h0007;
 
     //
     // Run the entire design at the standard CCI-P frequency (400 MHz).
@@ -148,7 +152,7 @@ module ccip_std_afu
             // Addresses are of 32-bit objects in MMIO space.  Addresses
             // of 64-bit objects are thus multiples of 2.
             case (mmio_req_hdr.address)
-              0: // AFU DFH (device feature header)
+              HC_DEVICE_HEADER: // AFU DFH (device feature header)
                 begin
                     // Here we define a trivial feature list.  In this
                     // example, our AFU is the only entry in this list.
@@ -160,10 +164,10 @@ module ccip_std_afu
                 end
 
               // AFU_ID_L
-              2: sTx.c2.data <= afu_id[63:0];
+              (HC_AFU_ID_LOW >> 2): sTx.c2.data <= afu_id[63:0];
 
               // AFU_ID_H
-              4: sTx.c2.data <= afu_id[127:64];
+              (HC_AFU_ID_HIGH >> 2): sTx.c2.data <= afu_id[127:64];
 
               // DFH_RSVD0
               6: sTx.c2.data <= t_ccip_mmioData'(0);
@@ -185,32 +189,32 @@ module ccip_std_afu
     // dsm_basel: device status memory - base low
     logic is_dsm_basel;
     assign is_dsm_basel = is_csr_write &&
-                          (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_AFU_DSM_BASEL >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_DSM_BASE_LOW >> 2));
 
     // csr_read: src address
     logic is_mem_addr_csr_read;
     assign is_mem_addr_csr_read = is_csr_write &&
-                                  (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_SRC_ADDR >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_1 >> 2));
 
     // src_num_lines: source number of cache lines
     logic is_src_num_lines;
     assign is_src_num_lines = is_csr_write &&
-                              (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_SRC_NUM_LINES >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_1 >> 2));
 
     // csr_write: dst address
     logic is_mem_addr_csr_write;
     assign is_mem_addr_csr_write = is_csr_write &&
-                                   (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_DST_ADDR >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_0 >> 2));
 
     // dst_num_lines: destination number of cache lines
     logic is_dst_num_lines;
     assign is_dst_num_lines = is_csr_write &&
-                              (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_DST_NUM_LINES >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_0 >> 2));
 
     // ctl: block control
     logic is_ctl;
     assign is_ctl = is_csr_write &&
-                    (mmio_req_hdr.address == t_ccip_mmioAddr'(CSR_CTL >> 2));
+        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_CONTROL >> 2));
 
     // Memory address to which this AFU will read or write.
     t_ccip_clAddr mem_dsm;
@@ -294,7 +298,7 @@ module ccip_std_afu
         end
         else
         begin
-            if ((state == STATE_IDLE) && (ctl == CTL_START))
+            if ((state == STATE_IDLE) && (ctl == HC_CONTROL_START))
             begin
                 state <= STATE_RUN;
             end
@@ -314,7 +318,7 @@ module ccip_std_afu
                 state <= STATE_STOP;
             end
 
-            if ((state == STATE_STOP) && (ctl == CTL_STOP))
+            if ((state == STATE_STOP) && (ctl == HC_CONTROL_STOP))
             begin
               state <= STATE_IDLE;
             end
