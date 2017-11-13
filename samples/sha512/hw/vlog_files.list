@@ -1,0 +1,3 @@
+${PWD}/../../${AFU}/hw/ccip_std_afu.sv
+${PWD}/../../${AFU}/hw/sha512_csr.sv
+
