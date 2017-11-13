@@ -162,10 +162,10 @@ module ccip_std_afu
                 end
 
               // AFU_ID_L
-              2: sTx.c2.data <= afu_id[63:0];
+              HC_AFU_ID_LOW: sTx.c2.data <= afu_id[63:0];
 
               // AFU_ID_H
-              4: sTx.c2.data <= afu_id[127:64];
+              HC_AFU_ID_HIGH: sTx.c2.data <= afu_id[127:64];
 
               // DFH_RSVD0
               6: sTx.c2.data <= t_ccip_mmioData'(0);
