@@ -49,8 +49,9 @@ module ccip_std_afu
 
 
     // register map to HardCloud
-    localparam HC_AFU_ID_LOW       = 16'h002; // 64b - RO  Constant: 0xC000C9660D824272.
-    localparam HC_AFU_ID_HIGH      = 16'h004; // 64b - RO  Constant: 0x9AEFFE5F84570612.
+    localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
+    localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
+    localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
     localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
     localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
     localparam HC_BUFFER_ADDRESS_0 = 16'h130; // 64b - RW  Reads are targetted to this region
@@ -150,7 +151,7 @@ module ccip_std_afu
             // Addresses are of 32-bit objects in MMIO space.  Addresses
             // of 64-bit objects are thus multiples of 2.
             case (mmio_req_hdr.address)
-              0: // AFU DFH (device feature header)
+              HC_DEVICE_HEADER: // AFU DFH (device feature header)
                 begin
                     // Here we define a trivial feature list.  In this
                     // example, our AFU is the only entry in this list.
@@ -162,10 +163,10 @@ module ccip_std_afu
                 end
 
               // AFU_ID_L
-              HC_AFU_ID_LOW: sTx.c2.data <= afu_id[63:0];
+              (HC_AFU_ID_LOW >> 2): sTx.c2.data <= afu_id[63:0];
 
               // AFU_ID_H
-              HC_AFU_ID_HIGH: sTx.c2.data <= afu_id[127:64];
+              (HC_AFU_ID_HIGH >> 2): sTx.c2.data <= afu_id[127:64];
 
               // DFH_RSVD0
               6: sTx.c2.data <= t_ccip_mmioData'(0);
