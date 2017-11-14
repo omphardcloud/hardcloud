@@ -3,6 +3,10 @@
 package sha512_pkg;
   import ccip_if_pkg::*;
 
+  //
+  // HardCloud definitions
+  //
+
   parameter HC_DSM_BASE_LOW        = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
   parameter HC_CONTROL             = 16'h118; // 32b - RW  Control to start n stop the test
 
@@ -69,6 +73,27 @@ package sha512_pkg;
 
     return is_write && (mmio_req_hdr.address == HC_DSM_BASE_LOW >> 2);
   endfunction : hc_dsm_sel
+
+  //
+  // request definitions
+  //
+
+  typedef struct packed {
+    logic         dirty;
+    logic [511:0] data;
+  } t_block;
+
+  typedef enum logic [2:0] {
+    S_RD_IDLE,
+    S_RD_FETCH,
+    S_RD_WAIT,
+    S_RD_FINISH
+  } t_rd_state;
+
+  typedef enum logic [2:0] {
+    S_WR_IDLE,
+    S_WR_FINISH
+  } t_wr_state;
 
 endpackage : sha512_pkg
 

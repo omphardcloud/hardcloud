@@ -19,160 +19,152 @@ module sha512_requestor
   output logic           valid_o
 );
 
-  logic [1023:0] block[2];
+  t_block mem_block[4];
+
+  t_ccip_clAddr rd_cnt;
+  t_ccip_clAddr rd_rsp_cnt;
+  logic         rd_toggle;
 
   //
-  // States in our simple example.
-  //
-  typedef enum logic [2:0]
-  {
-      STATE_IDLE,
-      STATE_READ,
-      STATE_WAIT_READ,
-      STATE_WRITE,
-      STATE_FINISH,
-      STATE_STOP
-  }
-  t_state;
-
-  t_state state;
-
-  //
-  // Common Data
-  //
-  logic [511:0] data;
-
-  //
-  // State machine
+  // read state FSM
   //
 
-  always_ff @(posedge clk)
-  begin
-      if (reset)
-      begin
-          state <= STATE_IDLE;
-      end
-      else
-      begin
-          if ((state == STATE_IDLE) && (hc_control == HC_CONTROL_START))
-          begin
-              state <= STATE_READ;
-    
-              $display("== requestor ==");
-              $display(hc_buffer[0].address);
-              $display(hc_buffer[0].size);
-              $display(hc_buffer[1].address);
-              $display(hc_buffer[1].size);
-          end
+  t_rd_state rd_state;
+  t_rd_state rd_next_state;
 
-          if ((state == STATE_READ) && !ccip_rx.c0TxAlmFull)
-          begin
-              state <= STATE_WAIT_READ;
-          end
-
-          if ((state == STATE_WAIT_READ) &&
-              (ccip_rx.c0.rspValid) &&
-              (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE))
-          begin
-              state <= STATE_WRITE;
-          end
-
-          if ((state == STATE_WRITE) && !ccip_rx.c1TxAlmFull)
-          begin
-              state <= STATE_FINISH;
-          end
-
-          if ((state == STATE_FINISH) && !ccip_rx.c1TxAlmFull)
-          begin
-              state <= STATE_STOP;
-          end
-
-          if ((state == STATE_STOP) && (hc_control == HC_CONTROL_STOP))
-          begin
-            state <= STATE_IDLE;
-          end
-      end
-  end
-
-  //
-  // Read
-  //
-
-  // Construct a memory read request header.  For this AFU it is always
-  // the same, since we read to only one address.
   t_ccip_c0_ReqMemHdr rd_hdr;
-  always_comb
-  begin
-      // Zero works for most write request header fields in this example
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      ccip_c0_tx.valid <= 1'b0;
+      rd_cnt           <= 0;
+
       rd_hdr = t_ccip_c0_ReqMemHdr'(0);
-      // Set the read address
-      rd_hdr.address = hc_buffer[1].address;
+    end
+    else begin
+      case(rd_state)
+      S_RD_IDLE:
+        begin
+          ccip_c0_tx.valid <= 1'b0;
+        end
+
+      S_RD_FETCH:
+        begin
+          if (!ccip_rx.c0TxAlmFull) begin
+            rd_hdr.cl_len  = eCL_LEN_2;
+            rd_hdr.address = hc_buffer[1].address + rd_cnt;
+
+            ccip_c0_tx.valid <= 1'b1;
+            ccip_c0_tx.hdr   <= rd_hdr;
+            rd_cnt           <= t_ccip_clAddr'(rd_cnt + 2);
+          end
+          else begin
+            ccip_c0_tx.valid <= 1'b0;
+          end
+        end
+
+      S_RD_FINISH:
+        begin
+          ccip_c0_tx.valid <= 1'b0;
+        end
+      endcase
+    end
   end
 
-  // Control logic for memory reads
-  always_ff @(posedge clk)
-  begin
-      if (reset)
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      rd_state <= S_RD_IDLE;
+    end
+    else begin
+      rd_state <= rd_next_state;
+    end
+  end
+
+  always_comb begin
+    rd_next_state = rd_state;
+
+    case (rd_state)
+    S_RD_IDLE:
       begin
-          ccip_c0_tx.valid <= 1'b0;
-      end
-      else
-      begin
-          // Request the write as long as the channel isn't full.
-          ccip_c0_tx.valid <= ((state == STATE_READ) && !ccip_rx.c0TxAlmFull);
+        if (hc_control == HC_CONTROL_START) begin
+          rd_next_state <= S_RD_FETCH;
+        end
       end
 
-      ccip_c0_tx.hdr <= rd_hdr;
+    S_RD_FETCH:
+      begin
+        if (!ccip_rx.c0TxAlmFull && (rd_cnt + 2) == hc_buffer[1].size) begin
+          rd_next_state <= S_RD_FINISH;
+        end
+      end
+    endcase
+
   end
 
   // Receive data (read responses).
-  always_ff @(posedge clk)
-  begin
-      if ((ccip_rx.c0.rspValid) && (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE))
-      begin
-          for (int i = 0; i < 32; i++)
-          begin
-            data[32*i +: 32] <= ccip_rx.c0.data[32*i +: 32] + 10;
-          end
-
-          $display("recv data test");
-          $display(ccip_rx.c0.data);
+  always_ff @(posedge clk or posedge reset) begin
+    if (reset) begin
+      for (int i = 0; i < 4; i++) begin
+        mem_block[i].dirty <= 1'b0;
+        mem_block[i].data  <= '0;
       end
+
+      rd_toggle  <= 1'b0;
+      rd_rsp_cnt <= '0;
+    end
+    else begin
+      if ((ccip_rx.c0.rspValid) &&
+        (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+
+        for (int i = 0; i < 16; i++) begin
+          // data[32*i +: 32] <= ccip_rx.c0.data[32*i +: 32] + 10;
+
+          $display("recv data : ", i);
+          $display(ccip_rx.c0.data[32*i +: 32]);
+        end
+
+        rd_rsp_cnt <= t_ccip_clAddr'(rd_rsp_cnt + 1);
+
+        $display(ccip_rx.c0.hdr.cl_num);
+      end
+    end
   end
 
   //
-  // Write
+  // write state FSM
   //
 
-  // Construct a memory write request header.
+  t_wr_state wr_state;
+  t_wr_state wr_next_state;
+
   t_ccip_c1_ReqMemHdr wr_hdr;
-  always_comb
-  begin
-      // Zero works for most write request header fields in this example
+
+  always_ff @(posedge clk) begin
+    if (reset) begin
+      wr_state <= S_WR_IDLE;
+
+      ccip_c1_tx.valid <= 1'b0;
+
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
-      // Set the write address
-      wr_hdr.address = (state == STATE_FINISH) ? hc_dsm_base + 1 : hc_buffer[0].address;
-      // Start of packet is always set for single beat writes
-      wr_hdr.sop = 1'b1;
-  end
+    end
+    else begin
+      if (wr_state == S_WR_IDLE &&
+        rd_rsp_cnt == hc_buffer[1].size &&
+        !ccip_rx.c1TxAlmFull) begin
 
-  // Control logic for memory writes
-  always_ff @(posedge clk)
-  begin
-      if (reset)
-      begin
-          ccip_c1_tx.valid <= 1'b0;
+        wr_hdr.address = hc_dsm_base + 1;
+        wr_hdr.sop = 1'b1;
+
+        ccip_c1_tx.hdr   <= wr_hdr;
+        ccip_c1_tx.valid <= 1'b1;
+        ccip_c1_tx.data  <= t_ccip_clData'('h1);
+
+        wr_state <= S_WR_FINISH;
       end
-      else
-      begin
-          // Request the write as long as the channel isn't full.
-          ccip_c1_tx.valid <= ((state == STATE_FINISH || state == STATE_WRITE) &&
-                          !ccip_rx.c1TxAlmFull);
-
-          ccip_c1_tx.data <= (state == STATE_FINISH) ? t_ccip_clData'('h1) : data;
+      else begin
+        ccip_c1_tx.valid <= 1'b0;
       end
-
-      ccip_c1_tx.hdr <= wr_hdr;
+    end
   end
 
 endmodule : sha512_requestor
