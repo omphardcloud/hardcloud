@@ -3,4 +3,8 @@ ${PWD}/../../${AFU}/hw/ccip_std_afu.sv
 ${PWD}/../../${AFU}/hw/sha512.sv
 ${PWD}/../../${AFU}/hw/sha512_csr.sv
 ${PWD}/../../${AFU}/hw/sha512_requestor.sv
+${PWD}/../../${AFU}/hw/sha512_core.v
+${PWD}/../../${AFU}/hw/sha512_h_constants.v
+${PWD}/../../${AFU}/hw/sha512_k_constants.v
+${PWD}/../../${AFU}/hw/sha512_w_mem.v
 

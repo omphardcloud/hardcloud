@@ -84,6 +84,11 @@ module ccip_std_afu
   //   Instances.
   //
   // =========================================================================
+  logic [511:0] block;
+  logic         block_valid;
+  logic [511:0] digest;
+  logic         digest_valid;
+
   t_hc_control  hc_control;
   t_ccip_clAddr hc_dsm_base;
   t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
@@ -101,18 +106,28 @@ module ccip_std_afu
 
   sha512_requestor uu_sha512_requestor
   (
-    .clk         (clk),
-    .reset       (reset),
-    .hc_control  (hc_control),
-    .hc_dsm_base (hc_dsm_base),
-    .hc_buffer   (hc_buffer),
-    .data_i      (),
-    .valid_i     (),
-    .ccip_rx     (ccip_rx),
-    .ccip_c0_tx  (ccip_tx.c0),
-    .ccip_c1_tx  (ccip_tx.c1),
-    .data_o      (),
-    .valid_o     ()
+    .clk          (clk),
+    .reset        (reset),
+    .hc_control   (hc_control),
+    .hc_dsm_base  (hc_dsm_base),
+    .hc_buffer    (hc_buffer),
+    .digest       (digest),
+    .digest_valid (digest_valid),
+    .ccip_rx      (ccip_rx),
+    .ccip_c0_tx   (ccip_tx.c0),
+    .ccip_c1_tx   (ccip_tx.c1),
+    .block        (block),
+    .block_valid  (block_valid)
+  );
+
+  sha512 uu_sha512
+  (
+    .clk          (clk),
+    .reset        (reset),
+    .block        (block),
+    .block_valid  (block_valid),
+    .digest       (digest),
+    .digest_valid (digest_valid)
   );
 
 endmodule : ccip_std_afu
