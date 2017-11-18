@@ -207,7 +207,6 @@ module sha512_requestor
     if (reset) begin
       ccip_c1_tx.valid <= 1'b0;
       wr_offset        <= '0;
-      wr_rsp_cnt       <= '0;
 
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
     end
