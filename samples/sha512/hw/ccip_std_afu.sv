@@ -88,6 +88,7 @@ module ccip_std_afu
   logic         block_valid;
   logic [511:0] digest;
   logic         digest_valid;
+  logic         ready;
 
   t_hc_control  hc_control;
   t_ccip_clAddr hc_dsm_base;
@@ -113,6 +114,7 @@ module ccip_std_afu
     .hc_buffer    (hc_buffer),
     .digest       (digest),
     .digest_valid (digest_valid),
+    .ready        (ready),
     .ccip_rx      (ccip_rx),
     .ccip_c0_tx   (ccip_tx.c0),
     .ccip_c1_tx   (ccip_tx.c1),
@@ -127,7 +129,8 @@ module ccip_std_afu
     .block        (block),
     .block_valid  (block_valid),
     .digest       (digest),
-    .digest_valid (digest_valid)
+    .digest_valid (digest_valid),
+    .ready        (ready)
   );
 
 endmodule : ccip_std_afu

@@ -94,7 +94,9 @@ package sha512_pkg;
   typedef enum logic [2:0] {
     S_WR_IDLE,
     S_WR_DATA,
-    S_WR_FINISH
+    S_WR_WAIT,
+    S_WR_FINISH_1,
+    S_WR_FINISH_2
   } t_wr_state;
 
 endpackage : sha512_pkg

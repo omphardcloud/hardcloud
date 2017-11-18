@@ -9,7 +9,8 @@ module sha512
   input  logic [511:0] block,
   input  logic         block_valid,
   output logic [511:0] digest,
-  output logic         digest_valid
+  output logic         digest_valid,
+  output logic         ready
 );
 
   localparam MODE_SHA_512 = 3;
@@ -17,7 +18,6 @@ module sha512
   logic          init;
   logic          next;
   logic          ptr;
-  logic          ready;
   logic [1023:0] local_block;
 
   logic          first_time;

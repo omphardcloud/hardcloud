@@ -3,8 +3,8 @@
 
 #define CL 64               // cache line - bytes
 
-#define NI 2*CL/sizeof(int) // number of itens
-#define NJ 1*CL/sizeof(int) // number of itens
+#define NI 18000*CL/sizeof(int) // number of itens
+#define NJ  9000*CL/sizeof(int) // number of itens
 
 int main()
 {
@@ -13,7 +13,7 @@ int main()
 
   for (int i = 0; i < NI; i++)
   {
-    A[i] = i + 100;
+    A[i] = i;
   }
 
   #pragma omp target device(HARPSIM) map(to: A) map(from: B)
