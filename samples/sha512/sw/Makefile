@@ -18,7 +18,7 @@ $(error Set LLVM to the root directory of the Clang/LLVM with support to Intel H
 endif
 
 # libraries to use, objects to compile
-SRCS = main.cpp
+SRCS = sha512.cpp main.cpp
 SRCS_FILES = $(foreach F, $(SRCS), src/$(F))
 COMMON_FILES =
 
@@ -38,7 +38,7 @@ host:
 	$(COMPILE) $(ARGS_HOST) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HOST)
 
 harpsim:
-	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM) -g
+	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM)
 
 folder:
 	mkdir -p build/

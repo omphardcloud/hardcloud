@@ -1,33 +1,52 @@
-#include <iostream>
+#include <stdio.h>
+#include <string.h>
+
 #include "harp.h"
+#include "sha512.h"
 
-#define CL 64               // cache line - bytes
+#define CL 64 // cache line - bytes
 
-#define NI 18000*CL/sizeof(int) // number of itens
-#define NJ  9000*CL/sizeof(int) // number of itens
+#define NI 18000*CL/sizeof(uint64_t) // number of itens
+#define NJ     1*CL/sizeof(uint64_t) // number of itens
+
+void sha512(uint64_t* input, uint16_t size, uint64_t* output)
+{
+  uint64_t buffers[] = {
+    0x6A09E667F3BCC908, 0xBB67AE8584CAA73B, 0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
+    0x510E527FADE682D1, 0x9B05688C2B3E6C1F, 0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
+  };
+
+  calculateHash(size, input, (uint64_t*) &buffers);
+
+  for (int i = 0; i < 8; i++)
+  {
+    output[i] = buffers[7 - i];
+  }
+}
 
 int main()
 {
-  int A[NI];
-  int B[NJ];
+  uint64_t input[NI];
+  uint64_t output[NJ];
 
   for (int i = 0; i < NI; i++)
   {
-    A[i] = i;
+    input[i] = i;
   }
 
-  #pragma omp target device(HARPSIM) map(to: A) map(from: B)
-  #pragma omp parallel for use(hrw) module(sha512)
-  for (int i = 0; i < NJ; i++)
+  #pragma omp target device(HARPSIM) map(to: input) map(from: output)
+  #pragma omp parallel use(hrw) module(sha512)
   {
-    B[0] = A[0];
+    output[0] = input[0];
+
+    sha512(input, NI/16, output);
   }
 
-  for (int i = 0; i < NJ; i++)
-  {
-    std::cout << " idx = " << i << " : ";
-    std::cout << B[i] << "\n";
+  printf("Final hash: ");
+  for (int i = 0; i < 8; i++) {
+    printf("%016llx",(unsigned long long) output[7 - i]);
   }
+  printf("\n");
 
   return 0;
 }
