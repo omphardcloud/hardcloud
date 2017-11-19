@@ -1,3 +1,6 @@
+${PWD}/../../${AFU}/hw/ccip_afifo_channel.sv
+${PWD}/../../${AFU}/hw/ccip_async_activity_cnt.sv
+${PWD}/../../${AFU}/hw/ccip_async_shim.sv
 ${PWD}/../../${AFU}/hw/sha512_pkg.sv
 ${PWD}/../../${AFU}/hw/ccip_std_afu.sv
 ${PWD}/../../${AFU}/hw/sha512.sv
@@ -7,4 +10,3 @@ ${PWD}/../../${AFU}/hw/sha512_core.v
 ${PWD}/../../${AFU}/hw/sha512_h_constants.v
 ${PWD}/../../${AFU}/hw/sha512_k_constants.v
 ${PWD}/../../${AFU}/hw/sha512_w_mem.v
-
