@@ -22,10 +22,12 @@ module sha512_requestor
 
   t_block mem_block[4];
 
+  logic prev_digest_valid;
 
   //
   // send data to sha512
   //
+
   logic [1:0]   ptr;
   t_ccip_clAddr rd_offset;
   t_ccip_clAddr rd_rsp_cnt;
@@ -55,10 +57,13 @@ module sha512_requestor
 
   t_ccip_c0_ReqMemHdr rd_hdr;
 
+  logic [2:0] inital_requests_cnt;
+
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
-      ccip_c0_tx.valid <= 1'b0;
-      rd_offset        <= 0;
+      ccip_c0_tx.valid    <= 1'b0;
+      rd_offset           <= '0;
+      inital_requests_cnt <= '0;
 
       rd_hdr = t_ccip_c0_ReqMemHdr'(0);
     end
@@ -75,9 +80,13 @@ module sha512_requestor
             rd_hdr.cl_len  = eCL_LEN_2;
             rd_hdr.address = hc_buffer[1].address + rd_offset;
 
-            ccip_c0_tx.valid <= 1'b1;
-            ccip_c0_tx.hdr   <= rd_hdr;
-            rd_offset        <= t_ccip_clAddr'(rd_offset + 2);
+            ccip_c0_tx.valid    <= 1'b1;
+            ccip_c0_tx.hdr      <= rd_hdr;
+            rd_offset           <= t_ccip_clAddr'(rd_offset + 2);
+
+            if (inital_requests_cnt[2] == 0) begin
+              inital_requests_cnt <= inital_requests_cnt + 1;
+            end
           end
           else begin
             ccip_c0_tx.valid <= 1'b0;
@@ -118,17 +127,18 @@ module sha512_requestor
     S_RD_IDLE:
       begin
         if (hc_control == HC_CONTROL_START) begin
-          rd_next_state <= S_RD_FETCH;
+          rd_next_state = S_RD_FETCH;
         end
       end
 
     S_RD_FETCH:
       begin
         if (!ccip_rx.c0TxAlmFull && (rd_offset + 2) == hc_buffer[1].size) begin
-          rd_next_state <= S_RD_FINISH;
+          rd_next_state = S_RD_FINISH;
         end
+        // else if (inital_requests_cnt[2] == 1 && !ccip_rx.c0TxAlmFull) begin
         else if (!ccip_rx.c0TxAlmFull) begin
-          rd_next_state <= S_RD_WAIT_0;
+          rd_next_state = S_RD_WAIT_0;
         end
       end
 
@@ -136,8 +146,7 @@ module sha512_requestor
       begin
         if ((ccip_rx.c0.rspValid) &&
           (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
-
-          rd_next_state <= S_RD_WAIT_1;
+          rd_next_state = S_RD_WAIT_1;
         end
       end
 
@@ -145,8 +154,7 @@ module sha512_requestor
       begin
         if ((ccip_rx.c0.rspValid) &&
           (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
-
-          rd_next_state <= S_RD_FETCH;
+          rd_next_state = S_RD_FETCH;
         end
       end
 
@@ -188,11 +196,21 @@ module sha512_requestor
   t_wr_state wr_next_state;
 
   t_ccip_clAddr wr_offset;
-  t_ccip_clAddr wr_rsp_cnt;
 
   t_ccip_c1_ReqMemHdr wr_hdr;
 
-  logic prev_digest_valid;
+  logic [31:0] digest_cnt;
+
+  always_ff @(posedge clk or posedge reset) begin
+    if (reset) begin
+      digest_cnt <= '0;
+    end
+    else begin
+      if (digest_valid && prev_digest_valid == 0) begin
+        digest_cnt <= digest_cnt + 1;
+      end
+    end
+  end
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
@@ -266,42 +284,25 @@ module sha512_requestor
     case (wr_state)
       S_WR_IDLE:
         begin
-          if (digest_valid && prev_digest_valid == 0) begin
-            wr_next_state <= S_WR_DATA;
-          end
-          else if (wr_rsp_cnt == hc_buffer[0].size) begin
-            wr_next_state <= S_WR_FINISH_1;
+          if (digest_cnt == hc_buffer[1].size >> 1) begin
+            wr_next_state = S_WR_DATA;
           end
         end
 
       S_WR_DATA:
         begin
           if (!ccip_rx.c1TxAlmFull) begin
-            wr_next_state <= S_WR_IDLE;
+            wr_next_state = S_WR_FINISH_1;
           end
         end
 
       S_WR_FINISH_1:
         begin
           if (!ccip_rx.c1TxAlmFull) begin
-            wr_next_state <= S_WR_FINISH_2;
+            wr_next_state = S_WR_FINISH_2;
           end
         end
     endcase
-  end
-
-  // Receive (write responses).
-  always_ff @(posedge clk or posedge reset) begin
-    if (reset) begin
-      wr_rsp_cnt <= '0;
-    end
-    else begin
-      if ((ccip_rx.c1.rspValid) &&
-        (ccip_rx.c1.hdr.resp_type == eRSP_WRLINE)) begin
-
-        wr_rsp_cnt <= t_ccip_clAddr'(wr_rsp_cnt + 1);
-      end
-    end
   end
 
 endmodule : sha512_requestor

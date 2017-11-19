@@ -52,10 +52,9 @@ module ccip_std_afu
   // Run the entire design at the standard CCI-P frequency (400 MHz).
   //
   logic clk;
-  assign clk = pClk;
+  assign clk = pClkDiv2;
 
   logic reset;
-  assign reset = pck_cp2af_softReset;
 
   // =========================================================================
   //
@@ -71,13 +70,26 @@ module ccip_std_afu
   //
 
   t_if_ccip_Rx ccip_rx;
+  t_if_ccip_Rx ccip_rx_wire;
   always_ff @(posedge clk)
   begin
-      ccip_rx <= pck_cp2af_sRx;
+      ccip_rx <= ccip_rx_wire;
   end
 
   t_if_ccip_Tx ccip_tx;
-  assign pck_af2cp_sTx = ccip_tx;
+
+  ccip_async_shim uu_ccip_async_shim
+  (
+    .bb_softreset     (pck_cp2af_softReset),
+    .bb_clk           (pClk),
+    .bb_tx            (pck_af2cp_sTx),
+    .bb_rx            (pck_cp2af_sRx),
+    .afu_softreset    (reset),
+    .afu_clk          (clk),
+    .afu_tx           (ccip_tx),
+    .afu_rx           (ccip_rx_wire),
+    .async_shim_error ()
+  );
 
   // =========================================================================
   //
