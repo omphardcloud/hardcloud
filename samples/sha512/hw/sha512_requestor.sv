@@ -203,7 +203,7 @@ module sha512_requestor
 
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
-      digest_cnt <= '0;
+      digest_cnt <= 'h0;
     end
     else begin
       if (digest_valid && prev_digest_valid == 0) begin
@@ -231,6 +231,11 @@ module sha512_requestor
     else begin
       case (wr_state)
       S_WR_IDLE:
+        begin
+          ccip_c1_tx.valid <= 1'b0;
+        end
+
+      S_WR_CHECK:
         begin
           ccip_c1_tx.valid <= 1'b0;
         end
@@ -283,6 +288,13 @@ module sha512_requestor
 
     case (wr_state)
       S_WR_IDLE:
+        begin
+          if (hc_control == HC_CONTROL_START) begin
+            wr_next_state = S_WR_CHECK;
+          end
+        end
+
+      S_WR_CHECK:
         begin
           if (digest_cnt == hc_buffer[1].size >> 1) begin
             wr_next_state = S_WR_DATA;

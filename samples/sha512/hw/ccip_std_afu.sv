@@ -52,7 +52,7 @@ module ccip_std_afu
   // Run the entire design at the standard CCI-P frequency (400 MHz).
   //
   logic clk;
-  assign clk = pClkDiv2;
+  assign clk = pClkDiv4;
 
   logic reset;
 
