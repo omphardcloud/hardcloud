@@ -13,7 +13,7 @@ module sha512
   output logic         ready
 );
 
-  localparam MODE_SHA_512 = 3;
+  localparam [1:0] MODE_SHA_512 = 3;
 
   logic          init;
   logic          next;
@@ -68,7 +68,7 @@ module sha512
       first_time <= 1'b1;
     end
     else begin
-      if (block_valid && ptr == 1'b1) begin
+      if (block_valid && (ptr == 1'b1)) begin
         first_time <= 1'b0;
       end
     end
@@ -79,7 +79,7 @@ module sha512
       init <= 1'b0;
     end
     else begin
-      if (block_valid && first_time && ptr == 1'b1) begin
+      if (block_valid && first_time && (ptr == 1'b1)) begin
         init <= 1'b1;
       end
       else begin
@@ -93,7 +93,7 @@ module sha512
       next <= 1'b0;
     end
     else begin
-      if (block_valid && !first_time && ptr == 1'b1) begin
+      if (block_valid && !first_time && (ptr == 1'b1)) begin
         next <= 1'b1;
       end
       else begin

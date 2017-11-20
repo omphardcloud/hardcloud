@@ -37,7 +37,7 @@ module sha512_requestor
       ptr <= 2'b00;
     end
     else begin
-      if (ready == 1'b1 && mem_block[ptr].dirty == 1'b1) begin
+      if ((ready == 1'b1) && (mem_block[ptr].dirty == 1'b1)) begin
         block       <= mem_block[ptr].data;
         block_valid <= 1'b1;
         ptr         <= ptr + 1;
@@ -133,7 +133,7 @@ module sha512_requestor
 
     S_RD_FETCH:
       begin
-        if (!ccip_rx.c0TxAlmFull && (rd_offset + 2) == hc_buffer[1].size) begin
+        if (!ccip_rx.c0TxAlmFull && ((rd_offset + 2) == hc_buffer[1].size)) begin
           rd_next_state = S_RD_FINISH;
         end
         // else if (inital_requests_cnt[2] == 1 && !ccip_rx.c0TxAlmFull) begin
@@ -206,7 +206,7 @@ module sha512_requestor
       digest_cnt <= 'h0;
     end
     else begin
-      if (digest_valid && prev_digest_valid == 0) begin
+      if (digest_valid && (prev_digest_valid == 0)) begin
         digest_cnt <= digest_cnt + 1;
       end
     end
@@ -296,7 +296,7 @@ module sha512_requestor
 
       S_WR_CHECK:
         begin
-          if (digest_cnt == hc_buffer[1].size >> 1) begin
+          if (digest_cnt == (hc_buffer[1].size >> 1)) begin
             wr_next_state = S_WR_DATA;
           end
         end

@@ -99,31 +99,43 @@ module sha512_csr
   //
 
   always_ff @(posedge clk) begin
-    if (hc_dsm_sel(rx_mmio_channel)) begin
+    if (reset) begin
+      hc_dsm_base <= '0;
+    end
+    else if (hc_dsm_sel(rx_mmio_channel)) begin
       hc_dsm_base <= t_ccip_clAddr'(rx_mmio_channel.data) >> 6;
     end
   end
 
   always_ff @(posedge clk) begin
-    if (hc_control_sel(rx_mmio_channel)) begin
+    if (reset) begin
+      hc_control <= '0;
+    end
+    else if (hc_control_sel(rx_mmio_channel)) begin
       hc_control <= t_hc_control'(rx_mmio_channel.data[31:0]);
     end
   end
 
   always_ff @(posedge clk) begin
-    logic [1:0] sel;
-
-    sel = hc_buffer_sel(rx_mmio_channel);
-
-    if (sel == 2'b01) begin
-      hc_buffer[hc_buffer_which(rx_mmio_channel)].address <=
-        t_ccip_clAddr'(rx_mmio_channel.data);
+    if (reset) begin
+      for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
+        hc_buffer[i] <= '0;
+      end
     end
-    else if (sel == 2'b11) begin
-      hc_buffer[hc_buffer_which(rx_mmio_channel)].size <=
-        rx_mmio_channel.data[31:0];
-    end
+    else begin
+      logic [HC_BUFFER_SIZE - 1:0] sel;
 
+      sel = hc_buffer_sel(rx_mmio_channel);
+
+      if (sel == 2'b01) begin
+        hc_buffer[hc_buffer_which(rx_mmio_channel)].address <=
+          t_ccip_clAddr'(rx_mmio_channel.data);
+      end
+      else if (sel == 2'b11) begin
+        hc_buffer[hc_buffer_which(rx_mmio_channel)].size <=
+          rx_mmio_channel.data[31:0];
+      end
+    end
   end
 
 endmodule : sha512_csr
