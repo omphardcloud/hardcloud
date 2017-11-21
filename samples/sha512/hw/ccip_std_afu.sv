@@ -69,14 +69,8 @@ module ccip_std_afu
   // The code below never uses combinational logic to write ccip_tx.
   //
 
-  t_if_ccip_Rx ccip_rx;
-  t_if_ccip_Rx ccip_rx_wire;
-  always_ff @(posedge clk)
-  begin
-      ccip_rx <= ccip_rx_wire;
-  end
-
   t_if_ccip_Tx ccip_tx;
+  t_if_ccip_Rx ccip_rx;
 
   ccip_async_shim uu_ccip_async_shim
   (
@@ -87,7 +81,7 @@ module ccip_std_afu
     .afu_softreset    (reset),
     .afu_clk          (clk),
     .afu_tx           (ccip_tx),
-    .afu_rx           (ccip_rx_wire),
+    .afu_rx           (ccip_rx),
     .async_shim_error ()
   );
 
