@@ -16,34 +16,55 @@ module sha512_requestor
   input  t_if_ccip_Rx    ccip_rx,
   output t_if_ccip_c0_Tx ccip_c0_tx,
   output t_if_ccip_c1_Tx ccip_c1_tx,
-  output logic [511:0]   block,
+  output logic [511:0]   block[2],
   output logic           block_valid
 );
 
-  t_block mem_block[4];
-
   logic prev_digest_valid;
+
+  t_block enq_data;
+  t_block deq_data[2];
+
+  logic enq_en;
+  logic not_full;
+  logic deq_en;
+  logic not_empty;
+
+  sha512_fifo uu_sha512_fifo
+  (
+    .clk       (clk),
+    .reset     (reset),
+    .enq_data  (enq_data),
+    .enq_en    (enq_en),
+    .not_full  (not_full),
+    .deq_data  (deq_data),
+    .deq_en    (deq_en),
+    .not_empty (not_empty)
+  );
 
   //
   // send data to sha512
   //
 
-  logic [1:0]   ptr;
   t_ccip_clAddr rd_offset;
   t_ccip_clAddr rd_rsp_cnt;
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
-      ptr <= 2'b00;
+      block[0]    <= '0;
+      block[1]    <= '0;
+      block_valid <= '0;
+      deq_en      <= '0;
     end
     else begin
-      if ((ready == 1'b1) && (mem_block[ptr].dirty == 1'b1)) begin
-        block       <= mem_block[ptr].data;
+      if (ready && not_empty) begin
+        block       <= deq_data;
         block_valid <= 1'b1;
-        ptr         <= ptr + 1;
+        deq_en      <= 1'b1;
       end
       else begin
         block_valid <= 1'b0;
+        deq_en      <= 1'b0;
       end
     end
   end
@@ -57,13 +78,10 @@ module sha512_requestor
 
   t_ccip_c0_ReqMemHdr rd_hdr;
 
-  logic [2:0] inital_requests_cnt;
-
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
       ccip_c0_tx.valid    <= 1'b0;
       rd_offset           <= '0;
-      inital_requests_cnt <= '0;
 
       rd_hdr = t_ccip_c0_ReqMemHdr'(0);
     end
@@ -83,10 +101,6 @@ module sha512_requestor
             ccip_c0_tx.valid    <= 1'b1;
             ccip_c0_tx.hdr      <= rd_hdr;
             rd_offset           <= t_ccip_clAddr'(rd_offset + 2);
-
-            if (inital_requests_cnt[2] == 0) begin
-              inital_requests_cnt <= inital_requests_cnt + 1;
-            end
           end
           else begin
             ccip_c0_tx.valid <= 1'b0;
@@ -136,7 +150,6 @@ module sha512_requestor
         if (!ccip_rx.c0TxAlmFull && ((rd_offset + 2) == hc_buffer[1].size)) begin
           rd_next_state = S_RD_FINISH;
         end
-        // else if (inital_requests_cnt[2] == 1 && !ccip_rx.c0TxAlmFull) begin
         else if (!ccip_rx.c0TxAlmFull) begin
           rd_next_state = S_RD_WAIT_0;
         end
@@ -164,11 +177,6 @@ module sha512_requestor
   // Receive data (read responses).
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
-      for (int i = 0; i < 4; i++) begin
-        mem_block[i].dirty <= 1'b0;
-        mem_block[i].data  <= '0;
-      end
-
       rd_rsp_cnt <= '0;
     end
     else begin
@@ -177,13 +185,11 @@ module sha512_requestor
 
         rd_rsp_cnt <= t_ccip_clAddr'(rd_rsp_cnt + 1);
 
-        mem_block[{rd_rsp_cnt[1], ccip_rx.c0.hdr.cl_num[0]}].dirty <= 1'b1;
-        mem_block[{rd_rsp_cnt[1], ccip_rx.c0.hdr.cl_num[0]}].data <=
-          ccip_rx.c0.data;
+        enq_en   <= 1'b1;
+        enq_data <= ccip_rx.c0.data;
       end
-
-      if (block_valid) begin
-        mem_block[(ptr - 1)%4].dirty <= 1'b0;
+      else begin
+        enq_en <= 1'b0;
       end
     end
   end
@@ -296,7 +302,7 @@ module sha512_requestor
 
       S_WR_CHECK:
         begin
-          if (digest_cnt == (hc_buffer[1].size >> 1)) begin
+          if (digest_cnt == hc_buffer[1].size[31:1]) begin
             wr_next_state = S_WR_DATA;
           end
         end

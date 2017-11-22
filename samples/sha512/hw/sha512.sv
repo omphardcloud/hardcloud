@@ -6,7 +6,7 @@ module sha512
 (
   input  logic         clk,
   input  logic         reset,
-  input  logic [511:0] block,
+  input  logic [511:0] block[2],
   input  logic         block_valid,
   output logic [511:0] digest,
   output logic         digest_valid,
@@ -17,8 +17,6 @@ module sha512
 
   logic          init;
   logic          next;
-  logic          ptr;
-  logic [1023:0] local_block;
 
   logic          first_time;
 
@@ -31,7 +29,7 @@ module sha512
     .mode            (MODE_SHA_512),
     .work_factor     (),
     .work_factor_num (),
-    .block           (local_block),
+    .block           ({block[1], block[0]}),
     .ready           (ready),
     .digest          (digest),
     .digest_valid    (digest_valid)
@@ -39,36 +37,10 @@ module sha512
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
-      local_block[0] <= '0;
-      local_block[1] <= '0;
-    end
-    else begin
-      if (block_valid) begin
-        local_block[ptr*512 +: 512] <= block;
-      end
-    end
-  end
-
-  int cnt;
-  always_ff@(posedge clk or posedge reset) begin
-    if (reset) begin
-      ptr <= 0;
-      cnt <= 0;
-    end
-    else begin
-      if (block_valid) begin
-        ptr <= !ptr;
-        cnt <= cnt + 1;
-      end
-    end
-  end
-
-  always_ff@(posedge clk or posedge reset) begin
-    if (reset) begin
       first_time <= 1'b1;
     end
     else begin
-      if (block_valid && (ptr == 1'b1)) begin
+      if (block_valid) begin
         first_time <= 1'b0;
       end
     end
@@ -79,7 +51,7 @@ module sha512
       init <= 1'b0;
     end
     else begin
-      if (block_valid && first_time && (ptr == 1'b1)) begin
+      if (block_valid && first_time) begin
         init <= 1'b1;
       end
       else begin
@@ -93,7 +65,7 @@ module sha512
       next <= 1'b0;
     end
     else begin
-      if (block_valid && !first_time && (ptr == 1'b1)) begin
+      if (block_valid && !first_time) begin
         next <= 1'b1;
       end
       else begin

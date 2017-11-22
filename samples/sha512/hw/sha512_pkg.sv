@@ -79,7 +79,6 @@ package sha512_pkg;
   //
 
   typedef struct packed {
-    logic         dirty;
     logic [511:0] data;
   } t_block;
 

@@ -28,6 +28,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+// Include MPF data types, including the CCI interface pacakge.
+`include "cci_mpf_if.vh"
+
 import ccip_if_pkg::*;
 import sha512_pkg::*;
 
@@ -48,29 +51,101 @@ module ccip_std_afu
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  //
-  // Run the entire design at the standard CCI-P frequency (400 MHz).
-  //
-  logic clk;
-  assign clk = pClkDiv4;
+  localparam MPF_DFH_MMIO_ADDR = 'h1000;
 
-  logic reset;
+  logic          clk;
+  logic          reset;
+  logic          block_valid;
+  logic          digest_valid;
+  logic          ready;
 
-  // =========================================================================
-  //
-  //   Register requests.
-  //
-  // =========================================================================
+  t_block block[2];
+  t_block digest;
 
-  //
-  // The incoming pck_cp2af_sRx and outgoing pck_af2cp_sTx must both be
-  // registered.  Here we register pck_cp2af_sRx and assign it to ccip_rx.
-  // We also assign pck_af2cp_sTx to ccip_tx here but don't register it.
-  // The code below never uses combinational logic to write ccip_tx.
-  //
+  t_hc_control  hc_control;
+  t_ccip_clAddr hc_dsm_base;
+  t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
 
-  t_if_ccip_Tx ccip_tx;
-  t_if_ccip_Rx ccip_rx;
+  t_if_ccip_Tx  ccip_tx;
+  t_if_ccip_Rx  ccip_rx;
+
+  t_if_ccip_Rx  afck_cp2af_sRx;
+  t_if_ccip_Tx  afck_af2cp_sTx;
+
+  // combinational logic
+  assign clk   = pClkDiv4;
+  assign reset = pck_cp2af_softReset;
+
+  always_comb begin
+    ccip_rx.c0 = afu.c0Rx;
+    ccip_rx.c1 = afu.c1Rx;
+
+    ccip_rx.c0TxAlmFull = afu.c0TxAlmFull;
+    ccip_rx.c1TxAlmFull = afu.c1TxAlmFull;
+
+    afu.c0Tx = cci_mpf_cvtC0TxFromBase(ccip_tx.c0);
+    afu.c1Tx = cci_mpf_cvtC1TxFromBase(ccip_tx.c1);
+
+    if (cci_mpf_c0TxIsReadReq(afu.c0Tx)) begin
+      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c0Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
+      afu.c0Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
+    end
+
+    if (cci_mpf_c1TxIsWriteReq(afu.c1Tx)) begin
+      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c1Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
+      afu.c1Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
+    end
+
+    afu.c2Tx = ccip_tx.c2;
+  end
+
+  // cci_mpf
+
+  cci_mpf_if fiu(.clk(clk));
+  cci_mpf_if afu(.clk(clk));
+
+  ccip_wires_to_mpf
+  #(
+    // All inputs and outputs in PR region (AFU) must be registered!
+    .REGISTER_INPUTS(1),
+    .REGISTER_OUTPUTS(1)
+  )
+  map_ifc
+  (
+    .pClk                (clk),
+    .pClkDiv2            (pClkDiv2),
+    .pClkDiv4            (pClkDiv4),
+    .uClk_usr            (uClk_usr),
+    .uClk_usrDiv2        (uClk_usrDiv2),
+    .pck_cp2af_softReset (reset),
+    .pck_cp2af_pwrState  (pck_cp2af_pwrState),
+    .pck_cp2af_error     (pck_cp2af_error),
+    .pck_cp2af_sRx       (afck_cp2af_sRx),
+    .pck_af2cp_sTx       (afck_af2cp_sTx),
+    .fiu                 (fiu)
+  );
+
+  cci_mpf
+  #(
+    .SORT_READ_RESPONSES(1),
+    .PRESERVE_WRITE_MDATA(1),
+    .ENABLE_VTP(0),
+    .ENABLE_VC_MAP(0),
+    .ENABLE_DYNAMIC_VC_MAPPING(1),
+    .ENFORCE_WR_ORDER(0),
+    .ENABLE_PARTIAL_WRITES(0),
+    .DFH_MMIO_BASE_ADDR(MPF_DFH_MMIO_ADDR)
+  )
+  mpf
+  (
+    .clk(clk),
+    .fiu,
+    .afu,
+    .c0NotEmpty(),
+    .c1NotEmpty()
+  );
 
   ccip_async_shim uu_ccip_async_shim
   (
@@ -78,27 +153,12 @@ module ccip_std_afu
     .bb_clk           (pClk),
     .bb_tx            (pck_af2cp_sTx),
     .bb_rx            (pck_cp2af_sRx),
-    .afu_softreset    (reset),
+    // .afu_softreset    (reset),
     .afu_clk          (clk),
-    .afu_tx           (ccip_tx),
-    .afu_rx           (ccip_rx),
+    .afu_tx           (afck_af2cp_sTx),
+    .afu_rx           (afck_cp2af_sRx),
     .async_shim_error ()
   );
-
-  // =========================================================================
-  //
-  //   Instances.
-  //
-  // =========================================================================
-  logic [511:0] block;
-  logic         block_valid;
-  logic [511:0] digest;
-  logic         digest_valid;
-  logic         ready;
-
-  t_hc_control  hc_control;
-  t_ccip_clAddr hc_dsm_base;
-  t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
 
   sha512_csr uu_sha512_csr
   (
