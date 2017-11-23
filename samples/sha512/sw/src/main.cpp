@@ -6,10 +6,10 @@
 
 #define CL 64 // cache line - bytes
 
-#define NI 18000*CL/sizeof(uint64_t) // number of itens
-#define NJ     1*CL/sizeof(uint64_t) // number of itens
+#define NI 30000000*CL/sizeof(uint64_t) // number of itens
+#define NJ 1*CL/sizeof(uint64_t) // number of itens
 
-void sha512(uint64_t* input, uint16_t size, uint64_t* output)
+void sha512(uint64_t* input, uint64_t size, uint64_t* output)
 {
   uint64_t buffers[] = {
     0x6A09E667F3BCC908, 0xBB67AE8584CAA73B, 0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
@@ -26,15 +26,17 @@ void sha512(uint64_t* input, uint16_t size, uint64_t* output)
 
 int main()
 {
-  uint64_t input[NI];
+  uint64_t* input;
   uint64_t output[NJ];
 
-  for (int i = 0; i < NI; i++)
+  input = (uint64_t *) malloc (NI*sizeof(uint64_t));
+
+  for (uint64_t i = 0; i < NI; i++)
   {
     input[i] = i;
   }
 
-  #pragma omp target device(HARPSIM) map(to: input) map(from: output)
+  #pragma omp target device(HARPSIM) map(to: input[:NI]) map(from: output)
   #pragma omp parallel use(hrw) module(sha512)
   {
     output[0] = input[0];

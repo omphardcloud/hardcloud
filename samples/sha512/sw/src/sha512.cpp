@@ -19,13 +19,13 @@ uint64_t constants[] = {
   0x431D67C49C100D4C, 0x4CC5D4BECB3E42B6, 0x597F299CFC657E2A, 0x5FCB6FAB3AD6FAEC, 0x6C44198C4A475817
 };
 
-void calculateHash(uint16_t blockcount, uint64_t* inputstring, uint64_t* buffers) {
+void calculateHash(uint64_t blockcount, uint64_t* inputstring, uint64_t* buffers) {
   uint64_t inits[] = {
     0x6A09E667F3BCC908, 0xBB67AE8584CAA73B, 0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
     0x510E527FADE682D1, 0x9B05688C2B3E6C1F, 0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
   };
 
-  for (int block = 0; block < blockcount; block++) {
+  for (uint64_t block = 0; block < blockcount; block++) {
     uint64_t schedule[80];
     getwtschedule(&inputstring[block*16], schedule);
 
