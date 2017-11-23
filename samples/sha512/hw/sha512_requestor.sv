@@ -30,16 +30,19 @@ module sha512_requestor
   logic deq_en;
   logic not_empty;
 
+  logic [3:0] dec_counter;
+
   sha512_fifo uu_sha512_fifo
   (
-    .clk       (clk),
-    .reset     (reset),
-    .enq_data  (enq_data),
-    .enq_en    (enq_en),
-    .not_full  (not_full),
-    .deq_data  (deq_data),
-    .deq_en    (deq_en),
-    .not_empty (not_empty)
+    .clk         (clk),
+    .reset       (reset),
+    .enq_data    (enq_data),
+    .enq_en      (enq_en),
+    .not_full    (not_full),
+    .deq_data    (deq_data),
+    .deq_en      (deq_en),
+    .not_empty   (not_empty),
+    .dec_counter (dec_counter)
   );
 
   //
@@ -49,6 +52,22 @@ module sha512_requestor
   t_ccip_clAddr rd_offset;
   t_ccip_clAddr rd_rsp_cnt;
 
+  logic wait_digest_valid;
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      wait_digest_valid <= 1'b0;
+    end
+    else begin
+      if (ready && not_empty && !wait_digest_valid) begin
+        wait_digest_valid <= 1'b1;
+      end
+      else if (digest_valid) begin
+        wait_digest_valid <= 1'b0;
+      end
+    end
+  end
+
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
       block[0]    <= '0;
@@ -57,7 +76,7 @@ module sha512_requestor
       deq_en      <= '0;
     end
     else begin
-      if (ready && not_empty) begin
+      if (ready && not_empty && !wait_digest_valid) begin
         block       <= deq_data;
         block_valid <= 1'b1;
         deq_en      <= 1'b1;
@@ -73,10 +92,42 @@ module sha512_requestor
   // read state FSM
   //
 
+  logic [31:0] cnt_request;
+
   t_rd_state rd_state;
   t_rd_state rd_next_state;
 
   t_ccip_c0_ReqMemHdr rd_hdr;
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      cnt_request <= '0;
+    end
+    else begin
+      logic [31:0] request;
+      logic [31:0] response;
+
+      if ((rd_state == S_RD_FETCH) &&
+        ((dec_counter - cnt_request) >= 2) &&
+        !ccip_rx.c0TxAlmFull) begin
+
+        request = 2;
+      end
+      else begin
+        request = 0;
+      end
+
+      if ((ccip_rx.c0.rspValid) &&
+        (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+        response = 1;
+      end
+      else begin
+        response = 0;
+      end
+
+      cnt_request <= cnt_request + request - response;
+    end
+  end
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
@@ -94,7 +145,10 @@ module sha512_requestor
 
       S_RD_FETCH:
         begin
-          if (!ccip_rx.c0TxAlmFull) begin
+          if ((dec_counter - cnt_request) < 2) begin
+            ccip_c0_tx.valid <= 1'b0;
+          end
+          else if (!ccip_rx.c0TxAlmFull) begin
             rd_hdr.cl_len  = eCL_LEN_2;
             rd_hdr.address = hc_buffer[1].address + rd_offset;
 
@@ -107,12 +161,7 @@ module sha512_requestor
           end
         end
 
-      S_RD_WAIT_0:
-        begin
-          ccip_c0_tx.valid <= 1'b0;
-        end
-
-      S_RD_WAIT_1:
+      S_RD_WAIT:
         begin
           ccip_c0_tx.valid <= 1'b0;
         end
@@ -147,26 +196,17 @@ module sha512_requestor
 
     S_RD_FETCH:
       begin
-        if (!ccip_rx.c0TxAlmFull && ((rd_offset + 2) == hc_buffer[1].size)) begin
+        if ((dec_counter - cnt_request) < 2) begin
+          rd_next_state = S_RD_WAIT;
+        end
+        else if (!ccip_rx.c0TxAlmFull && ((rd_offset + 2) == hc_buffer[1].size)) begin
           rd_next_state = S_RD_FINISH;
         end
-        else if (!ccip_rx.c0TxAlmFull) begin
-          rd_next_state = S_RD_WAIT_0;
-        end
       end
 
-    S_RD_WAIT_0:
+    S_RD_WAIT:
       begin
-        if ((ccip_rx.c0.rspValid) &&
-          (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
-          rd_next_state = S_RD_WAIT_1;
-        end
-      end
-
-    S_RD_WAIT_1:
-      begin
-        if ((ccip_rx.c0.rspValid) &&
-          (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+        if ((dec_counter - cnt_request) >= 2) begin
           rd_next_state = S_RD_FETCH;
         end
       end
@@ -229,10 +269,12 @@ module sha512_requestor
 
   always_ff @(posedge clk) begin
     if (reset) begin
-      ccip_c1_tx.valid <= 1'b0;
-      wr_offset        <= '0;
+      wr_offset <= '0;
 
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
+      ccip_c1_tx.hdr   <= wr_hdr;
+      ccip_c1_tx.valid <= 1'b0;
+      ccip_c1_tx.data  <= t_ccip_clData'('0);
     end
     else begin
       case (wr_state)

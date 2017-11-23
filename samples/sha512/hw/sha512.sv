@@ -20,6 +20,9 @@ module sha512
 
   logic          first_time;
 
+  assign init = block_valid && first_time;
+  assign next = block_valid && !first_time;
+
   sha512_core uu_sha512_core
   (
     .clk             (clk),
@@ -42,34 +45,6 @@ module sha512
     else begin
       if (block_valid) begin
         first_time <= 1'b0;
-      end
-    end
-  end
-
-  always_ff@(posedge clk or posedge reset) begin
-    if (reset) begin
-      init <= 1'b0;
-    end
-    else begin
-      if (block_valid && first_time) begin
-        init <= 1'b1;
-      end
-      else begin
-        init <= 1'b0;
-      end
-    end
-  end
-
-  always_ff@(posedge clk or posedge reset) begin
-    if (reset) begin
-      next <= 1'b0;
-    end
-    else begin
-      if (block_valid && !first_time) begin
-        next <= 1'b1;
-      end
-      else begin
-        next <= 1'b0;
       end
     end
   end

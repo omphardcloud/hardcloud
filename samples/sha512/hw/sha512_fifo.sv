@@ -16,11 +16,13 @@ module sha512_fifo
 
   output logic [511:0] deq_data[2],
   input  logic         deq_en,
-  output logic         not_empty
+  output logic         not_empty,
+
+  output logic [SHA512_FIFO_DEPTH/2 - 1:0] dec_counter
 );
 
-  logic [SHA512_FIFO_DEPTH/2 - 1:0] wr_pointer;
-  logic [SHA512_FIFO_DEPTH/2 - 1:0] rd_pointer;
+  logic [$clog2(SHA512_FIFO_DEPTH) - 1:0] wr_pointer;
+  logic [$clog2(SHA512_FIFO_DEPTH) - 1:0] rd_pointer;
   logic [SHA512_FIFO_DEPTH/2 - 1:0] counter;
 
   t_block mem[SHA512_FIFO_DEPTH];
@@ -30,6 +32,8 @@ module sha512_fifo
 
   assign deq_data[1]  = mem[rd_pointer + 1];
   assign deq_data[0]  = mem[rd_pointer];
+
+  assign dec_counter = SHA512_FIFO_DEPTH - counter;
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin

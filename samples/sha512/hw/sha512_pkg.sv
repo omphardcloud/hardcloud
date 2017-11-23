@@ -85,8 +85,7 @@ package sha512_pkg;
   typedef enum logic [2:0] {
     S_RD_IDLE,
     S_RD_FETCH,
-    S_RD_WAIT_0,
-    S_RD_WAIT_1,
+    S_RD_WAIT,
     S_RD_FINISH
   } t_rd_state;
 
