@@ -71,7 +71,7 @@ int main()
     pt[i] = rand();
   }
 
-  #pragma omp target device(HARPSIM) map(to: key, pt) map(from: ct)
+  #pragma omp target device(HARPSIM) map(to: key, pt[:NUM_WORDS]) map(from: ct[:NUM_WORDS])
   #pragma omp parallel use(hrw) module(aes128)
   {
     ct[0] = key[0];
