@@ -4,7 +4,8 @@ module sobel_unit
   input              rst_b,
   input              valid_in,
   input      [127:0] data_in,
-  output reg [511:0] data_out
+  output reg [511:0] data_out,
+  output reg         valid_out
 );
 
   localparam DELAY          = 31;
@@ -17,6 +18,15 @@ module sobel_unit
   reg [15:0] row_buffer_q[2];
 
   reg [511:0] data_out_q[DELAY];
+
+  always_ff @(posedge clk) begin
+    if(!rst_b) begin
+      valid_out <= 1'b0;
+    end
+    else begin
+      valid_out <= valid_in;
+    end
+  end
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
@@ -127,3 +137,4 @@ module sobel_unit
   end
 
 endmodule : sobel_unit
+
