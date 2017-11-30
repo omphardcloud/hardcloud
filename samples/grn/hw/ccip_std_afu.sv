@@ -28,363 +28,157 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+// Include MPF data types, including the CCI interface pacakge.
+`include "cci_mpf_if.vh"
+
 import ccip_if_pkg::*;
+import grn_pkg::*;
 
 module ccip_std_afu
 (
-    // CCI-P Clocks and Resets
-    input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
-    input  logic         pClkDiv2,           // 200MHz - CCI-P clock domain.
-    input  logic         pClkDiv4,           // 100MHz - CCI-P clock domain.
-    input  logic         uClk_usr,           // User clock domain. Refer to clock programming guide  ** Currently provides fixed 300MHz clock **
-    input  logic         uClk_usrDiv2,       // User clock domain. Half the programmed frequency  ** Currently provides fixed 150MHz clock **
-    input  logic         pck_cp2af_softReset,// CCI-P ACTIVE HIGH Soft Reset
-    input  logic [1:0]   pck_cp2af_pwrState, // CCI-P AFU Power State
-    input  logic         pck_cp2af_error,    // CCI-P Protocol Error Detected
+  // CCI-P Clocks and Resets
+  input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
+  input  logic         pClkDiv2,           // 200MHz - CCI-P clock domain.
+  input  logic         pClkDiv4,           // 100MHz - CCI-P clock domain.
+  input  logic         uClk_usr,           // User clock domain. Refer to clock programming guide  ** Currently provides fixed 300MHz clock **
+  input  logic         uClk_usrDiv2,       // User clock domain. Half the programmed frequency  ** Currently provides fixed 150MHz clock **
+  input  logic         pck_cp2af_softReset,// CCI-P ACTIVE HIGH Soft Reset
+  input  logic [1:0]   pck_cp2af_pwrState, // CCI-P AFU Power State
+  input  logic         pck_cp2af_error,    // CCI-P Protocol Error Detected
 
-    // Interface structures
-    input  t_if_ccip_Rx  pck_cp2af_sRx,      // CCI-P Rx Port
-    output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
+  // Interface structures
+  input  t_if_ccip_Rx  pck_cp2af_sRx,      // CCI-P Rx Port
+  output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
+  localparam MPF_DFH_MMIO_ADDR = 'h1000;
 
-    // register map to HardCloud
-    localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
-    localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
-    localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
-    localparam HC_DSM_BASE_LOW     = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
-    localparam HC_CONTROL          = 16'h118; // 32b - RW  Control to start n stop the test
+  logic clk;
+  logic reset;
 
-    localparam HC_BUFFER_ADDRESS_0 = 16'h120; // 64b - RW  Reads are targetted to this region
-    localparam HC_BUFFER_SIZE_0    = 16'h128; // 32b - RW  Numbers of cache lines
-    localparam HC_BUFFER_ADDRESS_1 = 16'h130; // 64b - RW  Reads are targetted to this region
-    localparam HC_BUFFER_SIZE_1    = 16'h138; // 32b - RW  Numbers of cache lines
+  logic [511:0] transient;
+  logic         req_write;
+  logic         top_grn_reset;
+  logic         ack_write;
 
-    // HC_CONTROL actions
-    localparam HC_CONTROL_ASSERT_RST   = 32'h0000;
-    localparam HC_CONTROL_DEASSERT_RST = 32'h0001;
-    localparam HC_CONTROL_START        = 32'h0003;
-    localparam HC_CONTROL_STOP         = 32'h0007;
+  t_hc_control  hc_control;
+  t_ccip_clAddr hc_dsm_base;
+  t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
 
-    //
-    // Run the entire design at the standard CCI-P frequency (400 MHz).
-    //
-    logic clk;
-    assign clk = pClk;
+  t_if_ccip_Tx  ccip_tx;
+  t_if_ccip_Rx  ccip_rx;
 
-    logic reset;
-    assign reset = pck_cp2af_softReset;
+  // combinational logic
+  assign clk   = pClk;
+  assign reset = pck_cp2af_softReset;
 
+  always_comb begin
+    ccip_rx.c0 = afu.c0Rx;
+    ccip_rx.c1 = afu.c1Rx;
 
-    // =========================================================================
-    //
-    //   Register requests.
-    //
-    // =========================================================================
+    ccip_rx.c0TxAlmFull = afu.c0TxAlmFull;
+    ccip_rx.c1TxAlmFull = afu.c1TxAlmFull;
 
-    //
-    // The incoming pck_cp2af_sRx and outgoing pck_af2cp_sTx must both be
-    // registered.  Here we register pck_cp2af_sRx and assign it to sRx.
-    // We also assign pck_af2cp_sTx to sTx here but don't register it.
-    // The code below never uses combinational logic to write sTx.
-    //
+    afu.c0Tx = cci_mpf_cvtC0TxFromBase(ccip_tx.c0);
+    afu.c1Tx = cci_mpf_cvtC1TxFromBase(ccip_tx.c1);
 
-    t_if_ccip_Rx sRx;
-    always_ff @(posedge clk)
-    begin
-        sRx <= pck_cp2af_sRx;
+    if (cci_mpf_c0TxIsReadReq(afu.c0Tx)) begin
+      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c0Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
+      afu.c0Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
     end
 
-    t_if_ccip_Tx sTx;
-    assign pck_af2cp_sTx = sTx;
-
-
-    // =========================================================================
-    //
-    //   CSR (MMIO) handling.
-    //
-    // =========================================================================
-
-    // The AFU ID is a unique ID for a given program.  Here we generated
-    // one with the "uuidgen" program.
-    logic [127:0] afu_id = 128'hC000C966_0D82_4272_9AEF_FE5F84570612;
-
-    //
-    // A valid AFU must implement a device feature list, starting at MMIO
-    // address 0.  Every entry in the feature list begins with 5 64-bit
-    // words: a device feature header, two AFU UUID words and two reserved
-    // words.
-    //
-
-    // Is a CSR read request active this cycle?
-    logic is_csr_read;
-    assign is_csr_read = sRx.c0.mmioRdValid;
-
-    // Is a CSR write request active this cycle?
-    logic is_csr_write;
-    assign is_csr_write = sRx.c0.mmioWrValid;
-
-    // The MMIO request header is overlayed on the normal c0 memory read
-    // response data structure.  Cast the c0Rx header to an MMIO request
-    // header.
-    t_ccip_c0_ReqMmioHdr mmio_req_hdr;
-    assign mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(sRx.c0.hdr);
-
-
-    //
-    // Implement the device feature list by responding to MMIO reads.
-    //
-
-    always_ff @(posedge clk)
-    begin
-        if (reset)
-        begin
-            sTx.c2.mmioRdValid <= 1'b0;
-        end
-        else
-        begin
-            // Always respond with something for every read request
-            sTx.c2.mmioRdValid <= is_csr_read;
-
-            // The unique transaction ID matches responses to requests
-            sTx.c2.hdr.tid <= mmio_req_hdr.tid;
-
-            // Addresses are of 32-bit objects in MMIO space.  Addresses
-            // of 64-bit objects are thus multiples of 2.
-            case (mmio_req_hdr.address)
-              HC_DEVICE_HEADER: // AFU DFH (device feature header)
-                begin
-                    // Here we define a trivial feature list.  In this
-                    // example, our AFU is the only entry in this list.
-                    sTx.c2.data <= t_ccip_mmioData'(0);
-                    // Feature type is AFU
-                    sTx.c2.data[63:60] <= 4'h1;
-                    // End of list (last entry in list)
-                    sTx.c2.data[40] <= 1'b1;
-                end
-
-              // AFU_ID_L
-              (HC_AFU_ID_LOW >> 2): sTx.c2.data <= afu_id[63:0];
-
-              // AFU_ID_H
-              (HC_AFU_ID_HIGH >> 2): sTx.c2.data <= afu_id[127:64];
-
-              // DFH_RSVD0
-              6: sTx.c2.data <= t_ccip_mmioData'(0);
-
-              // DFH_RSVD1
-              8: sTx.c2.data <= t_ccip_mmioData'(0);
-
-              default: sTx.c2.data <= t_ccip_mmioData'(0);
-            endcase
-        end
+    if (cci_mpf_c1TxIsWriteReq(afu.c1Tx)) begin
+      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c1Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
+      afu.c1Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
     end
 
+    afu.c2Tx = ccip_tx.c2;
+  end
 
-    //
-    // CSR write handling.  Host software must tell the AFU the memory address
-    // to which it should be writing.  The address is set by writing a CSR.
-    //
+  // cci_mpf
 
-    // dsm_basel: device status memory - base low
-    logic is_dsm_basel;
-    assign is_dsm_basel = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_DSM_BASE_LOW >> 2));
+  cci_mpf_if fiu(.clk(clk));
+  cci_mpf_if afu(.clk(clk));
 
-    // csr_read: src address
-    logic is_mem_addr_csr_read;
-    assign is_mem_addr_csr_read = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_1 >> 2));
+  ccip_wires_to_mpf
+  #(
+    // All inputs and outputs in PR region (AFU) must be registered!
+    .REGISTER_INPUTS(1),
+    .REGISTER_OUTPUTS(1)
+  )
+  map_ifc
+  (
+    .pClk                (clk),
+    .pClkDiv2            (pClkDiv2),
+    .pClkDiv4            (pClkDiv4),
+    .uClk_usr            (uClk_usr),
+    .uClk_usrDiv2        (uClk_usrDiv2),
+    .pck_cp2af_softReset (reset),
+    .pck_cp2af_pwrState  (pck_cp2af_pwrState),
+    .pck_cp2af_error     (pck_cp2af_error),
+    .pck_cp2af_sRx       (pck_cp2af_sRx),
+    .pck_af2cp_sTx       (pck_af2cp_sTx),
+    .fiu                 (fiu)
+  );
 
-    // src_num_lines: source number of cache lines
-    logic is_src_num_lines;
-    assign is_src_num_lines = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_1 >> 2));
+  cci_mpf
+  #(
+    .SORT_READ_RESPONSES(1),
+    .PRESERVE_WRITE_MDATA(1),
+    .ENABLE_VTP(0),
+    .ENABLE_VC_MAP(0),
+    .ENABLE_DYNAMIC_VC_MAPPING(1),
+    .ENFORCE_WR_ORDER(0),
+    .ENABLE_PARTIAL_WRITES(0),
+    .DFH_MMIO_BASE_ADDR(MPF_DFH_MMIO_ADDR)
+  )
+  mpf
+  (
+    .clk(clk),
+    .fiu,
+    .afu,
+    .c0NotEmpty(),
+    .c1NotEmpty()
+  );
 
-    // csr_write: dst address
-    logic is_mem_addr_csr_write;
-    assign is_mem_addr_csr_write = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_ADDRESS_0 >> 2));
+  grn_csr uu_grn_csr
+  (
+    .clk             (clk),
+    .reset           (reset),
+    .rx_mmio_channel (ccip_rx.c0),
+    .tx_mmio_channel (ccip_tx.c2),
+    .hc_control      (hc_control),
+    .hc_dsm_base     (hc_dsm_base),
+    .hc_buffer       (hc_buffer)
+  );
 
-    // dst_num_lines: destination number of cache lines
-    logic is_dst_num_lines;
-    assign is_dst_num_lines = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_BUFFER_SIZE_0 >> 2));
+  grn_requestor uu_grn_requestor
+  (
+    .clk           (clk),
+    .reset         (reset),
+    .hc_control    (hc_control),
+    .hc_dsm_base   (hc_dsm_base),
+    .hc_buffer     (hc_buffer),
+    .transient_in  (transient),
+    .req_write_in  (req_write),
+    .ccip_rx       (ccip_rx),
+    .ccip_c0_tx    (ccip_tx.c0),
+    .ccip_c1_tx    (ccip_tx.c1),
+    .top_grn_reset (top_grn_reset),
+    .ack_write     (ack_write)
+  );
 
-    // ctl: block control
-    logic is_ctl;
-    assign is_ctl = is_csr_write &&
-        (mmio_req_hdr.address == t_ccip_mmioAddr'(HC_CONTROL >> 2));
-
-    // Memory address to which this AFU will read or write.
-    t_ccip_clAddr mem_dsm;
-    t_ccip_clAddr mem_addr_read;
-    t_ccip_clAddr mem_addr_write;
-
-    logic [31:0] ctl;
-
-    always_ff @(posedge clk)
-    begin
-        if (is_dsm_basel)
-        begin
-            mem_dsm <= t_ccip_clAddr'(sRx.c0.data) >> 6;
-            $display("AFU set DSM Low");
-        end
-    end
-
-    always_ff @(posedge clk)
-    begin
-        if (is_mem_addr_csr_read)
-        begin
-            mem_addr_read <= t_ccip_clAddr'(sRx.c0.data);
-            $display("AFU set src_address");
-        end
-    end
-
-    always_ff @(posedge clk)
-    begin
-        if (is_mem_addr_csr_write)
-        begin
-            mem_addr_write <= t_ccip_clAddr'(sRx.c0.data);
-            $display("AFU set dst_address");
-        end
-    end
-
-    always_ff @(posedge clk)
-    begin
-        if (is_ctl)
-        begin
-            ctl <= sRx.c0.data[31:0];
-        end
-    end
-
-
-    // =========================================================================
-    //
-    //   Main AFU logic
-    //
-    // =========================================================================
-
-    //
-    // States in our simple example.
-    //
-    typedef enum logic [2:0]
-    {
-        STATE_IDLE,
-        STATE_RUN,
-        STATE_WRITE,
-        STATE_FINISH,
-        STATE_STOP
-    }
-    t_state;
-
-    t_state state;
-
-    //
-    // Common Data
-    //
-    logic [511:0] data;
-    logic         finish;
-
-    //
-    // State machine
-    //
-
-    always_ff @(posedge clk)
-    begin
-        if (reset)
-        begin
-            state <= STATE_IDLE;
-        end
-        else
-        begin
-            if ((state == STATE_IDLE) && (ctl == HC_CONTROL_START))
-            begin
-                state <= STATE_RUN;
-            end
-
-            if ((state == STATE_RUN) && finish)
-            begin
-                state <= STATE_WRITE;
-            end
-
-            if ((state == STATE_WRITE) && !sRx.c1TxAlmFull)
-            begin
-                state <= STATE_FINISH;
-            end
-
-            if ((state == STATE_FINISH) && !sRx.c1TxAlmFull)
-            begin
-                state <= STATE_STOP;
-            end
-
-            if ((state == STATE_STOP) && (ctl == HC_CONTROL_STOP))
-            begin
-              state <= STATE_IDLE;
-            end
-        end
-    end
-
-    //
-    // Run
-    //
-    int cnt;
-
-    always_ff@(posedge clk)
-    begin
-      if (reset)
-      begin
-        cnt    <= 30;
-        finish <= 1'b0;
-      end
-      else
-      begin
-        if (cnt > 0)
-        begin
-          cnt--;
-        end
-        else
-        begin
-          data   <= 512'h000000aa000000ff;
-          finish <= 1'b1;
-        end
-      end
-    end
-
-    //
-    // Write
-    //
-
-    // Construct a memory write request header.
-    t_ccip_c1_ReqMemHdr wr_hdr;
-    always_comb
-    begin
-        // Zero works for most write request header fields in this example
-        wr_hdr = t_ccip_c1_ReqMemHdr'(0);
-        // Set the write address
-        wr_hdr.address = (state == STATE_FINISH) ? mem_dsm + 1 : mem_addr_write;
-        // Start of packet is always set for single beat writes
-        wr_hdr.sop = 1'b1;
-    end
-
-    // Control logic for memory writes
-    always_ff @(posedge clk)
-    begin
-        if (reset)
-        begin
-            sTx.c1.valid <= 1'b0;
-        end
-        else
-        begin
-            // Request the write as long as the channel isn't full.
-            sTx.c1.valid <= ((state == STATE_FINISH || state == STATE_WRITE) &&
-                            !sRx.c1TxAlmFull);
-
-            sTx.c1.data <= (state == STATE_FINISH) ? t_ccip_clData'('h1) : data;
-        end
-
-        sTx.c1.hdr <= wr_hdr;
-    end
+  top_grn uu_top_grn
+  (
+    .clk        (clk),
+    .rst        (top_grn_reset),
+    .finish     (),
+    .req_write  (req_write),
+    .ack_write  (ack_write),
+    .transient  (transient)
+  );
 
 endmodule : ccip_std_afu
 
