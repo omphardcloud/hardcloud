@@ -42,7 +42,6 @@ reg [SIZE:0] atractor;
 reg [31:0] count;
 
 reg [31:0] transient;
-reg [31:0] length_value;
 
 reg stop_1;
 reg stop_2;
@@ -53,11 +52,13 @@ reg stop_2;
 always @ (posedge clk)
   begin : FSM_1
   if (rst == 1'b1) begin
-   state_V1 <= STATE_RST;
+    state_V1 <= STATE_RST;
+    count <= '0;
+    V1 <= '0;
   end
   else begin
     case(state_V1)
-      STATE_RST  :  begin
+    STATE_RST  :  begin
                 state_V1 <= STATE_INIT;
               end
     STATE_INIT  :   begin
@@ -168,7 +169,9 @@ always @ (posedge clk)
 always @ (posedge clk)
   begin : FSM2
   if (rst == 1'b1) begin
-   state_V2 <= STATE_RST;
+    state_V2 <= STATE_RST;
+    conf_out <= '0;
+    V2 <= '0;
   end
   else begin
     case(state_V2)
@@ -281,13 +284,18 @@ always @ (posedge clk)
 always @ (posedge clk)
   begin : FSM_C
   if (rst == 1'b1) begin
-   state_control <= STATE_RESET;
-   stop_1 <= 1'b0;
-   stop_2 <= 1'b0;
+    atractor <= '0;
+    state_control <= STATE_RESET;
+    stop_1 <= 1'b0;
+    stop_2 <= 1'b0;
+    transient <= '0;
+    transient_out <= '0;
+    length_out <= '0;
+    done_out <= '0;
   end
   else begin
     case(state_control)
-      STATE_RESET     :  begin
+    STATE_RESET     :  begin
                     state_control <= STATE_CONFIG;
                   end
 

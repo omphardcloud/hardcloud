@@ -36,7 +36,6 @@ t2_state state_aux;
 
 wire done_in[BLOCKS_NUMBER-1:0];
 wire [31:0] length_out[BLOCKS_NUMBER];
-wire [31:0] transient_out[BLOCKS_NUMBER];
 
 reg  [31:0] blocks_running;
 int block_ID;
@@ -129,17 +128,24 @@ always @ (posedge clk)
 
 
 int x;
-int states_count;
+logic [31:0] states_count;
 
 always @ (posedge clk)
   begin : FSM
   if (rst == 1'b1) begin
     blocks_running <= 32'd0;
-   states_count <= 0;
-  //transient <= 0;
-   state <= STATE_RST;
+    states_count <= '0;
+    //transient <= 0;
+    state <= STATE_RST;
 
     finish <= '0;
+    request_signal <= '0;
+
+    for (int i = 0; i < BLOCKS_NUMBER; i++) begin
+      start_block[i] <= '0;
+      done_out[i]    <= '0;
+      conf_init[i]   <= '0;
+    end
   end
   else begin
     case(state)

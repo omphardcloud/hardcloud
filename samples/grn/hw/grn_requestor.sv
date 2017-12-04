@@ -12,6 +12,7 @@ module grn_requestor
   input  t_hc_buffer     hc_buffer[HC_BUFFER_SIZE],
   input  logic [511:0]   transient_in,
   input  logic           req_write_in,
+  input  logic           finish,
   input  t_if_ccip_Rx    ccip_rx,
   output t_if_ccip_c0_Tx ccip_c0_tx,
   output t_if_ccip_c1_Tx ccip_c1_tx,
