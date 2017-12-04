@@ -1,8 +1,8 @@
-#include <iostream>
+#include <stdio.h>
 #include "harp.h"
 
-#define CL 64             // cache line bytes
-#define NI 1*CL/sizeof(int) // number of elements
+#define CL 64               // cache line bytes
+#define NI 12*CL/sizeof(int) // number of elements
 
 int main()
 {
@@ -17,8 +17,9 @@ int main()
 
   for (int i = 0; i < NI; i++)
   {
-    std::cout << results[i] << "\n";
+    printf("%d ", results[i]);
   }
+  printf("\n");
 
   return 0;
 }

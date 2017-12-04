@@ -68,8 +68,11 @@ module ccip_std_afu
   t_if_ccip_Tx  ccip_tx;
   t_if_ccip_Rx  ccip_rx;
 
+  t_if_ccip_Rx  afck_cp2af_sRx;
+  t_if_ccip_Tx  afck_af2cp_sTx;
+
   // combinational logic
-  assign clk   = pClk;
+  assign clk   = pClkDiv2;
   assign reset = pck_cp2af_softReset;
 
   always_comb begin
@@ -118,8 +121,8 @@ module ccip_std_afu
     .pck_cp2af_softReset (reset),
     .pck_cp2af_pwrState  (pck_cp2af_pwrState),
     .pck_cp2af_error     (pck_cp2af_error),
-    .pck_cp2af_sRx       (pck_cp2af_sRx),
-    .pck_af2cp_sTx       (pck_af2cp_sTx),
+    .pck_cp2af_sRx       (afck_cp2af_sRx),
+    .pck_af2cp_sTx       (afck_af2cp_sTx),
     .fiu                 (fiu)
   );
 
@@ -141,6 +144,19 @@ module ccip_std_afu
     .afu,
     .c0NotEmpty(),
     .c1NotEmpty()
+  );
+
+  ccip_async_shim uu_ccip_async_shim
+  (
+    .bb_softreset     (pck_cp2af_softReset),
+    .bb_clk           (pClk),
+    .bb_tx            (pck_af2cp_sTx),
+    .bb_rx            (pck_cp2af_sRx),
+    // .afu_softreset    (reset),
+    .afu_clk          (clk),
+    .afu_tx           (afck_af2cp_sTx),
+    .afu_rx           (afck_cp2af_sRx),
+    .async_shim_error ()
   );
 
   grn_csr uu_grn_csr

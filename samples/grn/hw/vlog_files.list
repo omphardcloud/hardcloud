@@ -1,3 +1,9 @@
+# cci_async
+
+${PWD}/../../../intel-fpga-bbb/BBB_ccip_async/hw/rtl/ccip_afifo_channel.sv
+${PWD}/../../../intel-fpga-bbb/BBB_ccip_async/hw/rtl/ccip_async_activity_cnt.sv
+${PWD}/../../../intel-fpga-bbb/BBB_ccip_async/hw/rtl/ccip_async_shim.sv
+
 # cci_mpf
 
 +define+CCI_SIMULATION
