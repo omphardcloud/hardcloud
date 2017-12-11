@@ -11,7 +11,7 @@ module aes128_requestor
   input  logic           clk,
   input  logic           reset,
   input  logic [31:0]    hc_control,
-  input  t_ccip_clAddr   hc_dsm_base,
+  input  t_hc_address    hc_dsm_base,
   input  t_hc_buffer     hc_buffer[HC_BUFFER_SIZE],
   input  logic [127:0]   data_in,
   input  logic           valid_in,
@@ -338,7 +338,7 @@ module aes128_requestor
       S_WR_FINISH_1:
         begin
           if (!ccip_rx.c1TxAlmFull && (wr_rsp_cnt == hc_buffer[0].size)) begin
-            wr_hdr.address = hc_dsm_base + 1;
+            wr_hdr.address = hc_dsm_base;
             wr_hdr.sop = 1'b1;
 
             ccip_c1_tx.hdr   <= wr_hdr;
