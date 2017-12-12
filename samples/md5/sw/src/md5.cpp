@@ -10,27 +10,6 @@
 #include "md5.h"
 
 
-#define WORD 32
-#define MASK 0xFFFFFFFF
-#if __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-typedef uint32_t WORD32;
-#else
-typedef unsigned int WORD32;
-#endif
-
-
-/**
-*  md5 hash function.
-*  @param message: aribtary string.
-*  @param len: message length.
-*  @param output: buffer to receive the hash value. Its size must be
-*  (at least) HASHSIZE.
-*/
-void md5 (const char *message, long len, char *output);
-
-
-
 /*
 ** Realiza a rotacao no sentido horario dos bits da variavel 'D' do tipo WORD32.
 ** Os bits sao deslocados de 'num' posicoes
@@ -192,23 +171,8 @@ static int converte (WORD32 *x, const char *pt, int num, int old_status) {
 
 
 
-void md5 (const char *message, long len, char *output) {
-  WORD32 d[4];
-  int status = 0;
-  long i = 0;
-  inic_digest(d);
-  while (status != 2) {
-    WORD32 d_old[4];
-    WORD32 wbuff[16];
-    int numbytes = (len-i >= 64) ? 64 : len-i;
-    /*salva os valores do vetor digest*/
-    d_old[0]=d[0]; d_old[1]=d[1]; d_old[2]=d[2]; d_old[3]=d[3];
-    status = converte(wbuff, message+i, numbytes, status);
-    if (status == 2) put_length(wbuff, len);
-    digest(wbuff, d);
-    d[0]+=d_old[0]; d[1]+=d_old[1]; d[2]+=d_old[2]; d[3]+=d_old[3];
-    i += numbytes;
-  }
-  word32tobytes(d, output);
+void md5 (const WORD32 *message, long len, WORD32 *output) {
+  inic_digest(output);
+  digest(message, output);
 }
 
