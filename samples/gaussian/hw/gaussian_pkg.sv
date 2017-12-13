@@ -20,13 +20,17 @@ package gaussian_pkg;
   parameter HC_CONTROL_STOP         = 32'h0007;
 
   typedef logic [31:0] t_hc_control;
+  typedef logic [63:0] t_hc_address;
 
   typedef struct packed {
-    t_ccip_clAddr address;
-    logic [31:0]  size;
+    t_hc_address address;
+    logic [31:0] size;
   } t_hc_buffer;
 
-  function logic hc_buffer_which(input t_if_ccip_c0_Rx rx_mmio_channel);
+  function logic [$clog2(HC_BUFFER_SIZE):0] hc_buffer_which(
+    input t_if_ccip_c0_Rx rx_mmio_channel
+  );
+
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
@@ -41,7 +45,7 @@ package gaussian_pkg;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
     t_ccip_mmioAddr top_addr;
 
-    is_write = rx_mmio_channel.mmioWrValid;
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
     top_addr = 16'h120 + 16'h10*HC_BUFFER_SIZE + 16'h8;
 
@@ -58,7 +62,7 @@ package gaussian_pkg;
     logic is_write;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
-    is_write = rx_mmio_channel.mmioWrValid;
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
     return is_write && (mmio_req_hdr.address == HC_CONTROL >> 2);
@@ -68,7 +72,7 @@ package gaussian_pkg;
     logic is_write;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
-    is_write = rx_mmio_channel.mmioWrValid;
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
     return is_write && (mmio_req_hdr.address == HC_DSM_BASE_LOW >> 2);
