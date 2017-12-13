@@ -77,6 +77,7 @@ ${PWD}/../../${AFU}/hw/rgb2luma.sv
 ${PWD}/../../${AFU}/hw/sobel_unit.sv
 ${PWD}/../../${AFU}/hw/sobel.sv
 ${PWD}/../../${AFU}/hw/sobel_csr.sv
+${PWD}/../../${AFU}/hw/sobel_fifo.sv
 ${PWD}/../../${AFU}/hw/sobel_requestor.sv
 ${PWD}/../../${AFU}/hw/ccip_std_afu.sv
 

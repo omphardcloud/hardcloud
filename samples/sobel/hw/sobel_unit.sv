@@ -8,7 +8,7 @@ module sobel_unit
   output reg         valid_out
 );
 
-  localparam DELAY          = 31;
+  localparam DELAY          = 1;
   localparam PARALELL_UNITS = 16;
   localparam KERNEL_SIZE    = 512;
 
@@ -121,10 +121,10 @@ module sobel_unit
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
-      data_out <= 0;
+      data_out <= '0;
 
       for (int i = 1; i < DELAY; i++) begin
-        data_out_q[i] <= 0;
+        data_out_q[i] <= '0;
       end
     end
     else if (valid_in) begin
