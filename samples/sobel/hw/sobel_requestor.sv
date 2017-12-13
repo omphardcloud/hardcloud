@@ -220,7 +220,6 @@ module sobel_requestor
   always_ff @(posedge clk) begin
     if (reset) begin
       deq_en     <= '0;
-      deq_data   <= '0;
       wr_offset  <= '0;
 
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
