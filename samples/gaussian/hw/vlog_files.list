@@ -76,6 +76,7 @@ ${PWD}/../../${AFU}/hw/gaussian_pkg.sv
 ${PWD}/../../${AFU}/hw/gaussian_unit.sv
 ${PWD}/../../${AFU}/hw/gaussian.sv
 ${PWD}/../../${AFU}/hw/gaussian_csr.sv
+${PWD}/../../${AFU}/hw/gaussian_fifo.sv
 ${PWD}/../../${AFU}/hw/gaussian_requestor.sv
 ${PWD}/../../${AFU}/hw/ccip_std_afu.sv
 

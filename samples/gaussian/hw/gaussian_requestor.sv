@@ -19,9 +19,36 @@ module gaussian_requestor
   output logic           valid_out
 );
 
+  t_block enq_data;
+  t_block deq_data;
+
+  logic enq_en;
+  logic not_full;
+  logic deq_en;
+  logic not_empty;
+
+  logic [7:0] counter;
+  logic [7:0] dec_counter;
+
+  gaussian_fifo uu_gaussian_fifo
+  (
+    .clk         (clk),
+    .reset       (reset),
+    .enq_data    (enq_data),
+    .enq_en      (enq_en),
+    .not_full    (not_full),
+    .deq_data    (deq_data),
+    .deq_en      (deq_en),
+    .not_empty   (not_empty),
+    .counter     (counter),
+    .dec_counter (dec_counter)
+  );
+
   //
   // read state FSM
   //
+
+  logic [31:0] cnt_request;
 
   t_ccip_clAddr rd_offset;
 
@@ -29,6 +56,36 @@ module gaussian_requestor
   t_rd_state rd_next_state;
 
   t_ccip_c0_ReqMemHdr rd_hdr;
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      cnt_request <= '0;
+    end
+    else begin
+      logic [31:0] request;
+      logic [31:0] response;
+
+      if ((rd_state == S_RD_FETCH) &&
+        (cnt_request < 'd33) &&
+        !ccip_rx.c0TxAlmFull) begin
+
+        request = 32'h1;
+      end
+      else begin
+        request = 32'h0;
+      end
+
+      if ((ccip_rx.c0.rspValid) &&
+        (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+        response = 32'h1;
+      end
+      else begin
+        response = 32'h0;
+      end
+
+      cnt_request <= cnt_request + request - response;
+    end
+  end
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
@@ -46,7 +103,10 @@ module gaussian_requestor
 
       S_RD_FETCH:
         begin
-          if (!ccip_rx.c0TxAlmFull) begin
+          if (cnt_request > 'd32) begin
+            ccip_c0_tx.valid <= 1'b0;
+          end
+          else if (!ccip_rx.c0TxAlmFull) begin
             rd_hdr.cl_len  = eCL_LEN_1;
             rd_hdr.address = hc_buffer[1].address + rd_offset;
 
@@ -127,6 +187,22 @@ module gaussian_requestor
 
   t_ccip_c1_ReqMemHdr wr_hdr;
 
+  always_ff @(posedge clk or posedge reset) begin
+    if (reset) begin
+      enq_en   <= 1'b0;
+      enq_data <= '0;
+    end
+    else begin
+      if (valid_in) begin
+        enq_en   <= 1'b1;
+        enq_data <= data_in;
+      end
+      else begin
+        enq_en <= 1'b0;
+      end
+    end
+  end
+
   // Receive data (write responses).
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -143,12 +219,12 @@ module gaussian_requestor
 
   always_ff @(posedge clk) begin
     if (reset) begin
+      deq_en     <= '0;
       wr_offset  <= '0;
 
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
       ccip_c1_tx.hdr   <= wr_hdr;
       ccip_c1_tx.valid <= 1'b0;
-      ccip_c1_tx.data  <= t_ccip_clData'('0);
     end
     else begin
       case (wr_state)
@@ -159,16 +235,24 @@ module gaussian_requestor
 
       S_WR_DATA:
         begin
-          if (!ccip_rx.c1TxAlmFull && valid_in) begin
+          if (deq_en && (counter == 1)) begin
+            deq_en <= 1'b0;
+
+            ccip_c1_tx.valid <= 1'b0;
+          end
+          else if (!ccip_rx.c1TxAlmFull && not_empty) begin
             wr_hdr.address = hc_buffer[0].address + wr_offset;
             wr_hdr.sop = 1'b1;
 
+            deq_en <= 1'b1;
+
             ccip_c1_tx.hdr   <= wr_hdr;
             ccip_c1_tx.valid <= 1'b1;
-            ccip_c1_tx.data  <= t_ccip_clData'(data_in);
             wr_offset        <= t_ccip_clAddr'(wr_offset + 1);
           end
           else begin
+            deq_en <= 1'b0;
+
             ccip_c1_tx.valid <= 1'b0;
           end
         end
@@ -181,7 +265,6 @@ module gaussian_requestor
 
             ccip_c1_tx.hdr   <= wr_hdr;
             ccip_c1_tx.valid <= 1'b1;
-            ccip_c1_tx.data  <= t_ccip_clData'('h1);
           end
           else begin
             ccip_c1_tx.valid <= 1'b0;
@@ -195,6 +278,13 @@ module gaussian_requestor
 
       endcase
     end
+  end
+
+  always_comb begin
+    case (wr_state)
+      S_WR_DATA: ccip_c1_tx.data = t_ccip_clData'(deq_data);
+      default  : ccip_c1_tx.data = t_ccip_clData'('h1);
+    endcase
   end
 
   always_ff@(posedge clk or posedge reset) begin
