@@ -7,11 +7,11 @@ module fft_csr
 (
   input  logic           clk,
   input  logic           reset,
-  input  t_if_ccip_c0_Rx rx_mmio_channel,
-  output t_if_ccip_c2_Tx tx_mmio_channel,
   output t_hc_control    hc_control,
-  output t_ccip_clAddr   hc_dsm_base,
-  output t_hc_buffer     hc_buffer[HC_BUFFER_SIZE]
+  output t_hc_address    hc_dsm_base,
+  output t_hc_buffer     hc_buffer[HC_BUFFER_SIZE],
+  cci_mpf_if.to_fiu      fiu,
+  cci_mpf_if.to_afu      afu
 );
 
   // register map to HardCloud
@@ -19,61 +19,60 @@ module fft_csr
   localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
   localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
 
-  // =========================================================================
-  //
-  //   CSR (MMIO) handling.
-  //
-  // =========================================================================
+  t_if_ccip_c0_Rx rx_mmio_channel;
+  t_if_ccip_c2_Tx tx_mmio_channel;
 
-  // The AFU ID is a unique ID for a given program.  Here we generated
-  // one with the "uuidgen" program.
+  t_ccip_c0_ReqMmioHdr mmio_req_hdr;
+
+  logic is_csr_read;
+
   logic [127:0] afu_id = 128'hC000C966_0D82_4272_9AEF_FE5F84570612;
 
-  //
-  // A valid AFU must implement a device feature list, starting at MMIO
-  // address 0.  Every entry in the feature list begins with 5 64-bit
-  // words: a device feature header, two AFU UUID words and two reserved
-  // words.
-  //
+  assign afu.reset = fiu.reset;
 
-  // Is a CSR read request active this cycle?
-  logic is_csr_read;
-  assign is_csr_read = rx_mmio_channel.mmioRdValid;
+  assign fiu.c0Tx = afu.c0Tx;
+  assign afu.c0TxAlmFull = fiu.c0TxAlmFull;
+  assign fiu.c1Tx = afu.c1Tx;
+  assign afu.c1TxAlmFull = fiu.c1TxAlmFull;
 
-  // The MMIO request header is overlayed on the normal c0 memory read
-  // response data structure.  Cast the c0Rx header to an MMIO request
-  // header.
-  t_ccip_c0_ReqMmioHdr mmio_req_hdr;
+  assign afu.c0Rx = fiu.c0Rx;
+  assign afu.c1Rx = fiu.c1Rx;
+
+  assign is_csr_read = rx_mmio_channel.mmioRdValid & (mmio_req_hdr.address < 'h400);
+
   assign mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
+
+  // Register incoming messages
+  always_ff @(posedge clk)
+  begin
+      rx_mmio_channel <= fiu.c0Rx;
+  end
+
+  // CSR reads
+  always_ff @(posedge clk) begin
+      fiu.c2Tx <= afu.c2Tx;
+
+      if (tx_mmio_channel.mmioRdValid) begin
+          fiu.c2Tx <= tx_mmio_channel;
+      end
+  end
 
   //
   // Implement the device feature list by responding to MMIO reads.
   //
 
-  always_ff @(posedge clk)
-  begin
+  always_ff @(posedge clk) begin
     if (reset) begin
       tx_mmio_channel.mmioRdValid <= 1'b0;
     end
     else begin
-      // Always respond with something for every read request
       tx_mmio_channel.mmioRdValid <= is_csr_read;
+      tx_mmio_channel.hdr.tid     <= mmio_req_hdr.tid;
 
-      // The unique transaction ID matches responses to requests
-      tx_mmio_channel.hdr.tid <= mmio_req_hdr.tid;
-
-      // Addresses are of 32-bit objects in MMIO space.  Addresses
-      // of 64-bit objects are thus multiples of 2.
       case (mmio_req_hdr.address)
         HC_DEVICE_HEADER: // AFU DFH (device feature header)
           begin
-              // Here we define a trivial feature list.  In this
-              // example, our AFU is the only entry in this list.
-              tx_mmio_channel.data <= t_ccip_mmioData'(0);
-              // Feature type is AFU
-              tx_mmio_channel.data[63:60] <= 4'h1;
-              // End of list (last entry in list)
-              tx_mmio_channel.data[40] <= 1'b1;
+            tx_mmio_channel.data <= 'h1000000010000000;
           end
 
         // AFU_ID_L
@@ -88,7 +87,7 @@ module fft_csr
         // DFH_RSVD1
         8: tx_mmio_channel.data <= t_ccip_mmioData'(0);
 
-        default: tx_mmio_channel.data <= t_ccip_mmioData'(0);
+        default: tx_mmio_channel.data <= t_ccip_mmioData'('0);
       endcase
     end
   end
@@ -103,7 +102,7 @@ module fft_csr
       hc_dsm_base <= '0;
     end
     else if (hc_dsm_sel(rx_mmio_channel)) begin
-      hc_dsm_base <= t_ccip_clAddr'(rx_mmio_channel.data) >> 6;
+      hc_dsm_base <= t_hc_address'(rx_mmio_channel.data) >> 6;
     end
   end
 
@@ -123,13 +122,13 @@ module fft_csr
       end
     end
     else begin
-      logic [HC_BUFFER_SIZE - 1:0] sel;
+      logic [1:0] sel;
 
       sel = hc_buffer_sel(rx_mmio_channel);
 
       if (sel == 2'b01) begin
         hc_buffer[hc_buffer_which(rx_mmio_channel)].address <=
-          t_ccip_clAddr'(rx_mmio_channel.data);
+          t_hc_address'(rx_mmio_channel.data) >> 6;
       end
       else if (sel == 2'b11) begin
         hc_buffer[hc_buffer_which(rx_mmio_channel)].size <=
