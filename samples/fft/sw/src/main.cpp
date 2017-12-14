@@ -102,7 +102,7 @@ int main()
   printf("\n");
 #endif // DEBUG
 
-  #pragma omp target device(HARPSIM) map(to: input) map(from: output)
+  #pragma omp target device(HARPSIM) map(to: input[:NUM_WORDS]) map(from: output[:NUM_WORDS])
   #pragma omp parallel for use(hrw) module(fft)
   for (int i = 0; i < NUM_WORDS/(2*N); i++)
   {
