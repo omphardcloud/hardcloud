@@ -8,10 +8,10 @@
 
 #define CL 64 // cache line - bytes
 
-#define NUM_WORDS 20*CL/sizeof(float) // number of itens
+#define NUM_WORDS 20000000*CL/sizeof(float) // number of itens
 
 #define q 4         // for 2^q points
-#define N (1<<q)    // N-point FFT, iFFT
+#define N (1 << q)    // N-point FFT, iFFT
 
 #ifndef PI
 # define PI 3.14159265358979323846264338327950288
@@ -27,9 +27,10 @@ typedef struct
 
 void fft(complex *v, int n, complex *tmp)
 {
+  int k;
+
   if (n > 1)
   {
-    int k;
     int m;
 
     complex z;
@@ -51,8 +52,8 @@ void fft(complex *v, int n, complex *tmp)
 
     for(m=0; m<n/2; m++)
     {
-      w.Re =  cos(2*PI*m/(double)n);
-      w.Im = -sin(2*PI*m/(double)n);
+      w.Re =  cos(2*PI*m/(float)n);
+      w.Im = -sin(2*PI*m/(float)n);
 
       z.Re = w.Re*vo[m].Re - w.Im*vo[m].Im;
       z.Im = w.Re*vo[m].Im + w.Im*vo[m].Re;
@@ -63,6 +64,16 @@ void fft(complex *v, int n, complex *tmp)
       v[m+n/2].Re = ve[m].Re - z.Re;
       v[m+n/2].Im = ve[m].Im - z.Im;
     }
+
+  }
+
+  if (n == N)
+  {
+    for (k = 0; k < n; k++)
+    {
+      tmp[k].Re = v[k].Re;
+      tmp[k].Im = v[k].Im;
+    }
   }
 
   return;
@@ -70,40 +81,43 @@ void fft(complex *v, int n, complex *tmp)
 
 int main()
 {
-  float input[NUM_WORDS];
-  float output[NUM_WORDS];
+  float *input;
+  float *output;
 
-  printf("N = %d\n", N);
+  input  = (float *) malloc (NUM_WORDS*sizeof(float));
+  output = (float *) malloc (NUM_WORDS*sizeof(float));
 
   for (int k=0; k < NUM_WORDS/2; k++)
   {
-    input[2*k    ] = k;     // 0.125*cos(2*PI*k/(double)N);
-    input[2*k + 1] = k + 1; // 0.125*sin(2*PI*k/(double)N);
+    input[2*k    ] = k;
+    input[2*k + 1] = k;
   }
 
+#ifdef DEBUG
   for (int i = 0; i < NUM_WORDS/2; i++)
   {
     printf("input [%02d] = %5.2f | %5.2f\n", i, input[2*i], input[2*i + 1]);
   }
 
   printf("\n");
+#endif // DEBUG
 
   #pragma omp target device(HARPSIM) map(to: input) map(from: output)
   #pragma omp parallel for use(hrw) module(fft)
   for (int i = 0; i < NUM_WORDS/(2*N); i++)
   {
-    output[0] = input[0];
+    output[i] = input[i];
 
-    fft(
-      (complex*) input + 2*sizeof(float)*i,
-      N,
-      (complex*) output + 2*sizeof(float)*i);
+    fft((complex*) &input[2*N*i], N,
+      (complex*) &output[2*N*i]);
   }
 
+#ifdef DEBUG
   for (int i = 0; i < NUM_WORDS/2; i++)
   {
     printf("output[%02d] = %5.2f | %5.2f\n", i, output[2*i], output[2*i + 1]);
   }
+#endif // DEBUG
 
   return 0;
 }

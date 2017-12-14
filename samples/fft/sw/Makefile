@@ -28,14 +28,14 @@ LIBS = -lomptarget -lm
 
 COMPILE = $(LLVM)/bin/clang++
 
-ARGS_HOST =
+ARGS_HOST = -O3
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!
 all: folder host harpsim
 
 host:
-	$(COMPILE) $(ARGS_HOST) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HOST) -g
+	$(COMPILE) $(ARGS_HOST) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HOST)
 
 harpsim:
 	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM)
