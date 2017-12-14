@@ -28,7 +28,7 @@ LIBS = -lomptarget
 
 COMPILE = $(LLVM)/bin/clang++
 
-ARGS_HOST =
+ARGS_HOST = -O3
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!

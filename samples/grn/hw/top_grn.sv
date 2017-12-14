@@ -2,7 +2,7 @@ module top_grn
 #(
   parameter BLOCKS_NUMBER = 16,
   parameter VECTOR_SIZE   = 69,
-  parameter TOTAL_STATES  = 96
+  parameter TOTAL_STATES  = 10000000
 )
 (
   input  logic rst,

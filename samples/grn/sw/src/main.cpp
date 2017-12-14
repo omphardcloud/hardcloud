@@ -1,10 +1,12 @@
-#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 #include <cmath>
 
 #include "harp.h"
 
 #define SIZE 69
-#define STATES 7040
+#define STATES 10000000
+#define OUT_SIZE 2*STATES
 
 void int_to_bin(unsigned int in, int count, int* out)
 {
@@ -124,9 +126,11 @@ int compare(int* v1, int* v2)
 
 int main()
 {
-  int results[2*STATES];
+  int *results;
 
-  #pragma omp target device(HARP) map(from: results)
+  results = (int *) malloc (sizeof(int)*OUT_SIZE);
+
+  #pragma omp target device(HARPSIM) map(from: results[:OUT_SIZE])
   #pragma omp parallel for use(hrw) module(grn)
   for (int i = 0; i < STATES; i++)
   {
@@ -164,10 +168,12 @@ int main()
     results[2*i + 1] = temp;
   }
 
+#ifdef DEBUG
   for (int i = 0; i < STATES; i++)
   {
     std::cout << results[2*i] << "\n";
   }
+#endif // DEBUG
 
   return 0;
 }
