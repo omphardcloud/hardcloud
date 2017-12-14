@@ -70,16 +70,9 @@ module fft_fifo
     end
   end
 
-  always_ff@(posedge clk or posedge reset) begin
-    if (reset) begin
-      for (int i = 0; i < FFT_FIFO_DEPTH; i++) begin
-        mem[i] <= '0;
-      end
-    end
-    else begin
-      if (enq_en && not_full) begin
-        mem[wr_pointer] <= enq_data;
-      end
+  always_ff@(posedge clk) begin
+    if (enq_en && not_full) begin
+      mem[wr_pointer] <= enq_data;
     end
   end
 
