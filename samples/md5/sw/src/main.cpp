@@ -7,8 +7,8 @@
 
 #define CL 64 // cache line - bytes
 
-#define NI 40*CL/sizeof(uint32_t) // number of itens
-#define NJ 10*CL/sizeof(uint32_t) // number of itens
+#define NI 20000000*CL/sizeof(uint32_t) // number of itens
+#define NJ 10000000*CL/sizeof(uint32_t) // number of itens
 
 int main()
 {
@@ -32,6 +32,7 @@ int main()
     md5((const uint32_t*) data_in + i, 64, (uint32_t *) data_out + i/4);
   }
 
+#ifdef DEBUG
   for (uint64_t i = 0; i < NJ; i += 4) {
     printf("md5[%02lu] = %08x %08x %08x %08x\n", i/4, 
         data_out[i + 3] & 0xff, 
@@ -41,6 +42,7 @@ int main()
   }
 
   printf("\n");
+#endif // DEBUG
 
   free(data_in);
   free(data_out);

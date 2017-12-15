@@ -6,6 +6,7 @@
 #define MASK 0xFFFFFFFF
 
 #include <stdint.h>
+#include <string.h>
 
 typedef uint32_t WORD32;
 
