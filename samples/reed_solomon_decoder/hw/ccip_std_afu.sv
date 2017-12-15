@@ -62,7 +62,7 @@ module ccip_std_afu
   logic       valid_rx;
 
   t_hc_control  hc_control;
-  t_ccip_clAddr hc_dsm_base;
+  t_hc_address  hc_dsm_base;
   t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
 
   t_if_ccip_Tx  ccip_tx;
@@ -86,24 +86,25 @@ module ccip_std_afu
     afu.c1Tx = cci_mpf_cvtC1TxFromBase(ccip_tx.c1);
 
     if (cci_mpf_c0TxIsReadReq(afu.c0Tx)) begin
-      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b1;
       afu.c0Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
       afu.c0Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
     end
 
     if (cci_mpf_c1TxIsWriteReq(afu.c1Tx)) begin
-      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b0;
+      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b1;
       afu.c1Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
       afu.c1Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
     end
 
-    afu.c2Tx = ccip_tx.c2;
+    afu.c2Tx.mmioRdValid = 1'b0;
   end
 
   // cci_mpf
 
   cci_mpf_if fiu(.clk(clk));
   cci_mpf_if afu(.clk(clk));
+  cci_mpf_if afu_csrs(.clk(clk));
 
   ccip_wires_to_mpf
   #(
@@ -130,7 +131,7 @@ module ccip_std_afu
   #(
     .SORT_READ_RESPONSES(1),
     .PRESERVE_WRITE_MDATA(1),
-    .ENABLE_VTP(0),
+    .ENABLE_VTP(1),
     .ENABLE_VC_MAP(0),
     .ENABLE_DYNAMIC_VC_MAPPING(1),
     .ENFORCE_WR_ORDER(0),
@@ -140,7 +141,7 @@ module ccip_std_afu
   mpf
   (
     .clk(clk),
-    .fiu,
+    .fiu(afu_csrs),
     .afu,
     .c0NotEmpty(),
     .c1NotEmpty()
@@ -161,13 +162,13 @@ module ccip_std_afu
 
   reed_solomon_decoder_csr uu_reed_solomon_decoder_csr
   (
-    .clk             (clk),
-    .reset           (reset),
-    .rx_mmio_channel (ccip_rx.c0),
-    .tx_mmio_channel (ccip_tx.c2),
-    .hc_control      (hc_control),
-    .hc_dsm_base     (hc_dsm_base),
-    .hc_buffer       (hc_buffer)
+    .clk          (clk),
+    .reset        (reset),
+    .hc_control   (hc_control),
+    .hc_dsm_base  (hc_dsm_base),
+    .hc_buffer    (hc_buffer),
+    .fiu          (fiu),
+    .afu          (afu_csrs)
   );
 
   reed_solomon_decoder_requestor uu_reed_solomon_decoder_requestor
