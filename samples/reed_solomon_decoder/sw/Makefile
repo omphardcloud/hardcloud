@@ -18,7 +18,7 @@ $(error Set LLVM to the root directory of the Clang/LLVM with support to Intel H
 endif
 
 # libraries to use, objects to compile
-SRCS = main.cpp
+SRCS = main.cpp rs.cpp
 SRCS_FILES = $(foreach F, $(SRCS), src/$(F))
 COMMON_FILES =
 
@@ -28,7 +28,7 @@ LIBS = -lomptarget -lm
 
 COMPILE = $(LLVM)/bin/clang++
 
-ARGS_HOST =
+ARGS_HOST = -O3
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!
