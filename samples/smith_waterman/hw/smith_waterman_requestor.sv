@@ -13,7 +13,7 @@ module smith_waterman_requestor
   input  logic [31:0]    hc_control,
   input  t_hc_address    hc_dsm_base,
   input  t_hc_buffer     hc_buffer[HC_BUFFER_SIZE],
-  input  logic [7:0]     data_in,
+  input  logic [511:0]   data_in,
   input  logic           valid_in,
   input  t_if_ccip_Rx    ccip_rx,
   output t_if_ccip_c0_Tx ccip_c0_tx,
@@ -237,25 +237,6 @@ module smith_waterman_requestor
 
   t_ccip_c1_ReqMemHdr wr_hdr;
 
-  logic [7:0] data[64];
-  logic [5:0] wr_ptr;
-
-  always_ff @(posedge clk or posedge reset) begin
-    if (reset) begin
-      for (int i = 0; i < 64; i++) begin
-        data[i] <= '0;
-      end
-
-      wr_ptr <= '0;
-    end
-    else begin
-      if (valid_in) begin
-        data[63 - wr_ptr] <= data_in;
-        wr_ptr            <= wr_ptr + 1;
-      end
-    end
-  end
-
   // Receive data (write responses).
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -293,13 +274,13 @@ module smith_waterman_requestor
 
       S_WR_DATA:
         begin
-          if (!ccip_rx.c1TxAlmFull) begin
+          if (!ccip_rx.c1TxAlmFull && valid_in) begin
             wr_hdr.address = hc_buffer[0].address + wr_offset;
             wr_hdr.sop = 1'b1;
 
             ccip_c1_tx.hdr   <= wr_hdr;
             ccip_c1_tx.valid <= 1'b1;
-            ccip_c1_tx.data  <= t_ccip_clData'(data);
+            ccip_c1_tx.data  <= t_ccip_clData'(data_in);
             wr_offset        <= t_ccip_clAddr'(wr_offset + 1);
           end
           else begin
@@ -347,24 +328,14 @@ module smith_waterman_requestor
       S_WR_IDLE:
         begin
           if (hc_control == HC_CONTROL_START) begin
-            wr_next_state = S_WR_WAIT;
-          end
-        end
-
-      S_WR_WAIT:
-        begin
-          if (valid_in && (wr_ptr == '1)) begin
-            wr_next_state <= S_WR_DATA;
-          end
-          else if (wr_offset == hc_buffer[0].size) begin
-            wr_next_state <= S_WR_FINISH_1;
+            wr_next_state = S_WR_DATA;
           end
         end
 
       S_WR_DATA:
         begin
-          if (!ccip_rx.c1TxAlmFull) begin
-            wr_next_state = S_WR_WAIT;
+          if (!ccip_rx.c1TxAlmFull && valid_in) begin
+            wr_next_state <= S_WR_FINISH_1;
           end
         end
 

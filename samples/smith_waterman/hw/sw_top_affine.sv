@@ -6,11 +6,11 @@ module sw_top_affine
   input  logic rst,
   input  logic clk,
   input  logic conf_in,
-  input  logic [31:0] count_in,
-  input  logic [ 7:0] data_in,
-  input  logic        valid_in,
-  output logic [ 7:0] data_out,
-  output logic        valid_out
+  input  logic [ 31:0] count_in,
+  input  logic [  7:0] data_in,
+  input  logic         valid_in,
+  output logic [511:0] data_out,
+  output logic         valid_out
 );
 
   typedef enum{
@@ -35,11 +35,11 @@ module sw_top_affine
   // ########## CONFIGURATION MACHINE ########
 
   always @ (posedge clk) begin: CONF
-    if (rst == 1'b1) begin
+    if (rst) begin
       done_count <= 1;
     end
     else begin
-      if (conf_in == 1'b1) begin
+      if (conf_in) begin
         done_count <= count_in;
       end
     end
@@ -49,49 +49,21 @@ module sw_top_affine
 
   // ########## DONE MACHINE ########
 
-  reg [512:0]temp;
-  reg flag;
-
   always @ (posedge clk) begin: DONE
-    if (rst == 1'b1) begin
-      aux  <= 0;
-      temp <= 0;
-      flag <= 0;
+    if (rst) begin
+      aux       <= '0;
+      data_out  <= '0;
+      valid_out <= '0;
     end
     else begin
-      if (o_vld == 1'b1) begin
-        aux <= aux+1;
+      if (o_vld) begin
+        aux <= aux + 1;
       end
 
       if(aux == done_count << 6) begin
-        flag <= 1;
-        aux <= 0;
-        temp[SCORE_WIDTH-2:0] <= m_result[SCORE_WIDTH-2:0];
-      end
-    end
-  end
-
-  reg [31:0]result;
-  reg gamb;
-
-  always @ (posedge clk) begin: RESULT
-    if (rst == 1'b1) begin
-      data_out  <= 0;
-      valid_out <= 0;
-      result    <= 0;
-      gamb      <= 0;
-    end
-    else begin
-      if (flag == 1'b1 && gamb == 0) begin
-        result    <= result+1;
+        aux <= '0;
+        data_out[SCORE_WIDTH-2:0] <= m_result[SCORE_WIDTH-2:0];
         valid_out <= 1'b1;
-        data_out  <= temp[7:0];
-        temp      <= temp >> 8;
-
-        if (result == 64) begin
-          valid_out <= 1'b0;
-          gamb      <= 1;
-        end
       end
     end
   end
@@ -99,7 +71,8 @@ module sw_top_affine
   sw_gen_affine #(
     .LENGTH(QUERY_LENGTH),
     .SCORE_WIDTH(SCORE_WIDTH)
-  ) sw
+  )
+  uu_sw_gen_affine
   (
     .clk(clk),
     .rst(rst),

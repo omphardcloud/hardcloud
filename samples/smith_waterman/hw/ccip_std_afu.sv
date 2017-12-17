@@ -56,12 +56,12 @@ module ccip_std_afu
   logic clk;
   logic reset;
 
-  logic [ 7:0] data_tx;
-  logic        valid_tx;
-  logic [ 7:0] data_rx;
-  logic        valid_rx;
-  logic [31:0] count;
-  logic        conf;
+  logic [  7:0] data_tx;
+  logic         valid_tx;
+  logic [511:0] data_rx;
+  logic         valid_rx;
+  logic [ 31:0] count;
+  logic         conf;
 
   t_hc_control  hc_control;
   t_hc_address  hc_dsm_base;
