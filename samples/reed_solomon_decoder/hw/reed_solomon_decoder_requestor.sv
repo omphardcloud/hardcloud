@@ -85,7 +85,7 @@ module reed_solomon_decoder_requestor
   // read state FSM
   //
 
-  logic [31:0] cnt_request;
+  logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] cnt_request;
 
   t_rd_state rd_next_state;
 
@@ -98,8 +98,8 @@ module reed_solomon_decoder_requestor
       cnt_request <= '0;
     end
     else begin
-      logic [31:0] request;
-      logic [31:0] response;
+      logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] request;
+      logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] response;
 
       if ((rd_state == S_RD_FETCH) &&
         (cnt_request + counter + 128 < REED_SOLOMON_DECODER_FIFO_DEPTH) &&
