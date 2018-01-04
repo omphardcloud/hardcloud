@@ -18,8 +18,8 @@ module reed_solomon_decoder_fifo
   input  logic       deq_en,
   output logic       not_empty,
 
-  output logic [REED_SOLOMON_DECODER_FIFO_DEPTH/2 - 1:0] counter,
-  output logic [REED_SOLOMON_DECODER_FIFO_DEPTH/2 - 1:0] dec_counter
+  output logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] counter,
+  output logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] dec_counter
 );
 
   logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH) - 1:0] wr_pointer;

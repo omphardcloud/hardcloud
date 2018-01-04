@@ -30,8 +30,8 @@ module reed_solomon_decoder_requestor
   logic deq_en;
   logic not_empty;
 
-  logic [REED_SOLOMON_DECODER_FIFO_DEPTH/2 - 1:0] counter;
-  logic [REED_SOLOMON_DECODER_FIFO_DEPTH/2 - 1:0] dec_counter;
+  logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] counter;
+  logic [$clog2(REED_SOLOMON_DECODER_FIFO_DEPTH):0] dec_counter;
 
   reed_solomon_decoder_fifo
   #(
@@ -54,6 +54,7 @@ module reed_solomon_decoder_requestor
   //
   // send data to reed_solomon_decoder
   //
+  t_rd_state rd_state;
 
   logic [3:0] wait_module = 4'h0;
 
@@ -66,10 +67,11 @@ module reed_solomon_decoder_requestor
       wait_module <= '0;
     end
     else begin
-      if ((counter > 0) && (wait_module == '0)) begin
+      if (((counter > 0) && (wait_module == '0)) ||
+        ((rd_state == S_RD_FINISH) && (wait_module == '0))) begin
         deq_en      <= 1'b1;
         valid_out   <= 1'b1;
-        wait_module <= 4'hc;
+        wait_module <= 4'h7;
       end
       else begin
         deq_en      <= 1'b0;
@@ -85,7 +87,6 @@ module reed_solomon_decoder_requestor
 
   logic [31:0] cnt_request;
 
-  t_rd_state rd_state;
   t_rd_state rd_next_state;
 
   t_ccip_c0_ReqMemHdr rd_hdr;
@@ -101,7 +102,7 @@ module reed_solomon_decoder_requestor
       logic [31:0] response;
 
       if ((rd_state == S_RD_FETCH) &&
-        (cnt_request < REED_SOLOMON_DECODER_FIFO_DEPTH) &&
+        (cnt_request + counter + 128 < REED_SOLOMON_DECODER_FIFO_DEPTH) &&
         !ccip_rx.c0TxAlmFull) begin
 
         request = 32'd64;
@@ -138,7 +139,7 @@ module reed_solomon_decoder_requestor
 
       S_RD_FETCH:
         begin
-          if (cnt_request >= REED_SOLOMON_DECODER_FIFO_DEPTH) begin
+          if (cnt_request + counter + 128 >= REED_SOLOMON_DECODER_FIFO_DEPTH) begin
             ccip_c0_tx.valid <= 1'b0;
           end
           else if (!ccip_rx.c0TxAlmFull) begin
@@ -189,10 +190,10 @@ module reed_solomon_decoder_requestor
 
     S_RD_FETCH:
       begin
-        if (cnt_request >= REED_SOLOMON_DECODER_FIFO_DEPTH) begin
+        if (cnt_request + counter + 64 >= REED_SOLOMON_DECODER_FIFO_DEPTH) begin
           rd_next_state = S_RD_WAIT;
         end
-        else if (!ccip_rx.c0TxAlmFull && ((rd_offset + 1) == hc_buffer[1].size)) begin
+        else if (!ccip_rx.c0TxAlmFull && (rd_offset == hc_buffer[1].size)) begin
           rd_next_state = S_RD_FINISH;
         end
       end
@@ -210,8 +211,8 @@ module reed_solomon_decoder_requestor
   // Receive data (read responses).
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
-      enq_en        <= '0;
-      enq_data      <= '0;
+      enq_en   <= '0;
+      enq_data <= '0;
     end
     else begin
       if ((ccip_rx.c0.rspValid) &&
