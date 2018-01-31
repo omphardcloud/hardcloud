@@ -18,7 +18,7 @@ $(error Set LLVM to the root directory of the Clang/LLVM with support to Intel H
 endif
 
 # libraries to use, objects to compile
-SRCS = main.cpp
+SRCS = main.cpp smith_waterman.cpp
 SRCS_FILES = $(foreach F, $(SRCS), src/$(F))
 COMMON_FILES =
 
