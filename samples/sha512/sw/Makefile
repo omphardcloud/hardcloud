@@ -28,7 +28,7 @@ LIBS = -lomptarget
 
 COMPILE = $(LLVM)/bin/clang++
 
-ARGS_HOST =
+ARGS_HOST = -O3
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!
@@ -39,6 +39,9 @@ host:
 
 harpsim:
 	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM)
+
+ir:
+	$(COMPILE) $(ARGS_HOST) $(INCLUDES) src/sha512.cpp -S -mllvm --x86-asm-syntax=intel -o build/$(TARGET).asm
 
 folder:
 	mkdir -p build/

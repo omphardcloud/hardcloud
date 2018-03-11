@@ -8,7 +8,7 @@
 #define CL 64 // cache line - bytes
 
 #ifdef DEBUG
-  #define NI 52*CL/sizeof(uint8_t) // number of itens
+  #define NI 51*CL/sizeof(uint8_t) // number of itens
   #define NJ 47*CL/sizeof(uint8_t) // number of itens
 #else
   #define NI 20400000*CL/sizeof(uint8_t) // number of itens

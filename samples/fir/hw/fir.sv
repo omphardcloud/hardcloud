@@ -150,7 +150,7 @@ module fir
       end
     end
     else begin
-      for (int i = 0; i < FIR_TAPS/4; i++) begin
+      for (int i = 0; i < FIR_TAPS/8; i++) begin
         data_pipe2[i] <= data_pipe1[2*i] + data_pipe1[2*i + 1];
       end
     end
