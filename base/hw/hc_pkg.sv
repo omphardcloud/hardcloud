@@ -16,19 +16,22 @@ package hc_pkg;
   parameter HC_BUFFER_SIZE = HC_BUFFER_TX_SIZE + HC_BUFFER_RX_SIZE;
 
   //
-  // HardCloud definitions
+  // HardCloud internal definitions
   //
 
-  parameter HC_DSM_BASE_LOW        = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
-  parameter HC_CONTROL             = 16'h118; // 32b - RW  Control to start n stop the test
+  parameter HC_DSM_BASE_LOW = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
+  parameter HC_CONTROL      = 16'h118; // 32b - RW  Control to start n stop the test
 
-  parameter HC_BUFFER_BASE_ADDRESS = 16'h120;
+  parameter HC_BUFFER_BASE_ADDRESS  = 16'h120;
 
-  // HC_CONTROL actions
   parameter HC_CONTROL_ASSERT_RST   = 32'h0000;
   parameter HC_CONTROL_DEASSERT_RST = 32'h0001;
   parameter HC_CONTROL_START        = 32'h0003;
   parameter HC_CONTROL_STOP         = 32'h0007;
+
+  //
+  // HardCloud csr definitions
+  //
 
   typedef logic [31:0] t_hc_control;
   typedef logic [63:0] t_hc_address;
@@ -136,7 +139,7 @@ package hc_pkg;
   } t_request_control;
 
   //
-  // HardCloud Requestor definitions
+  // HardCloud requestor definitions
   //
 
   typedef struct packed {

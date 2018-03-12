@@ -7,6 +7,10 @@ interface hc_buffers_if();
   import ccip_if_pkg::*;
   import hc_pkg::*;
 
+  //
+  // ports
+  //
+
   t_request_control read_request;
   t_request_control write_request;
 
@@ -18,6 +22,7 @@ interface hc_buffers_if();
   //
   // read request functions
   //
+
   function void read_idle();
     read_request.cmd    <= e_REQUEST_IDLE;
     read_request.id     <= t_request_cmd_id'('0);
@@ -42,6 +47,7 @@ interface hc_buffers_if();
   //
   // write request functions
   //
+
   function void write_idle();
     write_request.cmd    <= e_REQUEST_IDLE;
     write_request.id     <= t_request_cmd_id'('0);
@@ -72,6 +78,7 @@ interface hc_buffers_if();
   //
   // buffer functions
   //
+
   function void buffer_idle(int id);
     control[id].cmd <= e_BUFFER_IDLE;
   endfunction : buffer_idle
