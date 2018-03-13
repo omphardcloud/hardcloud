@@ -82,6 +82,7 @@ ${PWD}/../../../intel-fpga-bbb/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro
 
 ${PWD}/../../../base/hw/hc_pkg.sv
 ${PWD}/../../../base/hw/hc_csr.sv
+${PWD}/../../../base/hw/hc_fifo.sv
 ${PWD}/../../../base/hw/hc_requestor.sv
 ${PWD}/../../../base/hw/hc_buffers_if.sv
 

@@ -12,11 +12,18 @@ module loopback
 );
 
   int state;
+  int size;
+
+  int idx;
 
   // TODO(ciroceissler): implements loopback
   always@(posedge clk or posedge reset) begin
     if (reset) begin
       state <= 0;
+
+      size <= 10;
+
+      idx <= 0;
 
       buffers.read_idle();
       buffers.write_idle();
@@ -36,14 +43,18 @@ module loopback
 
         1:
           begin
-            buffers.read_stream(0, t_request_cmd_size'(10));
-            state <= 2;
+            buffers.read_indexed(1, t_request_cmd_offset'(idx));
+
+            if (idx < size) begin
+              state <= 2;
+            end
           end
 
         2:
           begin
             buffers.read_idle();
           end
+
       endcase
     end
   end

@@ -21,23 +21,20 @@ module hc_requestor
   //
   // start or stop control
   //
+
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
       start <= 1'b0;
     end
     else begin
-      if (HC_CONTROL_START == hc_control) begin
-        start <= 1'b1;
-      end
-      else begin
-        start <= 1'b0;
-      end
+      start <= (HC_CONTROL_START == hc_control) ? 1'b1 : 1'b0;
     end
   end
 
   //
   // buffer size
   //
+
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
       for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
@@ -52,12 +49,94 @@ module hc_requestor
   end
 
   //
+  // buffer queue
+  //
+  genvar i;
+  generate
+    for (i = 0; i < HC_BUFFER_TX_SIZE; i++) begin
+      hc_fifo
+      #(
+        .HC_FIFO_WIDTH($bits(t_buffer_data)),
+        .HC_FIFO_DEPTH(HC_BUFFER_TX_DEPTH)
+      )
+      uu_hc_tx_fifo
+      (
+        .clk          (clk),
+        .reset        (reset),
+        .enq_data     (),
+        .enq_en       (),
+        .not_full     (),
+        .deq_data     (),
+        .deq_en       (),
+        .not_empty    (),
+        .counter      (),
+        .dec_counter  ()
+      );
+    end
+  endgenerate
+
+  genvar j;
+  generate
+    for (j = 0; j < HC_BUFFER_RX_SIZE; j++) begin
+      hc_fifo
+      #(
+        .HC_FIFO_WIDTH($bits(t_buffer_data)),
+        .HC_FIFO_DEPTH(HC_BUFFER_RX_DEPTH)
+      )
+      uu_hc_rx_fifo
+      (
+        .clk          (clk),
+        .reset        (reset),
+        .enq_data     (),
+        .enq_en       (),
+        .not_full     (),
+        .deq_data     (),
+        .deq_en       (),
+        .not_empty    (),
+        .counter      (),
+        .dec_counter  ()
+      );
+    end
+  endgenerate
+
+  //
   // read request queue
   //
+
+  logic read_request_enq_en;
+  logic read_request_deq_en;
+  logic read_request_not_empty;
+
+  t_request_control read_request_deq_data;
+
+  assign read_request_enq_en =
+    (e_REQUEST_READ_STREAM  == core_buffers.read_request.cmd) |
+    (e_REQUEST_READ_INDEXED == core_buffers.read_request.cmd);
+
+  hc_fifo
+  #(
+    .HC_FIFO_WIDTH($bits(t_request_control)),
+    .HC_FIFO_DEPTH(8)
+  )
+  uu_hc_read_request_fifo
+  (
+    .clk          (clk),
+    .reset        (reset),
+    .enq_data     (core_buffers.read_request),
+    .enq_en       (read_request_enq_en),
+    .not_full     (),
+    .deq_data     (read_request_deq_data),
+    .deq_en       (read_request_deq_en),
+    .not_empty    (read_request_not_empty),
+    .counter      (),
+    .dec_counter  ()
+  );
 
   //
   // read state FSM
   //
+
+  t_request_control read_request;
 
   t_rd_state rd_state;
   t_rd_state rd_next_state;
@@ -66,6 +145,35 @@ module hc_requestor
   t_ccip_clAddr rd_rsp_cnt;
 
   t_ccip_c0_ReqMemHdr rd_hdr;
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      read_request <= '0;
+    end
+    else begin
+      if ((S_RD_IDLE == rd_state) && read_request_not_empty) begin
+        read_request <= read_request_deq_data;
+      end
+    end
+  end
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      read_request_deq_en <= '0;
+    end
+    else begin
+      if ((S_RD_IDLE == rd_state) && read_request_not_empty) begin
+        read_request_deq_en <= 1'b1;
+      end
+      else begin
+        read_request_deq_en <= 1'b0;
+      end
+    end
+  end
+
+  // if (rd_state == S_RD_STREAM && !ccip_rx.c0TxAlmFull) begin
+  //   rd_offset <= t_ccip_clAddr'(rd_offset + 1);
+  // end
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
@@ -98,14 +206,12 @@ module hc_requestor
 
       S_RD_STREAM:
         begin
-          $display("stream0");
-
           if (!ccip_rx.c0TxAlmFull) begin
             rd_hdr.cl_len  = eCL_LEN_1;
             rd_hdr.address = hc_buffer[1].address + rd_offset;
 
-            ccip_c0_tx.valid    <= 1'b1;
-            ccip_c0_tx.hdr      <= rd_hdr;
+            ccip_c0_tx.valid <= 1'b1;
+            ccip_c0_tx.hdr   <= rd_hdr;
           end
           else begin
             ccip_c0_tx.valid <= 1'b0;
@@ -115,12 +221,15 @@ module hc_requestor
       S_RD_INDEX:
         begin
           if (!ccip_rx.c0TxAlmFull) begin
-            rd_hdr.cl_len  = eCL_LEN_1;
-            // TODO(ciroceissler): remove rd_offset
-            rd_hdr.address = hc_buffer[1].address + rd_offset;
+            $display("index 3");
+            $display(hc_buffer[read_request.id].address);
 
-            ccip_c0_tx.valid    <= 1'b1;
-            ccip_c0_tx.hdr      <= rd_hdr;
+            rd_hdr.cl_len  = eCL_LEN_1;
+            rd_hdr.address =
+              hc_buffer[read_request.id].address + read_request.offset;
+
+            ccip_c0_tx.valid <= 1'b1;
+            ccip_c0_tx.hdr   <= rd_hdr;
           end
           else begin
             ccip_c0_tx.valid <= 1'b0;
@@ -153,24 +262,26 @@ module hc_requestor
 
     S_RD_IDLE:
       begin
-        if (e_REQUEST_READ_STREAM == core_buffers.read_request.cmd) begin
+        if (e_REQUEST_READ_STREAM == read_request_deq_data.cmd) begin
           rd_next_state = S_RD_STREAM;
         end
-        else if (e_REQUEST_READ_INDEXED == core_buffers.read_request.cmd) begin
+        else if (e_REQUEST_READ_INDEXED == read_request_deq_data.cmd) begin
+          $display("index 1");
           rd_next_state = S_RD_INDEX;
         end
       end
 
     S_RD_STREAM:
       begin
-        if (e_REQUEST_IDLE == core_buffers.read_request.cmd) begin
+        if (!ccip_rx.c0TxAlmFull) begin
           rd_next_state = S_RD_IDLE;
         end
       end
 
     S_RD_INDEX:
       begin
-        if (e_REQUEST_IDLE == core_buffers.read_request.cmd) begin
+        if (!ccip_rx.c0TxAlmFull) begin
+          $display("index 2");
           rd_next_state = S_RD_IDLE;
         end
       end

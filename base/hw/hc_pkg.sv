@@ -98,14 +98,13 @@ package hc_pkg;
 
   parameter HC_MAX_COUNT      = 32;
   parameter HC_MAX_CMD_SIZE   = 32;
-  parameter HC_MAX_CMD_OFFSET = 32;
 
   typedef logic [(CCIP_CLDATA_WIDTH - 1):0] t_buffer_data;
   typedef logic [(HC_MAX_COUNT - 1):0]      t_buffer_size;
 
   typedef logic [$clog2(HC_BUFFER_SIZE):0]  t_request_cmd_id;
   typedef logic [(HC_MAX_CMD_SIZE - 1):0]   t_request_cmd_size;
-  typedef logic [(HC_MAX_CMD_OFFSET - 1):0] t_request_cmd_offset;
+  typedef t_ccip_clAddr                     t_request_cmd_offset;
 
   typedef enum logic [1:0] {
     e_BUFFER_IDLE    = 2'h0,
