@@ -57,7 +57,7 @@ module hc_requestor
   logic read_request_not_empty;
   logic read_request_not_full;
 
-  t_request_size read_request_count;
+  t_request_size read_request_counter;
 
   t_request_control read_request_deq_data;
 
@@ -80,15 +80,15 @@ module hc_requestor
     .deq_data     (read_request_deq_data),
     .deq_en       (read_request_deq_en),
     .not_empty    (read_request_not_empty),
-    .counter      (read_request_count),
+    .counter      (read_request_counter),
     .dec_counter  ()
   );
 
   always_ff@(posedge clk) begin
-    core_buffer.read_request.status.count <= read_request_count;
+    core_buffer.read_request.status.count <= read_request_counter;
     core_buffer.read_request.status.empty <= !read_request_not_empty;
     core_buffer.read_request.status.full  <=
-      read_request_count > (HC_REQUEST_DEPTH - 4);
+      read_request_counter > (HC_REQUEST_DEPTH - 4);
   end
 
   //
@@ -320,7 +320,8 @@ module hc_requestor
   always_ff@(posedge clk) begin
     core_buffer.write_request.status.count <= write_request_counter;
     core_buffer.write_request.status.empty <= !write_request_not_empty;
-    core_buffer.write_request.status.full  <= !write_request_not_full;
+    core_buffer.write_request.status.full  <=
+      write_request_counter > (HC_BUFFER_TX_DEPTH - 4);
   end
 
   always_comb begin

@@ -11,29 +11,41 @@ module loopback
   hc_buffers_if buffer
 );
 
-  int state;
-  int size;
-  int idx;
+  logic [1:0] state;
 
-  task read_indexed();
-    if (!buffer.read_full()) begin
-      buffer.read_indexed(1, t_request_cmd_offset'(idx));
-      idx++;
-    end
-    else begin
-      buffer.read_idle();
-    end
+  logic fifo_enq_en;
+  logic fifo_deq_en;
+  logic fifo_not_empty;
+  logic fifo_not_full;
 
-    if ((idx + 1) > size) begin
-      state <= 3;
-    end
-  endtask : read_indexed
+  t_request_size fifo_counter;
 
+  t_buffer_data fifo_enq_data;
+  t_buffer_data fifo_deq_data;
+
+  loopback_fifo
+  #(
+    .LOOPBACK_FIFO_WIDTH(512),
+    .LOOPBACK_FIFO_DEPTH(30)
+  )
+  uu_loopback_fifo
+  (
+    .clk          (clk),
+    .reset        (reset),
+    .enq_data     (fifo_enq_data),
+    .enq_en       (fifo_enq_en),
+    .not_full     (fifo_not_full),
+    .deq_data     (fifo_deq_data),
+    .deq_en       (fifo_deq_en),
+    .not_empty    (fifo_not_empty),
+    .counter      (fifo_counter),
+    .dec_counter  ()
+  );
+
+  // read request
   always@(posedge clk or posedge reset) begin
     if (reset) begin
-      idx   <= 0;
-      state <= 0;
-      size  <= 1000;
+      state <= '0;
 
       buffer.read_idle();
       buffer.write_idle();
@@ -41,49 +53,50 @@ module loopback
     else begin
       case (state)
       0: state <= (start) ? 1 : 0;
-
-`ifdef LPBK_INDEXED
-      1: read_indexed();
-`else
-      1: begin buffer.read_stream(1, 10); state <= 3; end
-      // 2: begin buffer.read_stream(1, 500); state <= 3; end
-`endif // LPBK_INDEXED
-
-      3: buffer.read_idle();
+      1: begin buffer.read_stream(1, 30); state <= 2; end
+      2: buffer.read_idle();
       endcase
     end
   end
 
-  int cnt;
-  t_request_cmd_offset write_offset;
-
+  // read response
   always@(posedge clk or posedge reset) begin
     if (reset) begin
-      cnt          <= '0;
-      write_offset <= '0;
+      fifo_enq_en <= 1'b0;
     end
     else begin
       if (buffer.valid()) begin
-        $display("lpbk read: %d | %h", cnt, buffer.data());
-        cnt <= cnt + 1;
-
-`ifdef LPBK_INDEXED
-        buffer.write_indexed(0, write_offset, buffer.data());
-`else
-        buffer.write_stream(0, buffer.data());
-`endif // LPBK_INDEXED
-
-        write_offset <= t_request_cmd_offset'(write_offset + 1);
+        fifo_enq_en   <= 1'b1;
+        fifo_enq_data <= buffer.data();
       end
       else begin
-        buffer.write_idle();
-      end
-
-      if (cnt == 999) begin
-        finish <= 1'b1;
+        fifo_enq_en <= 1'b0;
       end
     end
   end
+
+  // write resquest
+  always@(posedge clk or posedge reset) begin
+    if (reset) begin
+      fifo_deq_en <= 1'b0;
+
+      buffer.write_idle();
+    end
+    else begin
+      if (fifo_not_empty && !buffer.write_full()) begin
+        fifo_deq_en <= 1'b1;
+
+        buffer.write_stream(0, fifo_deq_data);
+      end
+      else begin
+        fifo_deq_en <= 1'b0;
+
+        buffer.write_idle();
+      end
+    end
+  end
+
+  // finish
 
 endmodule : loopback
 
