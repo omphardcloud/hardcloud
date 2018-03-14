@@ -13,7 +13,6 @@ module loopback
 
   int state;
   int size;
-
   int idx;
 
   // TODO(ciroceissler): implements loopback
@@ -21,7 +20,7 @@ module loopback
     if (reset) begin
       state <= 0;
 
-      size <= 10;
+      size <= 100;
 
       idx <= 0;
 
@@ -43,9 +42,16 @@ module loopback
 
         1:
           begin
-            buffers.read_indexed(1, t_request_cmd_offset'(idx));
+            if (!buffers.read_full()) begin
+              $display("lpbk: read idx = %d", idx);
+              buffers.read_indexed(1, t_request_cmd_offset'(idx));
+              idx++;
+            end
+            else begin
+              buffers.read_idle();
+            end
 
-            if (idx < size) begin
+            if ((idx + 1) > size) begin
               state <= 2;
             end
           end
@@ -53,6 +59,10 @@ module loopback
         2:
           begin
             buffers.read_idle();
+
+            if (buffers.buffer_size(1) == 10) begin
+              finish <= 1'b1;
+            end
           end
 
       endcase

@@ -106,29 +106,33 @@ module hc_requestor
   logic read_request_enq_en;
   logic read_request_deq_en;
   logic read_request_not_empty;
+  logic read_request_not_full;
 
   t_request_control read_request_deq_data;
 
   assign read_request_enq_en =
-    (e_REQUEST_READ_STREAM  == core_buffers.read_request.cmd) |
-    (e_REQUEST_READ_INDEXED == core_buffers.read_request.cmd);
+    (e_REQUEST_READ_STREAM  == core_buffers.read_request.control.cmd) |
+    (e_REQUEST_READ_INDEXED == core_buffers.read_request.control.cmd);
+
+  assign core_buffers.read_request.status.empty = !read_request_not_empty;
+  assign core_buffers.read_request.status.full  = !read_request_not_full;
 
   hc_fifo
   #(
     .HC_FIFO_WIDTH($bits(t_request_control)),
-    .HC_FIFO_DEPTH(8)
+    .HC_FIFO_DEPTH(HC_REQUEST_DEPTH)
   )
   uu_hc_read_request_fifo
   (
     .clk          (clk),
     .reset        (reset),
-    .enq_data     (core_buffers.read_request),
+    .enq_data     (core_buffers.read_request.control),
     .enq_en       (read_request_enq_en),
-    .not_full     (),
+    .not_full     (read_request_not_full),
     .deq_data     (read_request_deq_data),
     .deq_en       (read_request_deq_en),
     .not_empty    (read_request_not_empty),
-    .counter      (),
+    .counter      (core_buffers.read_request.status.count),
     .dec_counter  ()
   );
 
@@ -162,7 +166,12 @@ module hc_requestor
       read_request_deq_en <= '0;
     end
     else begin
+      if (read_request_deq_en) begin
+        $display("toggle dequeue");
+        read_request_deq_en <= 1'b0;
+      end
       if ((S_RD_IDLE == rd_state) && read_request_not_empty) begin
+        $display("dequeue", read_request_deq_data.offset);
         read_request_deq_en <= 1'b1;
       end
       else begin
@@ -221,8 +230,7 @@ module hc_requestor
       S_RD_INDEX:
         begin
           if (!ccip_rx.c0TxAlmFull) begin
-            $display("index 3");
-            $display(hc_buffer[read_request.id].address);
+            $display("index 3 - ", hc_buffer[read_request.id].address, read_request.offset);
 
             rd_hdr.cl_len  = eCL_LEN_1;
             rd_hdr.address =
@@ -262,12 +270,14 @@ module hc_requestor
 
     S_RD_IDLE:
       begin
-        if (e_REQUEST_READ_STREAM == read_request_deq_data.cmd) begin
-          rd_next_state = S_RD_STREAM;
-        end
-        else if (e_REQUEST_READ_INDEXED == read_request_deq_data.cmd) begin
-          $display("index 1");
-          rd_next_state = S_RD_INDEX;
+        if (read_request_not_empty) begin
+          if (e_REQUEST_READ_STREAM == read_request_deq_data.cmd) begin
+            rd_next_state = S_RD_STREAM;
+          end
+          else if (e_REQUEST_READ_INDEXED == read_request_deq_data.cmd) begin
+            $display("index 1", read_request_deq_data.offset);
+            rd_next_state = S_RD_INDEX;
+          end
         end
       end
 

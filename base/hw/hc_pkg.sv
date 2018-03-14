@@ -99,12 +99,16 @@ package hc_pkg;
   parameter HC_MAX_COUNT      = 32;
   parameter HC_MAX_CMD_SIZE   = 32;
 
+  parameter HC_REQUEST_DEPTH = 8;
+
   typedef logic [(CCIP_CLDATA_WIDTH - 1):0] t_buffer_data;
   typedef logic [(HC_MAX_COUNT - 1):0]      t_buffer_size;
 
   typedef logic [$clog2(HC_BUFFER_SIZE):0]  t_request_cmd_id;
   typedef logic [(HC_MAX_CMD_SIZE - 1):0]   t_request_cmd_size;
   typedef t_ccip_clAddr                     t_request_cmd_offset;
+
+  typedef logic [(HC_REQUEST_DEPTH/2 - 1):0]  t_request_size;
 
   typedef enum logic [1:0] {
     e_BUFFER_IDLE    = 2'h0,
@@ -131,11 +135,22 @@ package hc_pkg;
   } t_buffer_control;
 
   typedef struct packed {
+    logic          empty;
+    logic          full;
+    t_request_size count;
+  } t_request_status;
+
+  typedef struct packed {
     t_request_cmd        cmd;
     t_request_cmd_id     id;
     t_request_cmd_size   size;
     t_request_cmd_offset offset;
   } t_request_control;
+
+  typedef struct packed {
+    t_request_control control;
+    t_request_status  status; 
+  } t_request;
 
   //
   // HardCloud requestor definitions

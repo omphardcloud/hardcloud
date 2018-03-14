@@ -11,8 +11,8 @@ interface hc_buffers_if();
   // ports
   //
 
-  t_request_control read_request;
-  t_request_control write_request;
+  t_request read_request;
+  t_request write_request;
 
   t_buffer_data    cl_data    [HC_BUFFER_SIZE];
   t_buffer_size    total_size [HC_BUFFER_SIZE];
@@ -24,42 +24,50 @@ interface hc_buffers_if();
   //
 
   function void read_idle();
-    read_request.cmd    <= e_REQUEST_IDLE;
-    read_request.id     <= t_request_cmd_id'('0);
-    read_request.size   <= t_request_cmd_size'('0);
-    read_request.offset <= t_request_cmd_offset'('0);
+    read_request.control.cmd    <= e_REQUEST_IDLE;
+    read_request.control.id     <= t_request_cmd_id'('0);
+    read_request.control.size   <= t_request_cmd_size'('0);
+    read_request.control.offset <= t_request_cmd_offset'('0);
   endfunction : read_idle
 
   function void read_stream(t_request_cmd_id id, t_request_cmd_size size);
-    read_request.cmd    <= e_REQUEST_READ_STREAM;
-    read_request.id     <= id;
-    read_request.size   <= size;
-    read_request.offset <= t_request_cmd_offset'('0);
+    read_request.control.cmd    <= e_REQUEST_READ_STREAM;
+    read_request.control.id     <= id;
+    read_request.control.size   <= size;
+    read_request.control.offset <= t_request_cmd_offset'('0);
   endfunction : read_stream
 
   function void read_indexed(t_request_cmd_id id, t_request_cmd_offset offset);
-    read_request.cmd    <= e_REQUEST_READ_INDEXED;
-    read_request.id     <= id;
-    read_request.size   <= t_request_cmd_size'('0);
-    read_request.offset <= offset;
+    read_request.control.cmd    <= e_REQUEST_READ_INDEXED;
+    read_request.control.id     <= id;
+    read_request.control.size   <= t_request_cmd_size'('0);
+    read_request.control.offset <= offset;
   endfunction : read_indexed
+
+  function logic read_empty();
+    return read_request.status.empty;
+  endfunction : read_empty
+
+  function logic read_full();
+    return read_request.status.full;
+  endfunction : read_full
 
   //
   // write request functions
   //
 
   function void write_idle();
-    write_request.cmd    <= e_REQUEST_IDLE;
-    write_request.id     <= t_request_cmd_id'('0);
-    write_request.size   <= t_request_cmd_size'('0);
-    write_request.offset <= t_request_cmd_offset'('0);
+    write_request.control.cmd    <= e_REQUEST_IDLE;
+    write_request.control.id     <= t_request_cmd_id'('0);
+    write_request.control.size   <= t_request_cmd_size'('0);
+    write_request.control.offset <= t_request_cmd_offset'('0);
   endfunction : write_idle
 
   function void write_stream(t_request_cmd_id id);
-    write_request.cmd    <= e_REQUEST_WRITE_STREAM;
-    write_request.id     <= id;
-    write_request.size   <= t_request_cmd_size'('0);
-    write_request.offset <= t_request_cmd_offset'('0);
+    write_request.control.cmd    <= e_REQUEST_WRITE_STREAM;
+    write_request.control.id     <= id;
+    write_request.control.size   <= t_request_cmd_size'('0);
+    write_request.control.offset <= t_request_cmd_offset'('0);
   endfunction : write_stream
 
   function void write_indexed(
@@ -67,13 +75,21 @@ interface hc_buffers_if();
     t_request_cmd_offset offset,
     t_buffer_data data
   );
-    write_request.cmd    <= e_REQUEST_WRITE_INDEXED;
-    write_request.id     <= id;
-    write_request.size   <= t_request_cmd_size'('0);
-    write_request.offset <= offset;
+    write_request.control.cmd    <= e_REQUEST_WRITE_INDEXED;
+    write_request.control.id     <= id;
+    write_request.control.size   <= t_request_cmd_size'('0);
+    write_request.control.offset <= offset;
 
     cl_data[id] <= data;
   endfunction : write_indexed
+
+  function logic write_empty();
+    return write_request.status.empty;
+  endfunction : write_empty
+
+  function logic write_full();
+    return write_request.status.full;
+  endfunction : write_full
 
   //
   // buffer functions
