@@ -10,8 +10,7 @@ package hc_pkg;
   parameter HC_BUFFER_TX_SIZE = 1;
   parameter HC_BUFFER_RX_SIZE = 1;
 
-  parameter HC_BUFFER_TX_DEPTH = 1;
-  parameter HC_BUFFER_RX_DEPTH = 1;
+  parameter HC_BUFFER_TX_DEPTH = 8;
 
   parameter HC_BUFFER_SIZE = HC_BUFFER_TX_SIZE + HC_BUFFER_RX_SIZE;
 
@@ -110,12 +109,6 @@ package hc_pkg;
 
   typedef logic [(HC_REQUEST_DEPTH/2 - 1):0]  t_request_size;
 
-  typedef enum logic [1:0] {
-    e_BUFFER_IDLE    = 2'h0,
-    e_BUFFER_DEQUEUE = 2'h1,
-    e_BUFFER_ENQUEUE = 2'h2
-  } t_buffer_cmd;
-
   typedef enum logic [2:0] {
     e_REQUEST_IDLE          = 3'h0,
     e_REQUEST_WRITE_STREAM  = 3'h1,
@@ -125,14 +118,9 @@ package hc_pkg;
   } t_request_cmd;
 
   typedef struct packed {
-    logic         empty;
-    logic         full;
-    t_buffer_size count;
-  } t_buffer_status;
-
-  typedef struct packed {
-    t_buffer_cmd cmd;
-  } t_buffer_control;
+    logic         valid;
+    t_buffer_data cl_data;
+  } t_buffer;
 
   typedef struct packed {
     logic          empty;
@@ -149,21 +137,19 @@ package hc_pkg;
 
   typedef struct packed {
     t_request_control control;
-    t_request_status  status; 
+    t_request_status  status;
   } t_request;
+
+  typedef struct packed {
+    t_request_cmd         cmd;
+    t_request_cmd_id      id;
+    t_request_cmd_offset  offset;
+    t_buffer_data         data;
+  } t_request_write_fifo;
 
   //
   // HardCloud requestor definitions
   //
-
-  typedef struct packed {
-    logic [511:0] data;
-  } t_block;
-
-  typedef enum logic {
-    HC_MODE_STREAM,
-    HC_MODE_INDEX
-  } t_rd_mode;
 
   typedef enum logic [1:0] {
     S_RD_START,

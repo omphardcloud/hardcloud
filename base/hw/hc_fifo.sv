@@ -26,7 +26,7 @@ module hc_fifo
   logic [$clog2(HC_FIFO_DEPTH) - 1:0] wr_pointer;
   logic [$clog2(HC_FIFO_DEPTH) - 1:0] rd_pointer;
 
-  t_block mem[HC_FIFO_DEPTH];
+  logic [HC_FIFO_WIDTH - 1:0] mem[HC_FIFO_DEPTH];
 
   assign not_full  = (counter == (HC_FIFO_DEPTH - 1)) ? 1'b0 : 1'b1;
   assign not_empty = (counter == '0) ? 1'b0 : 1'b1;

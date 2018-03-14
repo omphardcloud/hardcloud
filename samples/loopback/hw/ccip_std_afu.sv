@@ -59,7 +59,7 @@ module ccip_std_afu
   logic start;
   logic finish;
 
-  hc_buffers_if core_buffers();
+  hc_buffers_if core_buffer();
 
   t_hc_control  hc_control;
   t_hc_address  hc_dsm_base;
@@ -183,7 +183,7 @@ module ccip_std_afu
     .ccip_rx       (ccip_rx),
     .ccip_c0_tx    (ccip_tx.c0),
     .ccip_c1_tx    (ccip_tx.c1),
-    .core_buffers  (core_buffers)
+    .core_buffer   (core_buffer)
   );
 
   loopback uu_loopback
@@ -192,7 +192,7 @@ module ccip_std_afu
     .reset   (reset),
     .start   (start),
     .finish  (finish),
-    .buffers (core_buffers)
+    .buffer  (core_buffer)
   );
 
 endmodule : ccip_std_afu
