@@ -26,7 +26,7 @@ module loopback
   loopback_fifo
   #(
     .LOOPBACK_FIFO_WIDTH(512),
-    .LOOPBACK_FIFO_DEPTH(30)
+    .LOOPBACK_FIFO_DEPTH(512)
   )
   uu_loopback_fifo
   (
@@ -48,12 +48,11 @@ module loopback
       state <= '0;
 
       buffer.read_idle();
-      buffer.write_idle();
     end
     else begin
       case (state)
       0: state <= (start) ? 1 : 0;
-      1: begin buffer.read_stream(1, 30); state <= 2; end
+      1: begin buffer.read_stream(1, 512); state <= 2; end
       2: buffer.read_idle();
       endcase
     end

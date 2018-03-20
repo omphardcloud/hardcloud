@@ -95,13 +95,14 @@ package hc_pkg;
   // HardCloud interface definitions
   //
 
-  parameter HC_MAX_COUNT      = 32;
-  parameter HC_MAX_CMD_SIZE   = 32;
+  parameter HC_MAX_BUFFER_SIZE = 32;
+  parameter HC_MAX_CMD_SIZE    = 32;
 
   parameter HC_REQUEST_DEPTH = 8;
 
-  typedef logic [(CCIP_CLDATA_WIDTH - 1):0] t_buffer_data;
-  typedef logic [(HC_MAX_COUNT - 1):0]      t_buffer_size;
+  typedef logic [(CCIP_CLDATA_WIDTH - 1):0]                 t_buffer_data;
+  typedef logic [(HC_MAX_BUFFER_SIZE - 1):0]                t_buffer_size;
+  typedef logic [(HC_BUFFER_SIZE*HC_MAX_BUFFER_SIZE - 1):0] t_buffer_total_size;
 
   typedef logic [$clog2(HC_BUFFER_SIZE):0]  t_request_cmd_id;
   typedef logic [(HC_MAX_CMD_SIZE - 1):0]   t_request_cmd_size;

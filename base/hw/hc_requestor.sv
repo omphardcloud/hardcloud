@@ -38,12 +38,14 @@ module hc_requestor
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
       for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
-        core_buffer.buffer_size[i] <= '0;
+        core_buffer.buffer_size[HC_MAX_BUFFER_SIZE*i +: HC_MAX_BUFFER_SIZE]
+          <= '0;
       end
     end
     else begin
       for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
-        core_buffer.buffer_size[i] <= hc_buffer[i].size;
+        core_buffer.buffer_size[HC_MAX_BUFFER_SIZE*i +: HC_MAX_BUFFER_SIZE]
+          <= hc_buffer[i].size;
       end
     end
   end
@@ -113,6 +115,10 @@ module hc_requestor
         read_stream_size <= '0;
         read_request     <= read_request_deq_data;
       end
+
+      if (S_RD_STREAM == rd_state && !ccip_rx.c0TxAlmFull) begin
+        read_stream_size <= t_request_cmd_size'(read_stream_size + 1);
+      end
     end
   end
 
@@ -162,8 +168,7 @@ module hc_requestor
             ccip_c0_tx.valid <= 1'b1;
             ccip_c0_tx.hdr   <= rd_hdr;
 
-            rd_offset        <= t_ccip_clAddr'(rd_offset + 1);
-            read_stream_size <= t_request_cmd_size'(read_stream_size + 1);
+            rd_offset <= t_ccip_clAddr'(rd_offset + 1);
           end
           else begin
             ccip_c0_tx.valid <= 1'b0;

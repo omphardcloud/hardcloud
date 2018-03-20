@@ -17,7 +17,7 @@ interface hc_buffers_if();
   t_buffer rx_buffer_data;
   t_buffer tx_buffer_data;
 
-  t_buffer_size buffer_size[HC_BUFFER_SIZE];
+  t_buffer_total_size buffer_size;
 
   //
   // read request functions
@@ -115,6 +115,10 @@ interface hc_buffers_if();
   function t_buffer_data data();
     return rx_buffer_data.cl_data;
   endfunction : data
+
+  function t_buffer_size size(int id);
+    return buffer_size[id*HC_MAX_BUFFER_SIZE +: HC_MAX_BUFFER_SIZE];
+  endfunction : size
 
 endinterface : hc_buffers_if
 
