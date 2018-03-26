@@ -26,21 +26,18 @@ interface hc_buffers_if();
   function void read_idle();
     read_request.control.cmd    <= e_REQUEST_IDLE;
     read_request.control.id     <= t_request_cmd_id'('0);
-    read_request.control.size   <= t_request_cmd_size'('0);
     read_request.control.offset <= t_request_cmd_offset'('0);
   endfunction : read_idle
 
-  function void read_stream(t_request_cmd_id id, t_request_cmd_size size);
+  function void read_stream(t_request_cmd_id id, t_request_cmd_offset offset);
     read_request.control.cmd    <= e_REQUEST_READ_STREAM;
     read_request.control.id     <= id;
-    read_request.control.size   <= size;
-    read_request.control.offset <= t_request_cmd_offset'('0);
+    read_request.control.offset <= offset;
   endfunction : read_stream
 
   function void read_indexed(t_request_cmd_id id, t_request_cmd_offset offset);
     read_request.control.cmd    <= e_REQUEST_READ_INDEXED;
     read_request.control.id     <= id;
-    read_request.control.size   <= t_request_cmd_size'('0);
     read_request.control.offset <= offset;
   endfunction : read_indexed
 
@@ -63,7 +60,6 @@ interface hc_buffers_if();
   function void write_idle();
     write_request.control.cmd    <= e_REQUEST_IDLE;
     write_request.control.id     <= t_request_cmd_id'('0);
-    write_request.control.size   <= t_request_cmd_size'('0);
     write_request.control.offset <= t_request_cmd_offset'('0);
 
     tx_buffer_data.valid <= 1'b0;
@@ -72,7 +68,6 @@ interface hc_buffers_if();
   function void write_stream(t_request_cmd_id id, t_buffer_data data);
     write_request.control.cmd    <= e_REQUEST_WRITE_STREAM;
     write_request.control.id     <= id;
-    write_request.control.size   <= t_request_cmd_size'('0);
     write_request.control.offset <= t_request_cmd_offset'('0);
 
     tx_buffer_data.cl_data <= data;
@@ -86,7 +81,6 @@ interface hc_buffers_if();
   );
     write_request.control.cmd    <= e_REQUEST_WRITE_INDEXED;
     write_request.control.id     <= id;
-    write_request.control.size   <= t_request_cmd_size'('0);
     write_request.control.offset <= offset;
 
     tx_buffer_data.cl_data <= data;

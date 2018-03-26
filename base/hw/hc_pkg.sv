@@ -96,7 +96,6 @@ package hc_pkg;
   //
 
   parameter HC_MAX_BUFFER_SIZE = 32;
-  parameter HC_MAX_CMD_SIZE    = 32;
 
   parameter HC_REQUEST_DEPTH = 8;
 
@@ -105,17 +104,16 @@ package hc_pkg;
   typedef logic [(HC_BUFFER_SIZE*HC_MAX_BUFFER_SIZE - 1):0] t_buffer_total_size;
 
   typedef logic [$clog2(HC_BUFFER_SIZE):0]  t_request_cmd_id;
-  typedef logic [(HC_MAX_CMD_SIZE - 1):0]   t_request_cmd_size;
   typedef t_ccip_clAddr                     t_request_cmd_offset;
 
   typedef logic [(HC_REQUEST_DEPTH/2 - 1):0]  t_request_size;
 
   typedef enum logic [2:0] {
     e_REQUEST_IDLE          = 3'h0,
-    e_REQUEST_WRITE_STREAM  = 3'h1,
-    e_REQUEST_WRITE_INDEXED = 3'h2,
-    e_REQUEST_READ_STREAM   = 3'h3,
-    e_REQUEST_READ_INDEXED  = 3'h4
+    e_REQUEST_READ_STREAM   = 3'h1,
+    e_REQUEST_READ_INDEXED  = 3'h2,
+    e_REQUEST_WRITE_STREAM  = 3'h3,
+    e_REQUEST_WRITE_INDEXED = 3'h4
   } t_request_cmd;
 
   typedef struct packed {
@@ -132,7 +130,6 @@ package hc_pkg;
   typedef struct packed {
     t_request_cmd        cmd;
     t_request_cmd_id     id;
-    t_request_cmd_size   size;
     t_request_cmd_offset offset;
   } t_request_control;
 
@@ -153,15 +150,16 @@ package hc_pkg;
   //
 
   typedef enum logic [1:0] {
-    S_RD_START,
-    S_RD_IDLE,
-    S_RD_STREAM,
-    S_RD_INDEX
+    S_RD_IDLE   = 2'h0,
+    S_RD_STREAM = 2'h1,
+    S_RD_INDEX  = 2'h2,
+    S_RD_START  = 2'h3
   } t_rd_state;
 
   typedef enum logic [2:0] {
     S_WR_IDLE,
-    S_WR_RUN,
+    S_WR_WAIT,
+    S_WR_SEND,
     S_WR_FINISH_1,
     S_WR_FINISH_2
   } t_wr_state;

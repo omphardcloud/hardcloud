@@ -23,10 +23,13 @@ module loopback
   t_buffer_data fifo_enq_data;
   t_buffer_data fifo_deq_data;
 
+  logic         data_valid;
+  t_buffer_data data_out;
+
   loopback_fifo
   #(
     .LOOPBACK_FIFO_WIDTH(512),
-    .LOOPBACK_FIFO_DEPTH(512)
+    .LOOPBACK_FIFO_DEPTH(10)
   )
   uu_loopback_fifo
   (
@@ -74,22 +77,36 @@ module loopback
     end
   end
 
-  // write resquest
+  // dequeue data from fifo
   always@(posedge clk or posedge reset) begin
     if (reset) begin
       fifo_deq_en <= 1'b0;
-
-      buffer.write_idle();
+      data_valid  <= 1'b0;
+      data_out    <= '0;
     end
     else begin
       if (fifo_not_empty && !buffer.write_full()) begin
         fifo_deq_en <= 1'b1;
-
-        buffer.write_stream(0, fifo_deq_data);
+        data_valid  <= 1'b1;
+        data_out    <= fifo_deq_data;
       end
       else begin
         fifo_deq_en <= 1'b0;
+        data_valid  <= 1'b0;
+      end
+    end
+  end
 
+  // write resquest
+  always@(posedge clk or posedge reset) begin
+    if (reset) begin
+      buffer.write_idle();
+    end
+    else begin
+      if (data_valid && !buffer.write_full()) begin
+        buffer.write_stream(0, data_out);
+      end
+      else begin
         buffer.write_idle();
       end
     end
