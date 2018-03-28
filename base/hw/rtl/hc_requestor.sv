@@ -111,7 +111,11 @@ module hc_requestor
       read_request <= '0;
     end
     else begin
-      if ((S_RD_IDLE == rd_state) && read_request_not_empty) begin
+      if (
+        !ccip_rx.c0TxAlmFull &&
+        (S_RD_IDLE == rd_state) &&
+        read_request_not_empty
+      ) begin
         read_request <= read_request_deq_data;
       end
     end
@@ -139,7 +143,11 @@ module hc_requestor
       if (read_request_deq_en) begin
         read_request_deq_en <= 1'b0;
       end
-      if ((S_RD_IDLE == rd_state) && read_request_not_empty) begin
+      else if (
+        !ccip_rx.c0TxAlmFull &&
+        (S_RD_IDLE == rd_state) &&
+        read_request_not_empty
+      ) begin
         read_request_deq_en <= 1'b1;
       end
       else begin
@@ -170,6 +178,8 @@ module hc_requestor
 
       S_RD_STREAM:
         begin
+          $display("s_rd_stream = %h", rd_offset);
+
           rd_hdr.cl_len  = eCL_LEN_1;
           rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
 
@@ -190,6 +200,12 @@ module hc_requestor
 
           rd_offset <= t_ccip_clAddr'(read_request.offset + 1);
         end
+
+      S_RD_WAIT_STREAM:
+        begin
+          ccip_c0_tx.valid <= 1'b0;
+        end
+
       endcase
     end
   end
@@ -216,22 +232,30 @@ module hc_requestor
 
     S_RD_IDLE:
       begin
-        if (read_request_not_empty) begin
-          rd_next_state = t_rd_state'(read_request.cmd);
+        if (!ccip_rx.c0TxAlmFull && read_request_not_empty) begin
+          rd_next_state = t_rd_state'(read_request_deq_data.cmd);
         end
       end
 
     S_RD_STREAM:
       begin
-        if ((read_stream_size + 1) == read_request.offset) begin
+        if (ccip_rx.c0TxAlmFull) begin
+          rd_next_state = S_RD_WAIT_STREAM;
+        end
+        else if ((read_stream_size + 1) == read_request.offset) begin
           rd_next_state = S_RD_IDLE;
         end
       end
 
     S_RD_INDEX:
       begin
+        rd_next_state = S_RD_IDLE;
+      end
+
+    S_RD_WAIT_STREAM:
+      begin
         if (!ccip_rx.c0TxAlmFull) begin
-          rd_next_state = S_RD_IDLE;
+          rd_next_state = S_RD_STREAM;
         end
       end
 
@@ -249,6 +273,8 @@ module hc_requestor
     else begin
       if ((ccip_rx.c0.rspValid) &&
         (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+
+        $display("read_response = %h", ccip_rx.c0.data[31:0]);
 
         core_buffer.rx_buffer_data.cl_data <= ccip_rx.c0.data;
         core_buffer.rx_buffer_data.valid   <= '1;

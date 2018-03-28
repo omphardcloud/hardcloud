@@ -29,7 +29,7 @@ module loopback
   loopback_fifo
   #(
     .LOOPBACK_FIFO_WIDTH(512),
-    .LOOPBACK_FIFO_DEPTH(10)
+    .LOOPBACK_FIFO_DEPTH(512)
   )
   uu_loopback_fifo
   (
@@ -70,6 +70,8 @@ module loopback
       if (buffer.valid()) begin
         fifo_enq_en   <= 1'b1;
         fifo_enq_data <= buffer.data();
+
+        $display("fifo_enq_data = %h", buffer.rx_buffer_data.cl_data[31:0]);
       end
       else begin
         fifo_enq_en <= 1'b0;
@@ -78,17 +80,19 @@ module loopback
   end
 
   // dequeue data from fifo
+  assign data_out = fifo_deq_data;
+
   always@(posedge clk or posedge reset) begin
     if (reset) begin
       fifo_deq_en <= 1'b0;
-      data_valid  <= 1'b0;
-      data_out    <= '0;
+      data_valid  <= 1'b1;
     end
     else begin
-      if (fifo_not_empty && !buffer.write_full()) begin
+      if (fifo_counter > 1 && !buffer.write_full()) begin
         fifo_deq_en <= 1'b1;
         data_valid  <= 1'b1;
-        data_out    <= fifo_deq_data;
+
+        $display("fifo_deq_data = %h", fifo_deq_data);
       end
       else begin
         fifo_deq_en <= 1'b0;

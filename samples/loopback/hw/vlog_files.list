@@ -78,15 +78,16 @@ ${PWD}/../../../intel-fpga-bbb/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro
 
 # hardcloud common files
 
-+incdir+${PWD}/../../../base/hw
++incdir+${PWD}/../../../base/hw/rtl
 
-${PWD}/../../../base/hw/hc_pkg.sv
-${PWD}/../../../base/hw/hc_csr.sv
-${PWD}/../../../base/hw/hc_fifo.sv
-${PWD}/../../../base/hw/hc_requestor.sv
-${PWD}/../../../base/hw/hc_buffers_if.sv
+${PWD}/../../../base/hw/rtl/hc_pkg.sv
+${PWD}/../../../base/hw/rtl/hc_csr.sv
+${PWD}/../../../base/hw/rtl/hc_fifo.sv
+${PWD}/../../../base/hw/rtl/hc_requestor.sv
+${PWD}/../../../base/hw/rtl/hc_buffers_if.sv
 
 # dut
 
+${PWD}/../../${AFU}/hw/loopback_fifo.sv
 ${PWD}/../../${AFU}/hw/loopback.sv
 ${PWD}/../../${AFU}/hw/ccip_std_afu.sv

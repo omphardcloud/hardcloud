@@ -71,7 +71,8 @@ module ccip_std_afu
   t_if_ccip_Tx  afck_af2cp_sTx;
 
   // combinational logic
-  assign clk = pClk;
+  assign clk   = pClk;
+  assign reset = pck_cp2af_softReset;
 
   always_comb begin
     ccip_rx.c0 = afu.c0Rx;
@@ -151,7 +152,7 @@ module ccip_std_afu
     .bb_clk           (pClk),
     .bb_tx            (pck_af2cp_sTx),
     .bb_rx            (pck_cp2af_sRx),
-    .afu_softreset    (reset),
+    // .afu_softreset    (reset),
     .afu_clk          (clk),
     .afu_tx           (afck_af2cp_sTx),
     .afu_rx           (afck_cp2af_sRx),
