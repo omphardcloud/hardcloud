@@ -149,20 +149,18 @@ package hc_pkg;
   // HardCloud requestor definitions
   //
 
-  typedef enum logic [2:0] {
-    S_RD_IDLE        = 3'h0,
-    S_RD_STREAM      = 3'h1,
-    S_RD_INDEX       = 3'h2,
-    S_RD_START       = 3'h3,
-    S_RD_WAIT_STREAM = 3'h4
+  typedef enum logic [1:0] {
+    S_RD_IDLE        = 2'h0,
+    S_RD_STREAM      = 2'h1,
+    S_RD_INDEX       = 2'h2,
+    S_RD_START       = 2'h3
   } t_rd_state;
 
-  typedef enum logic [2:0] {
-    S_WR_IDLE     = 3'h0,
-    S_WR_WAIT     = 3'h1,
-    S_WR_SEND     = 3'h2,
-    S_WR_FINISH_1 = 3'h3,
-    S_WR_FINISH_2 = 3'h4
+  typedef enum logic [1:0] {
+    S_WR_IDLE     = 2'h0,
+    S_WR_SEND     = 2'h1,
+    S_WR_FINISH_1 = 2'h2,
+    S_WR_FINISH_2 = 2'h3
   } t_wr_state;
 
 endpackage : hc_pkg

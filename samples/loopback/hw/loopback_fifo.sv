@@ -13,11 +13,11 @@ module loopback_fifo
 
   input  logic [LOOPBACK_FIFO_WIDTH - 1:0] enq_data,
   input  logic                             enq_en,
-  output logic                             not_full,
+  output logic                             full,
 
   output logic [LOOPBACK_FIFO_WIDTH - 1:0] deq_data,
   input  logic                             deq_en,
-  output logic                             not_empty,
+  output logic                             empty,
 
   output logic [LOOPBACK_FIFO_DEPTH/2 - 1:0] counter,
   output logic [LOOPBACK_FIFO_DEPTH/2 - 1:0] dec_counter
@@ -28,8 +28,8 @@ module loopback_fifo
 
   logic [LOOPBACK_FIFO_WIDTH - 1:0] mem[LOOPBACK_FIFO_DEPTH];
 
-  assign not_full  = (counter == (LOOPBACK_FIFO_DEPTH - 1)) ? 1'b0 : 1'b1;
-  assign not_empty = (counter == '0) ? 1'b0 : 1'b1;
+  assign full  = counter == (LOOPBACK_FIFO_DEPTH - 1);
+  assign empty = counter == '0;
 
   assign deq_data  = mem[rd_pointer];
 
@@ -40,7 +40,7 @@ module loopback_fifo
       wr_pointer <= '0;
     end
     else begin
-      if (enq_en && not_full) begin
+      if (enq_en && !full) begin
         wr_pointer <= wr_pointer + 1;
       end
     end
@@ -51,7 +51,7 @@ module loopback_fifo
       rd_pointer <= '0;
     end
     else begin
-      if (deq_en && not_empty) begin
+      if (deq_en && !empty) begin
         rd_pointer <= rd_pointer + 1;
       end
     end
@@ -62,17 +62,17 @@ module loopback_fifo
       counter <= '0;
     end
     else begin
-      if (enq_en && !deq_en && not_full) begin
+      if (enq_en && !deq_en && !full) begin
         counter <= counter + 1;
       end
-      else if (!enq_en && deq_en && not_empty) begin
+      else if (!enq_en && deq_en && !empty) begin
         counter <= counter - 1;
       end
     end
   end
 
   always_ff@(posedge clk) begin
-    if (enq_en && not_full) begin
+    if (enq_en && !full) begin
       mem[wr_pointer] <= enq_data;
     end
   end
