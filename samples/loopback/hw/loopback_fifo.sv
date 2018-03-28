@@ -19,8 +19,8 @@ module loopback_fifo
   input  logic                             deq_en,
   output logic                             empty,
 
-  output logic [LOOPBACK_FIFO_DEPTH/2 - 1:0] counter,
-  output logic [LOOPBACK_FIFO_DEPTH/2 - 1:0] dec_counter
+  output logic [$clog2(LOOPBACK_FIFO_DEPTH):0] counter,
+  output logic [$clog2(LOOPBACK_FIFO_DEPTH):0] dec_counter
 );
 
   logic [$clog2(LOOPBACK_FIFO_DEPTH) - 1:0] wr_pointer;
