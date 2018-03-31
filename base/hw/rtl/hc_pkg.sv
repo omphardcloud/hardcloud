@@ -32,8 +32,8 @@ package hc_pkg;
   // HardCloud csr definitions
   //
 
-  typedef logic [31:0] t_hc_control;
-  typedef logic [63:0] t_hc_address;
+  typedef logic [31:0]  t_hc_control;
+  typedef t_ccip_clAddr t_hc_address;
 
   typedef struct packed {
     t_hc_address address;
@@ -149,11 +149,12 @@ package hc_pkg;
   // HardCloud requestor definitions
   //
 
-  typedef enum logic [1:0] {
-    S_RD_IDLE        = 2'h0,
-    S_RD_STREAM      = 2'h1,
-    S_RD_INDEX       = 2'h2,
-    S_RD_START       = 2'h3
+  typedef enum logic [2:0] {
+    S_RD_IDLE    = 3'h0,
+    S_RD_STREAM  = 3'h1,
+    S_RD_INDEX   = 3'h2,
+    S_RD_START   = 3'h3,
+    S_RD_PROCESS = 3'h4
   } t_rd_state;
 
   typedef enum logic [1:0] {

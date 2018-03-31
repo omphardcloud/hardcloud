@@ -21,14 +21,17 @@ module loopback
 
   logic fifo_enq_en;
   logic fifo_deq_en;
+  logic fifo_deq_en_q;
   logic fifo_empty;
   logic fifo_full;
 
   logic [31:0] count_write;
   logic [31:0] count_read;
+  logic [ 9:0] count_request;
 
   t_buffer_data fifo_enq_data;
   t_buffer_data fifo_deq_data;
+  t_buffer_data fifo_deq_data_q;
 
   loopback_fifo
   #(
@@ -50,6 +53,22 @@ module loopback
   );
 
   // read request
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
+      count_request <= '0;
+    end
+    else begin
+      logic [9:0] tmp = count_request;
+       
+      if (start)
+        tmp = tmp + 32'd512;
+
+      if (fifo_deq_en_q)
+        tmp = tmp - 32'd1;
+
+      count_request <= tmp;
+    end
+  end
 
   function void init_fifo();
     if (start) begin
@@ -61,7 +80,8 @@ module loopback
   endfunction : init_fifo
 
   function void fill_fifo();
-    if ((count_read - count_write) < 256) begin
+    // if ((count_read - count_write) < 256) begin
+    if (10'd256 == count_request) begin
       buffer.read_stream(1, 256);
 
       count_read <= count_read + 32'd256;
@@ -93,12 +113,12 @@ module loopback
   // read response
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
-      fifo_enq_en    <= 1'b0;
+      fifo_enq_en <= 1'b0;
     end
     else begin
       if (buffer.valid()) begin
-        fifo_enq_en    <= 1'b1;
-        fifo_enq_data  <= buffer.data();
+        fifo_enq_en   <= 1'b1;
+        fifo_enq_data <= buffer.data();
       end
       else begin
         fifo_enq_en <= 1'b0;
@@ -113,12 +133,23 @@ module loopback
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
+      fifo_deq_data_q <= '0;
+      fifo_deq_en_q   <= 1'b0;
+    end
+    else begin
+      fifo_deq_data_q <= fifo_deq_data;
+      fifo_deq_en_q   <= fifo_deq_en;
+    end
+  end
+
+  always_ff@(posedge clk or posedge reset) begin
+    if (reset) begin
       buffer.write_idle();
     end
     else begin
-      buffer.write_stream(0, fifo_deq_data);
+      buffer.write_stream(0, fifo_deq_data_q);
 
-      if (!fifo_deq_en) begin
+      if (!fifo_deq_en_q) begin
         buffer.write_idle();
       end
     end
@@ -132,7 +163,7 @@ module loopback
       count_write <= '0;
     end
     else begin
-      if (fifo_deq_en) begin
+      if (fifo_deq_en_q) begin
         count_write <= count_write + 32'h1;
       end
     end

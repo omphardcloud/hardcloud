@@ -156,10 +156,15 @@ module hc_requestor
           ccip_c0_tx.valid <= 1'b0;
         end
 
+      S_RD_PROCESS:
+        begin
+          ccip_c0_tx.valid <= 1'b0;
+        end
+
       S_RD_STREAM:
         begin
           rd_hdr.cl_len  = eCL_LEN_1;
-          rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
+          rd_hdr.address = hc_buffer[read_request.id].address; // + rd_offset;
 
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
           ccip_c0_tx.hdr   <= rd_hdr;
@@ -171,7 +176,7 @@ module hc_requestor
         begin
           rd_hdr.cl_len  = eCL_LEN_1;
           rd_hdr.address =
-            hc_buffer[read_request.id].address + read_request.offset;
+            hc_buffer[read_request.id].address; // + read_request.offset;
 
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
           ccip_c0_tx.hdr   <= rd_hdr;
@@ -207,8 +212,13 @@ module hc_requestor
     S_RD_IDLE:
       begin
         if (!ccip_rx.c0TxAlmFull && read_request_not_empty) begin
-          rd_next_state = t_rd_state'(read_request_deq_data.cmd);
+          rd_next_state = S_RD_PROCESS;
         end
+      end
+
+    S_RD_PROCESS:
+      begin
+        rd_next_state = t_rd_state'(read_request.cmd);
       end
 
     S_RD_STREAM:
@@ -318,6 +328,10 @@ module hc_requestor
     else begin
       write_request       <= write_request_deq_data;
       write_request_valid <= write_request_deq_en;
+
+      if (S_WR_FINISH_1 == wr_state) begin
+        write_request.data <= t_ccip_clData'('h1);
+      end
     end
   end
 
@@ -331,6 +345,9 @@ module hc_requestor
       ccip_c1_tx.data  <= t_ccip_clData'('0);
     end
     else begin
+
+      ccip_c1_tx.data <= t_ccip_clData'(write_request.data);
+
       case (wr_state)
       S_WR_IDLE:
         begin
@@ -347,22 +364,15 @@ module hc_requestor
 
           ccip_c1_tx.hdr   <= wr_hdr;
           ccip_c1_tx.valid <= write_request_valid;
-          ccip_c1_tx.data  <= t_ccip_clData'(write_request.data);
         end
 
       S_WR_FINISH_1:
         begin
-          if (!ccip_rx.c1TxAlmFull) begin
-            wr_hdr.address = hc_dsm_base;
-            wr_hdr.sop = 1'b1;
+          wr_hdr.address = hc_dsm_base;
+          wr_hdr.sop = 1'b1;
 
-            ccip_c1_tx.hdr   <= wr_hdr;
-            ccip_c1_tx.valid <= 1'b1;
-            ccip_c1_tx.data  <= t_ccip_clData'('h1);
-          end
-          else begin
-            ccip_c1_tx.valid <= 1'b0;
-          end
+          ccip_c1_tx.hdr   <= wr_hdr;
+          ccip_c1_tx.valid <= !ccip_rx.c1TxAlmFull;
         end
 
       S_WR_FINISH_2:
