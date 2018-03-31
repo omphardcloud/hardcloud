@@ -59,7 +59,7 @@ module loopback
     end
     else begin
       logic [9:0] tmp = count_request;
-       
+
       if (start)
         tmp = tmp + 32'd512;
 
