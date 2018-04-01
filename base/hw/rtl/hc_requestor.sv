@@ -164,7 +164,7 @@ module hc_requestor
       S_RD_STREAM:
         begin
           rd_hdr.cl_len  = eCL_LEN_1;
-          rd_hdr.address = hc_buffer[read_request.id].address; // + rd_offset;
+          rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
 
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
           ccip_c0_tx.hdr   <= rd_hdr;
@@ -176,7 +176,7 @@ module hc_requestor
         begin
           rd_hdr.cl_len  = eCL_LEN_1;
           rd_hdr.address =
-            hc_buffer[read_request.id].address; // + read_request.offset;
+            hc_buffer[read_request.id].address + read_request.offset;
 
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
           ccip_c0_tx.hdr   <= rd_hdr;
@@ -250,6 +250,8 @@ module hc_requestor
 
         core_buffer.rx_buffer_data.cl_data <= ccip_rx.c0.data;
         core_buffer.rx_buffer_data.valid   <= '1;
+
+        $display("read = %h", ccip_rx.c0.data);
       end
       else begin
         core_buffer.rx_buffer_data.valid <= '0;
@@ -313,7 +315,7 @@ module hc_requestor
     core_buffer.write_request.status.count <= write_request_counter;
     core_buffer.write_request.status.empty <= !write_request_not_empty;
     core_buffer.write_request.status.full  <=
-      write_request_counter > (HC_BUFFER_TX_DEPTH - 4);
+      write_request_counter > (HC_BUFFER_TX_DEPTH - 5);
   end
 
   always_comb begin
@@ -330,7 +332,7 @@ module hc_requestor
       write_request_valid <= write_request_deq_en;
 
       if (S_WR_FINISH_1 == wr_state) begin
-        write_request.data <= t_ccip_clData'('h1);
+        write_request.data[0] <= 1'b1;
       end
     end
   end
@@ -364,6 +366,9 @@ module hc_requestor
 
           ccip_c1_tx.hdr   <= wr_hdr;
           ccip_c1_tx.valid <= write_request_valid;
+
+          if (write_request_valid)
+            $display("write = %h", write_request.data);
         end
 
       S_WR_FINISH_1:

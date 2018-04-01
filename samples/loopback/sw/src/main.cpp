@@ -1,7 +1,7 @@
 #include <iostream>
 #include "harp.h"
 
-#define CL 1024               // cache line - bytes
+#define CL 64                 // cache line - bytes
 #define NI 512*CL/sizeof(int) // number of itens
 
 int main()

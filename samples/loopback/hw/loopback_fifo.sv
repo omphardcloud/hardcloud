@@ -31,9 +31,11 @@ module loopback_fifo
   assign full  = counter == (LOOPBACK_FIFO_DEPTH - 1);
   assign empty = counter == '0;
 
-  assign deq_data  = mem[rd_pointer];
-
   assign dec_counter = LOOPBACK_FIFO_DEPTH - counter;
+
+  always_ff@(posedge clk or posedge reset) begin
+    deq_data <= mem[rd_pointer];
+  end
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
@@ -79,3 +81,4 @@ module loopback_fifo
 
 endmodule : loopback_fifo
 
+// taf!

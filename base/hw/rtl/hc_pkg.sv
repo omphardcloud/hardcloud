@@ -32,8 +32,8 @@ package hc_pkg;
   // HardCloud csr definitions
   //
 
-  typedef logic [31:0]  t_hc_control;
-  typedef t_ccip_clAddr t_hc_address;
+  typedef logic [31:0] t_hc_control;
+  typedef logic [63:0] t_hc_address;
 
   typedef struct packed {
     t_hc_address address;
