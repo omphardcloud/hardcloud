@@ -145,6 +145,12 @@ module hc_requestor
       rd_offset <= t_ccip_clAddr'('0);
     end
     else begin
+
+      rd_hdr.cl_len  = eCL_LEN_1;
+      rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
+
+      ccip_c0_tx.hdr <= rd_hdr;
+
       case (rd_state)
       S_RD_START:
         begin
@@ -159,30 +165,24 @@ module hc_requestor
       S_RD_PROCESS:
         begin
           ccip_c0_tx.valid <= 1'b0;
+
+          if (S_RD_INDEX == t_rd_state'(read_request.cmd)) begin
+            rd_offset <= read_request.offset;
+          end
         end
 
       S_RD_STREAM:
         begin
-          rd_hdr.cl_len  = eCL_LEN_1;
-          rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
-
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
-          ccip_c0_tx.hdr   <= rd_hdr;
 
           rd_offset <= t_ccip_clAddr'(rd_offset + !ccip_rx.c0TxAlmFull);
         end
 
       S_RD_INDEX:
         begin
-          rd_hdr.cl_len  = eCL_LEN_1;
-          rd_hdr.address =
-            hc_buffer[read_request.id].address + read_request.offset;
-
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
-          ccip_c0_tx.hdr   <= rd_hdr;
 
-          rd_offset <=
-            t_ccip_clAddr'(read_request.offset + !ccip_rx.c0TxAlmFull);
+          rd_offset <= t_ccip_clAddr'(rd_offset + !ccip_rx.c0TxAlmFull);
         end
 
       endcase
@@ -290,7 +290,23 @@ module hc_requestor
   assign write_request_enq_data.cmd    = core_buffer.write_request.control.cmd;
   assign write_request_enq_data.id     = core_buffer.write_request.control.id;
   assign write_request_enq_data.offset = core_buffer.write_request.control.offset;
-  assign write_request_enq_data.data   = core_buffer.tx_buffer_data.cl_data;
+
+  assign write_request_enq_data.data0  = core_buffer.tx_buffer_data.cl_data[32*1  - 1:32*0];
+  assign write_request_enq_data.data1  = core_buffer.tx_buffer_data.cl_data[32*2  - 1:32*1];
+  assign write_request_enq_data.data2  = core_buffer.tx_buffer_data.cl_data[32*3  - 1:32*2];
+  assign write_request_enq_data.data3  = core_buffer.tx_buffer_data.cl_data[32*4  - 1:32*3];
+  assign write_request_enq_data.data4  = core_buffer.tx_buffer_data.cl_data[32*5  - 1:32*4];
+  assign write_request_enq_data.data5  = core_buffer.tx_buffer_data.cl_data[32*6  - 1:32*5];
+  assign write_request_enq_data.data6  = core_buffer.tx_buffer_data.cl_data[32*7  - 1:32*6];
+  assign write_request_enq_data.data7  = core_buffer.tx_buffer_data.cl_data[32*8  - 1:32*7];
+  assign write_request_enq_data.data8  = core_buffer.tx_buffer_data.cl_data[32*9  - 1:32*8];
+  assign write_request_enq_data.data9  = core_buffer.tx_buffer_data.cl_data[32*10 - 1:32*9];
+  assign write_request_enq_data.data10 = core_buffer.tx_buffer_data.cl_data[32*11 - 1:32*10];
+  assign write_request_enq_data.data11 = core_buffer.tx_buffer_data.cl_data[32*12 - 1:32*11];
+  assign write_request_enq_data.data12 = core_buffer.tx_buffer_data.cl_data[32*13 - 1:32*12];
+  assign write_request_enq_data.data13 = core_buffer.tx_buffer_data.cl_data[32*14 - 1:32*13];
+  assign write_request_enq_data.data14 = core_buffer.tx_buffer_data.cl_data[32*15 - 1:32*14];
+  assign write_request_enq_data.data15 = core_buffer.tx_buffer_data.cl_data[32*16 - 1:32*15];
 
   hc_fifo
   #(
@@ -330,10 +346,6 @@ module hc_requestor
     else begin
       write_request       <= write_request_deq_data;
       write_request_valid <= write_request_deq_en;
-
-      if (S_WR_FINISH_1 == wr_state) begin
-        write_request.data[0] <= 1'b1;
-      end
     end
   end
 
@@ -348,7 +360,27 @@ module hc_requestor
     end
     else begin
 
-      ccip_c1_tx.data <= t_ccip_clData'(write_request.data);
+      // ccip_c1_tx.data <= write_request.data;
+
+      ccip_c1_tx.data[32*1  - 1:32*0]  <= write_request.data0;
+      ccip_c1_tx.data[32*2  - 1:32*1]  <= write_request.data1;
+      ccip_c1_tx.data[32*3  - 1:32*2]  <= write_request.data2;
+      ccip_c1_tx.data[32*4  - 1:32*3]  <= write_request.data3;
+      ccip_c1_tx.data[32*5  - 1:32*4]  <= write_request.data4;
+      ccip_c1_tx.data[32*6  - 1:32*5]  <= write_request.data5;
+      ccip_c1_tx.data[32*7  - 1:32*6]  <= write_request.data6;
+      ccip_c1_tx.data[32*8  - 1:32*7]  <= write_request.data7;
+      ccip_c1_tx.data[32*9  - 1:32*8]  <= write_request.data8;
+      ccip_c1_tx.data[32*10 - 1:32*9]  <= write_request.data9;
+      ccip_c1_tx.data[32*11 - 1:32*10] <= write_request.data10;
+      ccip_c1_tx.data[32*12 - 1:32*11] <= write_request.data11;
+      ccip_c1_tx.data[32*13 - 1:32*12] <= write_request.data12;
+      ccip_c1_tx.data[32*14 - 1:32*13] <= write_request.data13;
+      ccip_c1_tx.data[32*15 - 1:32*14] <= write_request.data14;
+      ccip_c1_tx.data[32*16 - 1:32*15] <= write_request.data15;
+
+      if (S_WR_FINISH_1 == wr_state)
+        ccip_c1_tx.data[32*1  - 1:32*0] <= 32'h1;
 
       case (wr_state)
       S_WR_IDLE:
@@ -368,7 +400,7 @@ module hc_requestor
           ccip_c1_tx.valid <= write_request_valid;
 
           if (write_request_valid)
-            $display("write = %h", write_request.data);
+            $display("write = %h", write_request.data0);
         end
 
       S_WR_FINISH_1:

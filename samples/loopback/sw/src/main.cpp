@@ -31,7 +31,11 @@ int main()
   for (int i = 0; i < NI; i++)
   {
     if (i != B[i])
+    {
+      std::cout << i << ", " << B[i] << std::endl;
+
       error_cnt++;
+    }
   }
 
   std::cout << "[HardCloud] result  : ";
