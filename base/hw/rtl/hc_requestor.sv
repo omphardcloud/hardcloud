@@ -250,8 +250,6 @@ module hc_requestor
 
         core_buffer.rx_buffer_data.cl_data <= ccip_rx.c0.data;
         core_buffer.rx_buffer_data.valid   <= '1;
-
-        $display("read = %h", ccip_rx.c0.data);
       end
       else begin
         core_buffer.rx_buffer_data.valid <= '0;
@@ -365,9 +363,6 @@ module hc_requestor
 
           ccip_c1_tx.hdr   <= wr_hdr;
           ccip_c1_tx.valid <= write_request_valid;
-
-          if (write_request_valid)
-            $display("write = %h", write_request.data0);
         end
 
       S_WR_FINISH_1:
@@ -401,26 +396,26 @@ module hc_requestor
     wr_next_state = wr_state;
 
     case (wr_state)
-      S_WR_IDLE:
-        begin
-          if (hc_control == HC_CONTROL_START) begin
-            wr_next_state = S_WR_SEND;
-          end
+    S_WR_IDLE:
+      begin
+        if (hc_control == HC_CONTROL_START) begin
+          wr_next_state = S_WR_SEND;
         end
+      end
 
-      S_WR_SEND:
-        begin
-          if ((finish == 1) && (write_request_counter == 0)) begin
-            wr_next_state = S_WR_FINISH_1;
-          end
+    S_WR_SEND:
+      begin
+        if ((finish == 1) && (write_request_counter == 0)) begin
+          wr_next_state = S_WR_FINISH_1;
         end
+      end
 
-      S_WR_FINISH_1:
-        begin
-          if (!ccip_rx.c1TxAlmFull) begin
-            wr_next_state = S_WR_FINISH_2;
-          end
+    S_WR_FINISH_1:
+      begin
+        if (!ccip_rx.c1TxAlmFull) begin
+          wr_next_state = S_WR_FINISH_2;
         end
+      end
     endcase
   end
 

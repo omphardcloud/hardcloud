@@ -67,8 +67,8 @@ module loopback
     end
     else begin
       case (state)
-        START  : read_start();
-        FINISH : read_finish();
+      START  : read_start();
+      FINISH : read_finish();
       endcase
     end
   end
