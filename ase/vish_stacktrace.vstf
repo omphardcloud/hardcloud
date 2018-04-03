@@ -1,0 +1,26 @@
+# Current time Sun Dec 10 23:15:58 2017
+# ModelSim - Intel FPGA Edition Stack Trace
+# Program = vish
+# Id = "10.5c"
+# Version = "2017.01"
+# Date = "Jan 23 2017"
+# Platform = linuxpe
+# 0    0xf7ffb430: '<unknown (@0xf7ffb430)>'
+# 1    0xf7ffb40b: '<unknown (@0xf7ffb40b)>'
+# 2    0xf7fc9424: 'ItclDestroyClassNamesp + 0x34' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linux/itcl3.4/libitcl3.4.so'
+# 3    0x08544d60: 'Tcl_DeleteNamespace + 0xd0' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 4    0xf7fc89e0: 'ItclDestroyClass + 0x30' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linux/itcl3.4/libitcl3.4.so'
+# 5    0x08544afd: 'TclTeardownNamespace + 0x5d' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 6    0x08544d60: 'Tcl_DeleteNamespace + 0xd0' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 7    0xf7fc89e0: 'ItclDestroyClass + 0x30' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linux/itcl3.4/libitcl3.4.so'
+# 8    0x08544afd: 'TclTeardownNamespace + 0x5d' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 9    0x08544d60: 'Tcl_DeleteNamespace + 0xd0' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 10   0x08544bc6: 'TclTeardownNamespace + 0x126' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 11   0x084cb5dd: '<unknown (@0x84cb5dd)>'
+# 12   0x0855a335: 'Tcl_Release + 0xa5' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 13   0x083fb4ea: 'Tk_MainEx + 0x38a' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 14   0x081fe756: 'vish_inner_loop + 0x116' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 15   0x080e5c29: 'main + 0x989' in '/run/media/ciro.ceissler/d5b27d24-8e5a-4002-8645-05f0f26c7f2d/work/altera_pro/17.1/modelsim_ae/linuxaloem/vish'
+# 16   0xf7bd599e: '__libc_start_main + 0xee' in '/lib/libc.so.6'
+# End of Stack Trace
+
