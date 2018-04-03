@@ -142,22 +142,7 @@ package hc_pkg;
     t_request_cmd         cmd;
     t_request_cmd_id      id;
     t_request_cmd_offset  offset;
-    logic [31:0]          data0;
-    logic [31:0]          data1;
-    logic [31:0]          data2;
-    logic [31:0]          data3;
-    logic [31:0]          data4;
-    logic [31:0]          data5;
-    logic [31:0]          data6;
-    logic [31:0]          data7;
-    logic [31:0]          data8;
-    logic [31:0]          data9;
-    logic [31:0]          data10;
-    logic [31:0]          data11;
-    logic [31:0]          data12;
-    logic [31:0]          data13;
-    logic [31:0]          data14;
-    logic [31:0]          data15;
+    t_buffer_data         data;
   } t_request_write_fifo;
 
   //

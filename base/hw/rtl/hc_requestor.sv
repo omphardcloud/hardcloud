@@ -290,23 +290,7 @@ module hc_requestor
   assign write_request_enq_data.cmd    = core_buffer.write_request.control.cmd;
   assign write_request_enq_data.id     = core_buffer.write_request.control.id;
   assign write_request_enq_data.offset = core_buffer.write_request.control.offset;
-
-  assign write_request_enq_data.data0  = core_buffer.tx_buffer_data.cl_data[32*1  - 1:32*0];
-  assign write_request_enq_data.data1  = core_buffer.tx_buffer_data.cl_data[32*2  - 1:32*1];
-  assign write_request_enq_data.data2  = core_buffer.tx_buffer_data.cl_data[32*3  - 1:32*2];
-  assign write_request_enq_data.data3  = core_buffer.tx_buffer_data.cl_data[32*4  - 1:32*3];
-  assign write_request_enq_data.data4  = core_buffer.tx_buffer_data.cl_data[32*5  - 1:32*4];
-  assign write_request_enq_data.data5  = core_buffer.tx_buffer_data.cl_data[32*6  - 1:32*5];
-  assign write_request_enq_data.data6  = core_buffer.tx_buffer_data.cl_data[32*7  - 1:32*6];
-  assign write_request_enq_data.data7  = core_buffer.tx_buffer_data.cl_data[32*8  - 1:32*7];
-  assign write_request_enq_data.data8  = core_buffer.tx_buffer_data.cl_data[32*9  - 1:32*8];
-  assign write_request_enq_data.data9  = core_buffer.tx_buffer_data.cl_data[32*10 - 1:32*9];
-  assign write_request_enq_data.data10 = core_buffer.tx_buffer_data.cl_data[32*11 - 1:32*10];
-  assign write_request_enq_data.data11 = core_buffer.tx_buffer_data.cl_data[32*12 - 1:32*11];
-  assign write_request_enq_data.data12 = core_buffer.tx_buffer_data.cl_data[32*13 - 1:32*12];
-  assign write_request_enq_data.data13 = core_buffer.tx_buffer_data.cl_data[32*14 - 1:32*13];
-  assign write_request_enq_data.data14 = core_buffer.tx_buffer_data.cl_data[32*15 - 1:32*14];
-  assign write_request_enq_data.data15 = core_buffer.tx_buffer_data.cl_data[32*16 - 1:32*15];
+  assign write_request_enq_data.data   = core_buffer.tx_buffer_data.cl_data;
 
   hc_fifo
   #(
@@ -360,27 +344,10 @@ module hc_requestor
     end
     else begin
 
-      // ccip_c1_tx.data <= write_request.data;
-
-      ccip_c1_tx.data[32*1  - 1:32*0]  <= write_request.data0;
-      ccip_c1_tx.data[32*2  - 1:32*1]  <= write_request.data1;
-      ccip_c1_tx.data[32*3  - 1:32*2]  <= write_request.data2;
-      ccip_c1_tx.data[32*4  - 1:32*3]  <= write_request.data3;
-      ccip_c1_tx.data[32*5  - 1:32*4]  <= write_request.data4;
-      ccip_c1_tx.data[32*6  - 1:32*5]  <= write_request.data5;
-      ccip_c1_tx.data[32*7  - 1:32*6]  <= write_request.data6;
-      ccip_c1_tx.data[32*8  - 1:32*7]  <= write_request.data7;
-      ccip_c1_tx.data[32*9  - 1:32*8]  <= write_request.data8;
-      ccip_c1_tx.data[32*10 - 1:32*9]  <= write_request.data9;
-      ccip_c1_tx.data[32*11 - 1:32*10] <= write_request.data10;
-      ccip_c1_tx.data[32*12 - 1:32*11] <= write_request.data11;
-      ccip_c1_tx.data[32*13 - 1:32*12] <= write_request.data12;
-      ccip_c1_tx.data[32*14 - 1:32*13] <= write_request.data13;
-      ccip_c1_tx.data[32*15 - 1:32*14] <= write_request.data14;
-      ccip_c1_tx.data[32*16 - 1:32*15] <= write_request.data15;
+      ccip_c1_tx.data <= write_request.data;
 
       if (S_WR_FINISH_1 == wr_state)
-        ccip_c1_tx.data[32*1  - 1:32*0] <= 32'h1;
+        ccip_c1_tx.data[31:0] <= 32'h1;
 
       case (wr_state)
       S_WR_IDLE:
