@@ -6,9 +6,9 @@
 
 # TODO: check this configuration
 export INSTALL_DIR=/usr/local
-export QUARTUS_HOME=/opt/altera/16.0/quartus
-export MTI_HOME=/opt/altera/16.0/modelsim_ae
-export ASE_WORKDIR=~/samples/ase/work
+export QUARTUS_HOME=/opt/altera/17.1/quartus
+export MTI_HOME=/opt/altera/17.1/modelsim_ae
+export ASE_WORKDIR=~/ase/work
 
 # TODO: check licenses
 export QUARTUS_LICENSE=""

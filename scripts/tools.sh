@@ -8,7 +8,7 @@ echo '--------------------------------------------------------------------------
 
 # read command line args
 USER='sudo '
-INSTALL_PATH='/opt/altera/16.0/'
+INSTALL_PATH='/opt/altera/17.1/'
 
 for i in "$@"
 do
@@ -43,21 +43,21 @@ esac
 done
 
 echo ''
-echo '[tools] IntelFPGA Quartus 16.0'
+echo '[tools] IntelFPGA Quartus 17.1'
 echo ''
 
 cd /tmp/
-curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/16.0/211/ib_tar/Quartus-16.0.0.211-linux.tar
-tar xvf /tmp/Quartus-16.0.0.211-linux.tar
-rm -f /tmp/Quartus-16.0.0.211-linux.tar
-${USER} bash setup.sh --installdir ${INSTALL_PATH} --disable-components modelsim_ase --mode unattended
+curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/QuartusProSetup-17.1.0.240-linux.run
+${USER} QuartusProSetup-17.1.0.240-linux.run --installdir ${INSTALL_PATH} --disable-components modelsim_ase --mode unattended --accept_eula 1
+rm -f /tmp/QuartusProSetup-17.1.0.240-linux.run
 
 echo ''
-echo '[tools] ModelSim Altera Edition 16.0'
+echo '[tools] ModelSim Altera Edition 17.1'
 echo ''
-
-cd /tmp/components/
-${USER} ./ModelSimSetup-16.0.0.211-linux.run --installdir ${INSTALL_PATH} --mode unattended --modelsim_edition modelsim_ae
+cd /tmp/
+curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/ModelSimProSetup-17.1.0.240-linux.run
+${USER} ./ModelSimProSetup-17.1.0.240-linux.run --installdir ${INSTALL_PATH} --mode unattended --modelsim_edition modelsim_ae --accept_eula 1
+rm -f ModelSimProSetup-17.1.0.240-linux.run
 
 echo ''
 echo '[tools] clean'
