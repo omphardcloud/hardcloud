@@ -7,5 +7,6 @@
 
 # dut
 ${PWD}/../../samples/${AFU}/hw/loopback_fifo.sv
-${PWD}/../../samples/${AFU}/hw/loopback.sv
+${PWD}/../../samples/${AFU}/hw/loopback_stream.sv
+${PWD}/../../samples/${AFU}/hw/loopback_index.sv
 ${PWD}/../../samples/${AFU}/hw/ccip_std_afu.sv

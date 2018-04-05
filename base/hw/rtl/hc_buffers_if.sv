@@ -27,18 +27,21 @@ interface hc_buffers_if();
     read_request.control.cmd    <= e_REQUEST_IDLE;
     read_request.control.id     <= t_request_cmd_id'('0);
     read_request.control.offset <= t_request_cmd_offset'('0);
+    read_request.control.finish <= '0;
   endfunction : read_idle
 
   function void read_stream(t_request_cmd_id id, t_request_cmd_offset offset);
     read_request.control.cmd    <= e_REQUEST_READ_STREAM;
     read_request.control.id     <= id;
     read_request.control.offset <= offset;
+    read_request.control.finish <= '0;
   endfunction : read_stream
 
   function void read_indexed(t_request_cmd_id id, t_request_cmd_offset offset);
     read_request.control.cmd    <= e_REQUEST_READ_INDEXED;
     read_request.control.id     <= id;
     read_request.control.offset <= offset;
+    read_request.control.finish <= '0;
   endfunction : read_indexed
 
   function t_request_size read_count();
@@ -61,6 +64,7 @@ interface hc_buffers_if();
     write_request.control.cmd    <= e_REQUEST_IDLE;
     write_request.control.id     <= t_request_cmd_id'('0);
     write_request.control.offset <= t_request_cmd_offset'('0);
+    write_request.control.finish <= '0;
 
     tx_buffer_data.valid <= 1'b0;
   endfunction : write_idle
@@ -69,6 +73,7 @@ interface hc_buffers_if();
     write_request.control.cmd    <= e_REQUEST_WRITE_STREAM;
     write_request.control.id     <= id;
     write_request.control.offset <= t_request_cmd_offset'('0);
+    write_request.control.finish <= '0;
 
     tx_buffer_data.cl_data <= data;
     tx_buffer_data.valid   <= 1'b1;
@@ -82,10 +87,21 @@ interface hc_buffers_if();
     write_request.control.cmd    <= e_REQUEST_WRITE_INDEXED;
     write_request.control.id     <= id;
     write_request.control.offset <= offset;
+    write_request.control.finish <= '0;
 
     tx_buffer_data.cl_data <= data;
     tx_buffer_data.valid   <= 1'b1;
   endfunction : write_indexed
+
+  function void write_finish();
+    write_request.control.cmd    <= e_REQUEST_WRITE_FINISH;
+    write_request.control.id     <= 0;
+    write_request.control.offset <= 0;
+    write_request.control.finish <= '0;
+
+    tx_buffer_data.cl_data <= 1;
+    tx_buffer_data.valid   <= 1'b1;
+  endfunction : write_finish
 
   function t_request_size write_count();
     return write_request.status.count;

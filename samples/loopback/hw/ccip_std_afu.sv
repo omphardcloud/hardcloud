@@ -185,7 +185,11 @@ module ccip_std_afu
     .core_buffer   (core_buffer)
   );
 
-  loopback uu_loopback
+`ifdef LOOPBACK_INDEX
+  loopback_index uu_loopback
+`else
+  loopback_stream uu_loopback
+`endif
   (
     .clk     (clk),
     .reset   (reset),

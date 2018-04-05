@@ -1,8 +1,8 @@
-// loopback.sv
+// loopback_stream.sv
 
 import hc_pkg::*;
 
-module loopback
+module loopback_stream
 (
   input  logic  clk,
   input  logic  reset,
@@ -125,6 +125,6 @@ module loopback
     end
   end
 
-endmodule : loopback
+endmodule : loopback_stream
 
 // taf!

@@ -230,7 +230,9 @@ module hc_requestor
 
     S_RD_INDEX:
       begin
-        rd_next_state = S_RD_IDLE;
+        if (!ccip_rx.c0TxAlmFull) begin
+          rd_next_state = S_RD_IDLE;
+        end
       end
 
     endcase
@@ -316,19 +318,11 @@ module hc_requestor
       write_request_counter > (HC_BUFFER_TX_DEPTH - 5);
   end
 
-  always_comb begin
-    write_request_deq_en = !ccip_rx.c1TxAlmFull && write_request_not_empty;
-  end
+  assign write_request_deq_en =
+    !ccip_rx.c1TxAlmFull && (S_WR_STREAM == wr_state || S_WR_INDEX == wr_state);;
 
   always_ff @(posedge clk or posedge reset) begin
-    if (reset) begin
-      write_request       <= '0;
-      write_request_valid <= '0;
-    end
-    else begin
-      write_request       <= write_request_deq_data;
-      write_request_valid <= write_request_deq_en;
-    end
+    write_request <= (reset) ? '0 : write_request_deq_data;
   end
 
   always_ff @(posedge clk or posedge reset) begin
@@ -348,21 +342,47 @@ module hc_requestor
         ccip_c1_tx.data[31:0] <= 32'h1;
 
       case (wr_state)
+      S_WR_START:
+        begin
+          ccip_c1_tx.valid <= 1'b0;
+        end
+
       S_WR_IDLE:
         begin
           ccip_c1_tx.valid <= 1'b0;
         end
 
-      S_WR_SEND:
+      S_WR_PROCESS:
+        begin
+          ccip_c1_tx.valid <= 1'b0;
+
+          if (S_WR_INDEX == t_wr_state'(write_request.cmd)) begin
+            wr_offset <= write_request.offset;
+          end
+        end
+
+      S_WR_STREAM:
         begin
           wr_hdr.address = hc_buffer[write_request.id].address + wr_offset;
 
-          wr_offset <= t_ccip_clAddr'(wr_offset + write_request_valid);
+          wr_offset <= t_ccip_clAddr'(wr_offset + !ccip_rx.c1TxAlmFull);
 
           wr_hdr.sop = 1'b1;
 
           ccip_c1_tx.hdr   <= wr_hdr;
-          ccip_c1_tx.valid <= write_request_valid;
+          ccip_c1_tx.valid <= !ccip_rx.c1TxAlmFull;
+        end
+
+      S_WR_INDEX:
+        begin
+          wr_hdr.address = hc_buffer[write_request.id].address + wr_offset;
+
+          wr_offset <= t_ccip_clAddr'(wr_offset + !ccip_rx.c1TxAlmFull);
+
+          wr_hdr.sop = 1'b1;
+
+          ccip_c1_tx.hdr   <= wr_hdr;
+          ccip_c1_tx.valid <= !ccip_rx.c1TxAlmFull;
         end
 
       S_WR_FINISH_1:
@@ -396,17 +416,41 @@ module hc_requestor
     wr_next_state = wr_state;
 
     case (wr_state)
-    S_WR_IDLE:
+    S_WR_START:
       begin
         if (hc_control == HC_CONTROL_START) begin
-          wr_next_state = S_WR_SEND;
+          wr_next_state = S_WR_IDLE;
         end
       end
 
-    S_WR_SEND:
+    S_WR_IDLE:
       begin
-        if ((finish == 1) && (write_request_counter == 0)) begin
-          wr_next_state = S_WR_FINISH_1;
+        if (!ccip_rx.c1TxAlmFull) begin
+          if (write_request_not_empty) begin
+            wr_next_state = S_WR_PROCESS;
+          end
+          else if (1'b1 == finish) begin
+            wr_next_state = S_WR_FINISH_1;
+          end
+        end
+      end
+
+    S_WR_PROCESS:
+      begin
+        wr_next_state = t_wr_state'(write_request.cmd);
+      end
+
+    S_WR_STREAM:
+      begin
+        if (!ccip_rx.c1TxAlmFull) begin
+          wr_next_state = S_WR_IDLE;
+        end
+      end
+
+    S_WR_INDEX:
+      begin
+        if (!ccip_rx.c1TxAlmFull) begin
+          wr_next_state = S_WR_IDLE;
         end
       end
 

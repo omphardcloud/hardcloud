@@ -113,7 +113,8 @@ package hc_pkg;
     e_REQUEST_READ_STREAM   = 3'h1,
     e_REQUEST_READ_INDEXED  = 3'h2,
     e_REQUEST_WRITE_STREAM  = 3'h3,
-    e_REQUEST_WRITE_INDEXED = 3'h4
+    e_REQUEST_WRITE_INDEXED = 3'h4,
+    e_REQUEST_WRITE_FINISH  = 3'h5
   } t_request_cmd;
 
   typedef struct packed {
@@ -131,6 +132,7 @@ package hc_pkg;
     t_request_cmd        cmd;
     t_request_cmd_id     id;
     t_request_cmd_offset offset;
+    logic                finish;
   } t_request_control;
 
   typedef struct packed {
@@ -157,11 +159,14 @@ package hc_pkg;
     S_RD_PROCESS = 3'h4
   } t_rd_state;
 
-  typedef enum logic [1:0] {
-    S_WR_IDLE     = 2'h0,
-    S_WR_SEND     = 2'h1,
-    S_WR_FINISH_1 = 2'h2,
-    S_WR_FINISH_2 = 2'h3
+  typedef enum logic [2:0] {
+    S_WR_IDLE     = 3'h0,
+    S_WR_PROCESS  = 3'h1,
+    S_WR_START    = 3'h2,
+    S_WR_STREAM   = 3'h3,
+    S_WR_INDEX    = 3'h4,
+    S_WR_FINISH_1 = 3'h5,
+    S_WR_FINISH_2 = 3'h6
   } t_wr_state;
 
 endpackage : hc_pkg
