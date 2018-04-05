@@ -36,13 +36,17 @@ RUN git clone --recursive https://www.github.com/ciroceissler/hardcloud/ /tmp/ha
 
 # install quartus
 RUN cd tmp; \
-  curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/16.0/211/ib_tar/Quartus-16.0.0.211-linux.tar; \
-  tar xvf /tmp/Quartus-16.0.0.211-linux.tar; \
-  rm -f /tmp/Quartus-16.0.0.211-linux.tar; \
-  bash setup.sh --installdir /opt/altera/16.0/ --disable-components modelsim_ase --mode unattended; \
-  cd /tmp/components/; \
-  ./ModelSimSetup-16.0.0.211-linux.run --installdir /opt/altera/16.0 --mode unattended --modelsim_edition modelsim_ae; \
-  rm -rf /tmp/components/ /tmp/setup.sh tmp/readme.txt
+  curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/QuartusProSetup-17.1.0.240-linux.run \
+  chmod +x QuartusProSetup-17.1.0.240-linux.run \
+  ./QuartusProSetup-17.1.0.240-linux.run --installdir /opt/altera/17.1 --disable-components modelsim_ase --mode unattended --accept_eula 1 \
+  rm -f /tmp/QuartusProSetup-17.1.0.240-linux.run
+
+# install modelsim
+RUN cd tmp; \
+  curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/ModelSimProSetup-17.1.0.240-linux.run \
+  chmod +x ModelSimProSetup-17.1.0.240-linux.run \
+  ./ModelSimProSetup-17.1.0.240-linux.run --installdir /opt/altera/17.1 --mode unattended --modelsim_edition modelsim_ae --accept_eula 1 \
+  rm -f ModelSimProSetup-17.1.0.240-linux.run
 
 # install i686 packages
 RUN yum install -y libgcc.i686 \

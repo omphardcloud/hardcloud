@@ -48,7 +48,8 @@ echo ''
 
 cd /tmp/
 curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/QuartusProSetup-17.1.0.240-linux.run
-${USER} QuartusProSetup-17.1.0.240-linux.run --installdir ${INSTALL_PATH} --disable-components modelsim_ase --mode unattended --accept_eula 1
+chmod +x QuartusProSetup-17.1.0.240-linux.run
+${USER} ./QuartusProSetup-17.1.0.240-linux.run --installdir ${INSTALL_PATH} --disable-components modelsim_ase --mode unattended --accept_eula 1
 rm -f /tmp/QuartusProSetup-17.1.0.240-linux.run
 
 echo ''
@@ -56,6 +57,7 @@ echo '[tools] ModelSim Altera Edition 17.1'
 echo ''
 cd /tmp/
 curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/ModelSimProSetup-17.1.0.240-linux.run
+chmod +x ModelSimProSetup-17.1.0.240-linux.run
 ${USER} ./ModelSimProSetup-17.1.0.240-linux.run --installdir ${INSTALL_PATH} --mode unattended --modelsim_edition modelsim_ae --accept_eula 1
 rm -f ModelSimProSetup-17.1.0.240-linux.run
 
