@@ -1,4 +1,4 @@
-# Makefile -- Grayscale Makefile
+# Makefile -- grayscale Makefile
 
 # creating an application
 TARGET = grayscale
@@ -8,9 +8,6 @@ TARGET_HARPSIM = harpsim_$(TARGET)
 
 # where is the Clang/LLVM with support to Intel HARP offloading?
 ifeq ($(wildcard $(LLVM)),)
-$(error Set LLVM to the root directory of the Clang/LLVM with support to Intel HARP offloading)
-endif
-ifeq ($(wildcard $(LLVM)/lib/libomptarget.so),)
 $(error Set LLVM to the root directory of the Clang/LLVM with support to Intel HARP offloading)
 endif
 ifeq ($(wildcard $(LLVM)/lib/libomptarget.rtl.harpsim.so),)
@@ -28,7 +25,7 @@ LIBS = -lomptarget -lpng
 
 COMPILE = $(LLVM)/bin/clang++
 
-ARGS_HOST =
+ARGS_HOST = -O3
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
 
 # Make it all!
@@ -39,6 +36,9 @@ host:
 
 harpsim:
 	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM)
+
+ir:
+	$(COMPILE) $(ARGS_HOST) $(INCLUDES) src/main.cpp -S -mllvm --x86-asm-syntax=intel -o build/$(TARGET).asm
 
 folder:
 	mkdir -p build/
