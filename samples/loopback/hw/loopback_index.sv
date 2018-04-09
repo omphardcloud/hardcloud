@@ -110,7 +110,7 @@ module loopback_index
   // write request
   //
   always_comb begin
-    fifo_deq_en = !fifo_empty && !buffer.write_full() && wr_state == RUN;
+    fifo_deq_en = !fifo_empty && !buffer.write_fifo_is_full() && wr_state == RUN;
   end
 
   always_ff@(posedge clk or posedge reset) begin

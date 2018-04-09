@@ -91,7 +91,7 @@ module loopback_stream
   // write request
   //
   always_comb begin
-    fifo_deq_en = !fifo_empty && !buffer.write_full();
+    fifo_deq_en = !fifo_empty && !buffer.write_fifo_is_full();
   end
 
   always_ff@(posedge clk or posedge reset) begin

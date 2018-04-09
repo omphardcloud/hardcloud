@@ -93,30 +93,20 @@ interface hc_buffers_if();
     tx_buffer_data.valid   <= 1'b1;
   endfunction : write_indexed
 
-  function void write_finish();
-    write_request.control.cmd    <= e_REQUEST_WRITE_FINISH;
-    write_request.control.id     <= 0;
-    write_request.control.offset <= 0;
-    write_request.control.finish <= '0;
-
-    tx_buffer_data.cl_data <= 1;
-    tx_buffer_data.valid   <= 1'b1;
-  endfunction : write_finish
-
-  function t_request_size write_count();
+  function t_request_size write_fifo_count();
     return write_request.status.count;
-  endfunction : write_count
+  endfunction : write_fifo_count
 
-  function logic write_empty();
+  function logic write_fifo_is_empty();
     return write_request.status.empty;
-  endfunction : write_empty
+  endfunction : write_fifo_is_empty
 
-  function logic write_full();
+  function logic write_fifo_is_full();
     return write_request.status.full;
-  endfunction : write_full
+  endfunction : write_fifo_is_full
 
   //
-  // buffer functions
+  // read response functions
   //
   function logic valid();
     return rx_buffer_data.valid;
@@ -126,6 +116,9 @@ interface hc_buffers_if();
     return rx_buffer_data.cl_data;
   endfunction : data
 
+  //
+  // buffer functions
+  //
   function t_buffer_size size(int id);
     return buffer_size[id*HC_MAX_BUFFER_SIZE +: HC_MAX_BUFFER_SIZE];
   endfunction : size
