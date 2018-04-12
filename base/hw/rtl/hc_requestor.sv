@@ -1,6 +1,7 @@
 // hc_requestor.sv
 
 import ccip_if_pkg::*;
+import hc_user_pkg::*;
 import hc_pkg::*;
 
 module hc_requestor
@@ -70,7 +71,7 @@ module hc_requestor
   hc_fifo
   #(
     .HC_FIFO_WIDTH($bits(t_request_control)),
-    .HC_FIFO_DEPTH(HC_REQUEST_DEPTH)
+    .HC_FIFO_DEPTH(HC_READ_REQUEST_FIFO_DEPTH)
   )
   uu_hc_read_request_fifo
   (
@@ -90,7 +91,7 @@ module hc_requestor
     core_buffer.read_request.status.count <= read_request_counter;
     core_buffer.read_request.status.empty <= !read_request_not_empty;
     core_buffer.read_request.status.full  <=
-      read_request_counter > (HC_REQUEST_DEPTH - 4);
+      read_request_counter > (HC_READ_REQUEST_FIFO_DEPTH - 4);
   end
 
   //
@@ -277,7 +278,7 @@ module hc_requestor
   logic write_request_not_full;
   logic write_request_valid;
 
-  logic [HC_BUFFER_TX_DEPTH/2 - 1:0] write_request_counter;
+  logic [HC_WRITE_FIFO_DEPTH/2 - 1:0] write_request_counter;
 
   t_request_write_fifo write_request;
   t_request_write_fifo write_request_enq_data;
@@ -295,7 +296,7 @@ module hc_requestor
   hc_fifo
   #(
     .HC_FIFO_WIDTH($bits(t_request_write_fifo)),
-    .HC_FIFO_DEPTH(HC_BUFFER_TX_DEPTH)
+    .HC_FIFO_DEPTH(HC_WRITE_FIFO_DEPTH)
   )
   uu_hc_tx_fifo
   (
@@ -315,7 +316,7 @@ module hc_requestor
     core_buffer.write_request.status.count <= write_request_counter;
     core_buffer.write_request.status.empty <= !write_request_not_empty;
     core_buffer.write_request.status.full  <=
-      write_request_counter > (HC_BUFFER_TX_DEPTH - 5);
+      write_request_counter > (HC_WRITE_FIFO_DEPTH - 5);
   end
 
   assign write_request_deq_en =

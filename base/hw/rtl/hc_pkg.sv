@@ -2,21 +2,13 @@
 
 package hc_pkg;
   import ccip_if_pkg::*;
-
-  //
-  // HardCloud user definitions
-  //
-
-  parameter HC_BUFFER_TX_SIZE = 1;
-  parameter HC_BUFFER_RX_SIZE = 1;
-
-  parameter HC_BUFFER_TX_DEPTH = 8;
-
-  parameter HC_BUFFER_SIZE = HC_BUFFER_TX_SIZE + HC_BUFFER_RX_SIZE;
+  import hc_user_pkg::*;
 
   //
   // HardCloud internal definitions
   //
+
+  parameter HC_BUFFER_SIZE = HC_BUFFER_TX_SIZE + HC_BUFFER_RX_SIZE;
 
   parameter HC_DSM_BASE_LOW = 16'h110; // 32b - RW  Lower 32-bits of DSM base address
   parameter HC_CONTROL      = 16'h118; // 32b - RW  Control to start n stop the test
@@ -97,8 +89,6 @@ package hc_pkg;
 
   parameter HC_MAX_BUFFER_SIZE = 32;
 
-  parameter HC_REQUEST_DEPTH = 8;
-
   typedef logic [(CCIP_CLDATA_WIDTH - 1):0]                 t_buffer_data;
   typedef logic [(HC_MAX_BUFFER_SIZE - 1):0]                t_buffer_size;
   typedef logic [(HC_BUFFER_SIZE*HC_MAX_BUFFER_SIZE - 1):0] t_buffer_total_size;
@@ -106,7 +96,7 @@ package hc_pkg;
   typedef logic [$clog2(HC_BUFFER_SIZE):0]  t_request_cmd_id;
   typedef t_ccip_clAddr                     t_request_cmd_offset;
 
-  typedef logic [(HC_REQUEST_DEPTH/2 - 1):0]  t_request_size;
+  typedef logic [(HC_READ_REQUEST_FIFO_DEPTH/2 - 1):0]  t_request_size;
 
   typedef enum logic [2:0] {
     e_REQUEST_IDLE          = 3'h0,
