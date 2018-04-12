@@ -1,7 +1,5 @@
 // loopback_fifo.sv
 
-import hc_pkg::*;
-
 module loopback_fifo
 #(
   parameter LOOPBACK_FIFO_WIDTH = 512,

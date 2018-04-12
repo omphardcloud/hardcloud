@@ -1,7 +1,5 @@
 // hc_fifo.sv
 
-import hc_pkg::*;
-
 module hc_fifo
 #(
   parameter HC_FIFO_WIDTH = 512,
