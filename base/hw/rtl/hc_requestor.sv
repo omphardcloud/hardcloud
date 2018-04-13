@@ -116,7 +116,7 @@ module hc_requestor
     if (reset) begin
       read_request <= '0;
     end
-    else
+    else begin
       if (read_request_deq_en) begin
         read_request <= read_request_deq_data;
       end
