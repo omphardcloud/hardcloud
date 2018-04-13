@@ -100,12 +100,12 @@ module hc_requestor
   t_rd_state rd_state;
   t_rd_state rd_next_state;
 
-  t_ccip_clAddr rd_offset;
+  t_ccip_clAddr rd_offset[HC_BUFFER_SIZE];
   t_ccip_c0_ReqMemHdr rd_hdr;
 
   t_request_control read_request;
 
-  logic [9:0] read_stream_size;
+  logic [10:0] read_stream_size;
 
   always_comb begin
     read_request_deq_en =
@@ -116,7 +116,7 @@ module hc_requestor
     if (reset) begin
       read_request <= '0;
     end
-    else begin
+    else
       if (read_request_deq_en) begin
         read_request <= read_request_deq_data;
       end
@@ -143,12 +143,15 @@ module hc_requestor
 
       rd_hdr = t_ccip_c0_ReqMemHdr'('0);
 
-      rd_offset <= t_ccip_clAddr'('0);
+      for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
+        rd_offset[i] <= t_ccip_clAddr'('0);
+      end
     end
     else begin
 
       rd_hdr.cl_len  = eCL_LEN_1;
-      rd_hdr.address = hc_buffer[read_request.id].address + rd_offset;
+      rd_hdr.address =
+        hc_buffer[read_request.id].address + rd_offset[read_request.id];
 
       ccip_c0_tx.hdr <= rd_hdr;
 
@@ -168,7 +171,7 @@ module hc_requestor
           ccip_c0_tx.valid <= 1'b0;
 
           if (S_RD_INDEX == t_rd_state'(read_request.cmd)) begin
-            rd_offset <= read_request.offset;
+            rd_offset[read_request.id] <= read_request.offset;
           end
         end
 
@@ -176,14 +179,16 @@ module hc_requestor
         begin
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
 
-          rd_offset <= t_ccip_clAddr'(rd_offset + !ccip_rx.c0TxAlmFull);
+          rd_offset[read_request.id] <=
+            t_ccip_clAddr'(rd_offset[read_request.id] + !ccip_rx.c0TxAlmFull);
         end
 
       S_RD_INDEX:
         begin
           ccip_c0_tx.valid <= !ccip_rx.c0TxAlmFull;
 
-          rd_offset <= t_ccip_clAddr'(rd_offset + !ccip_rx.c0TxAlmFull);
+          rd_offset[read_request.id] <=
+            t_ccip_clAddr'(rd_offset[read_request.id] + !ccip_rx.c0TxAlmFull);
         end
 
       endcase
@@ -267,7 +272,7 @@ module hc_requestor
   t_wr_state wr_state;
   t_wr_state wr_next_state;
 
-  t_ccip_clAddr wr_offset;
+  t_ccip_clAddr wr_offset[HC_BUFFER_SIZE];
   t_ccip_clAddr wr_rsp_cnt;
 
   t_ccip_c1_ReqMemHdr wr_hdr;
@@ -280,7 +285,7 @@ module hc_requestor
 
   logic [HC_WRITE_FIFO_DEPTH/2 - 1:0] write_request_counter;
 
-  t_request_write_fifo write_request;
+  t_request_write_fifo write_request /* synthesis preserve */;
   t_request_write_fifo write_request_enq_data;
   t_request_write_fifo write_request_deq_data;
 
@@ -328,12 +333,14 @@ module hc_requestor
 
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
-      wr_offset  <= '0;
-
       wr_hdr = t_ccip_c1_ReqMemHdr'(0);
       ccip_c1_tx.hdr   <= wr_hdr;
       ccip_c1_tx.valid <= 1'b0;
       ccip_c1_tx.data  <= t_ccip_clData'('0);
+
+      for (int i = 0; i < HC_BUFFER_SIZE; i++) begin
+        wr_offset[i] <= '0;
+      end
     end
     else begin
 
@@ -358,15 +365,17 @@ module hc_requestor
           ccip_c1_tx.valid <= 1'b0;
 
           if (S_WR_INDEX == t_wr_state'(write_request.cmd)) begin
-            wr_offset <= write_request.offset;
+            wr_offset[write_request.id] <= write_request.offset;
           end
         end
 
       S_WR_STREAM:
         begin
-          wr_hdr.address = hc_buffer[write_request.id].address + wr_offset;
+          wr_hdr.address =
+            hc_buffer[write_request.id].address + wr_offset[write_request.id];
 
-          wr_offset <= t_ccip_clAddr'(wr_offset + !ccip_rx.c1TxAlmFull);
+          wr_offset[write_request.id] <=
+            t_ccip_clAddr'(wr_offset[write_request.id] + !ccip_rx.c1TxAlmFull);
 
           wr_hdr.sop = 1'b1;
 
@@ -376,9 +385,11 @@ module hc_requestor
 
       S_WR_INDEX:
         begin
-          wr_hdr.address = hc_buffer[write_request.id].address + wr_offset;
+          wr_hdr.address =
+            hc_buffer[write_request.id].address + wr_offset[write_request.id];
 
-          wr_offset <= t_ccip_clAddr'(wr_offset + !ccip_rx.c1TxAlmFull);
+          wr_offset[write_request.id] <=
+            t_ccip_clAddr'(wr_offset[write_request.id] + !ccip_rx.c1TxAlmFull);
 
           wr_hdr.sop = 1'b1;
 
