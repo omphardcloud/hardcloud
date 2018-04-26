@@ -24,6 +24,7 @@ module loopback_stream
 
   t_buffer_data fifo_enq_data;
   t_buffer_data fifo_deq_data;
+  t_buffer_data fifo_deq_data_q;
 
   loopback_fifo
   #(
@@ -95,7 +96,8 @@ module loopback_stream
   end
 
   always_ff@(posedge clk or posedge reset) begin
-    fifo_deq_en_q <= (reset) ? 1'b0 : fifo_deq_en;
+    fifo_deq_en_q   <= (reset) ? 1'b0 : fifo_deq_en;
+    fifo_deq_data_q <= (reset) ? '0   : fifo_deq_data;
   end
 
   always_ff@(posedge clk or posedge reset) begin
@@ -103,7 +105,7 @@ module loopback_stream
       buffer.write_idle();
     end
     else begin
-      buffer.write_stream(0, fifo_deq_data);
+      buffer.write_stream(0, fifo_deq_data_q);
 
       if (!fifo_deq_en_q) begin
         buffer.write_idle();
