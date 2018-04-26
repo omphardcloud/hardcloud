@@ -103,7 +103,7 @@ module hc_requestor
   t_ccip_clAddr rd_offset[HC_BUFFER_SIZE];
   t_ccip_c0_ReqMemHdr rd_hdr;
 
-  t_request_control read_request;
+  t_request_control read_request /*synthesis preserve*/;
 
   logic [10:0] read_stream_size;
 
