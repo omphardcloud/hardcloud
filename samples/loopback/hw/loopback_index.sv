@@ -27,6 +27,7 @@ module loopback_index
 
   t_buffer_data fifo_enq_data;
   t_buffer_data fifo_deq_data;
+  t_buffer_data fifo_deq_data_q;
 
   loopback_fifo
   #(
@@ -114,7 +115,8 @@ module loopback_index
   end
 
   always_ff@(posedge clk or posedge reset) begin
-    fifo_deq_en_q <= (reset) ? 1'b0 : fifo_deq_en;
+    fifo_deq_en_q   <= (reset) ? 1'b0 : fifo_deq_en;
+    fifo_deq_data_q <= (reset) ? '0   : fifo_deq_data;
   end
 
   always_ff@(posedge clk or posedge reset) begin
@@ -122,7 +124,7 @@ module loopback_index
       buffer.write_idle();
     end
     else begin
-      buffer.write_indexed(0, write_offset, fifo_deq_data);
+      buffer.write_indexed(0, write_offset, fifo_deq_data_q);
 
       if (!fifo_deq_en_q) begin
         buffer.write_idle();
