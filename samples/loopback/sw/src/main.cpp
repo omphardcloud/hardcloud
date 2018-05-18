@@ -20,30 +20,11 @@ int main()
   std::cout << "[HardCloud] offload : Loopback AFU simulation\n\n";
 
   #pragma omp target device(HARPSIM) map(to: A) map(from: B)
-  #pragma omp parallel for use(hrw) module(loopback)
+  #pragma omp parallel for use(hrw) module(loopback) check
   for (int i = 0; i < NI; i++)
   {
     B[i] = A[i];
   }
-
-  // check data
-  int error_cnt = 0;
-  for (int i = 0; i < NI; i++)
-  {
-    if (i != B[i])
-    {
-      std::cout << i << ", " << B[i] << std::endl;
-
-      error_cnt++;
-    }
-  }
-
-  std::cout << "[HardCloud] result  : ";
-
-  if (0 == error_cnt)
-    std::cout << "PASS\n\n";
-  else
-    std::cout << "FAIL\n\n";
 
   std::cout << "[HardCloud] finish  : Loopback Application\n";
 

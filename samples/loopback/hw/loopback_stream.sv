@@ -2,6 +2,9 @@
 
 import hc_pkg::*;
 
+`define A 1
+`define B 0
+
 module loopback_stream
 (
   input  logic  clk,
@@ -50,7 +53,7 @@ module loopback_stream
   //
   function void read_start();
     if (start) begin
-      buffer.read_stream(1, 512);
+      buffer.read_stream(`A, 512);
 
       state <= FINISH;
     end
@@ -105,7 +108,7 @@ module loopback_stream
       buffer.write_idle();
     end
     else begin
-      buffer.write_stream(0, fifo_deq_data_q);
+      buffer.write_stream(`B, fifo_deq_data_q);
 
       if (!fifo_deq_en_q) begin
         buffer.write_idle();
