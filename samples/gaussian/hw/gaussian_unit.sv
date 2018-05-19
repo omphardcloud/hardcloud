@@ -7,7 +7,6 @@ module gaussian_unit
   output reg [127:0] data_out
 );
 
-  localparam DELAY          =    1;
   localparam PARALELL_UNITS =   16;
   localparam KERNEL_SIZE    = 1024;
 
@@ -15,8 +14,6 @@ module gaussian_unit
 
   reg [PARALELL_UNITS - 1:0] data_in_q;
   reg [PARALELL_UNITS - 1:0] row_buffer_q[2];
-
-  reg [127:0] data_out_q[DELAY];
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
@@ -48,7 +45,7 @@ module gaussian_unit
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
-      data_out_q[0] <= '0;
+      data_out <= '0;
     end
     else if (valid_in) begin
       for (int i = 0; i < PARALELL_UNITS; i++) begin
@@ -91,25 +88,8 @@ module gaussian_unit
         tmp += data[2][1] >> 3;
         tmp += data[2][2] >> 4;
 
-        data_out_q[0][8*i +: 8] <= tmp;
+        data_out[8*i +: 8] <= tmp;
       end
-    end
-  end
-
-  always_ff @(posedge clk) begin
-    if (!rst_b) begin
-      data_out <= '0;
-
-      for (int i = 1; i < DELAY; i++) begin
-        data_out_q[i] <= '0;
-      end
-    end
-    else if (valid_in) begin
-      for (int i = 1; i < DELAY; i++) begin
-        data_out_q[i] <= data_out_q[i - 1];
-      end
-
-      data_out <= data_out_q[DELAY - 1];
     end
   end
 
