@@ -52,9 +52,6 @@ module gaussian_wrapper
     end
   endfunction : read_start
 
-  function void read_dummy_data();
-  endfunction : read_dummy_data
-
   function void read_request();
     buffer.read_indexed(`BUFFER_IMAGE_IN, read_offset);
 
