@@ -8,7 +8,6 @@ module sobel_unit
   output reg         valid_out
 );
 
-  localparam DELAY          = 1;
   localparam PARALELL_UNITS = 16;
   localparam KERNEL_SIZE    = 512;
 
@@ -16,8 +15,6 @@ module sobel_unit
 
   reg [15:0] data_in_q;
   reg [15:0] row_buffer_q[2];
-
-  reg [511:0] data_out_q[DELAY];
 
   always_ff @(posedge clk) begin
     if(!rst_b) begin
@@ -58,7 +55,7 @@ module sobel_unit
 
   always_ff @(posedge clk) begin
     if (!rst_b) begin
-      data_out_q[0] <= 0;
+      data_out <= 0;
     end
     else if (valid_in) begin
       for (int i = 0; i < PARALELL_UNITS; i++) begin
@@ -114,25 +111,8 @@ module sobel_unit
 
         tmp = dir_x + dir_y;
 
-        data_out_q[0][32*i +: 32] <= {8'h00, tmp, tmp, tmp};
+        data_out[32*i +: 32] <= {8'h00, tmp, tmp, tmp};
       end
-    end
-  end
-
-  always_ff @(posedge clk) begin
-    if (!rst_b) begin
-      data_out <= '0;
-
-      for (int i = 1; i < DELAY; i++) begin
-        data_out_q[i] <= '0;
-      end
-    end
-    else if (valid_in) begin
-      for (int i = 1; i < DELAY; i++) begin
-        data_out_q[i] <= data_out_q[i - 1];
-      end
-
-      data_out <= data_out_q[DELAY - 1];
     end
   end
 

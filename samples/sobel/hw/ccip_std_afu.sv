@@ -32,7 +32,7 @@
 `include "cci_mpf_if.vh"
 
 import ccip_if_pkg::*;
-import sobel_pkg::*;
+import hc_pkg::*;
 
 module ccip_std_afu
 (
@@ -55,11 +55,10 @@ module ccip_std_afu
 
   logic clk;
   logic reset;
+  logic start;
+  logic finish;
 
-  logic [511:0] data_tx;
-  logic         valid_tx;
-  logic [511:0] data_rx;
-  logic         valid_rx;
+  hc_buffers_if core_buffer();
 
   t_hc_control  hc_control;
   t_hc_address  hc_dsm_base;
@@ -144,41 +143,39 @@ module ccip_std_afu
     .c1NotEmpty()
   );
 
-  sobel_csr uu_sobel_csr
+  hc_csr uu_hc_csr
   (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .fiu          (fiu),
-    .afu          (afu_csrs)
+    .clk             (clk),
+    .reset           (reset),
+    .hc_control      (hc_control),
+    .hc_dsm_base     (hc_dsm_base),
+    .hc_buffer       (hc_buffer),
+    .fiu             (fiu),
+    .afu             (afu_csrs)
   );
 
-  sobel_requestor uu_sobel_requestor
+  hc_requestor uu_hc_requestor
   (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .data_in      (data_rx),
-    .valid_in     (valid_rx),
-    .ccip_rx      (ccip_rx),
-    .ccip_c0_tx   (ccip_tx.c0),
-    .ccip_c1_tx   (ccip_tx.c1),
-    .data_out     (data_tx),
-    .valid_out    (valid_tx)
+    .clk           (clk),
+    .reset         (reset),
+    .start         (start),
+    .finish        (finish),
+    .hc_control    (hc_control),
+    .hc_dsm_base   (hc_dsm_base),
+    .hc_buffer     (hc_buffer),
+    .ccip_rx       (ccip_rx),
+    .ccip_c0_tx    (ccip_tx.c0),
+    .ccip_c1_tx    (ccip_tx.c1),
+    .core_buffer   (core_buffer)
   );
 
-  sobel uu_sobel
+  sobel_wrapper uu_sobel_wrapper
   (
-    .clk       (clk),
-    .reset     (reset),
-    .data_in   (data_tx),
-    .valid_in  (valid_tx),
-    .data_out  (data_rx),
-    .valid_out (valid_rx)
+    .clk     (clk),
+    .reset   (reset),
+    .start   (start),
+    .finish  (finish),
+    .buffer  (core_buffer)
   );
 
 endmodule : ccip_std_afu
