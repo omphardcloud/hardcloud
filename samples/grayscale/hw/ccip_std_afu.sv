@@ -32,7 +32,7 @@
 `include "cci_mpf_if.vh"
 
 import ccip_if_pkg::*;
-import grayscale_pkg::*;
+import hc_pkg::*;
 
 module ccip_std_afu
 (
@@ -55,11 +55,10 @@ module ccip_std_afu
 
   logic clk;
   logic reset;
+  logic start;
+  logic finish;
 
-  logic [511:0] data_tx;
-  logic         valid_tx;
-  logic [511:0] data_rx;
-  logic         valid_rx;
+  hc_buffers_if core_buffer();
 
   t_hc_control  hc_control;
   t_hc_address  hc_dsm_base;
@@ -67,6 +66,9 @@ module ccip_std_afu
 
   t_if_ccip_Tx  ccip_tx;
   t_if_ccip_Rx  ccip_rx;
+
+  t_if_ccip_Rx  afck_cp2af_sRx;
+  t_if_ccip_Tx  afck_af2cp_sTx;
 
   // combinational logic
   assign clk   = pClk;
@@ -119,8 +121,8 @@ module ccip_std_afu
     .pck_cp2af_softReset (reset),
     .pck_cp2af_pwrState  (pck_cp2af_pwrState),
     .pck_cp2af_error     (pck_cp2af_error),
-    .pck_cp2af_sRx       (pck_cp2af_sRx),
-    .pck_af2cp_sTx       (pck_af2cp_sTx),
+    .pck_cp2af_sRx       (afck_cp2af_sRx),
+    .pck_af2cp_sTx       (afck_af2cp_sTx),
     .fiu                 (fiu)
   );
 
@@ -144,41 +146,52 @@ module ccip_std_afu
     .c1NotEmpty()
   );
 
-  grayscale_csr uu_grayscale_csr
+  ccip_async_shim uu_ccip_async_shim
   (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .fiu          (fiu),
-    .afu          (afu_csrs)
+    .bb_softreset     (pck_cp2af_softReset),
+    .bb_clk           (pClk),
+    .bb_tx            (pck_af2cp_sTx),
+    .bb_rx            (pck_cp2af_sRx),
+    // .afu_softreset    (reset),
+    .afu_clk          (clk),
+    .afu_tx           (afck_af2cp_sTx),
+    .afu_rx           (afck_cp2af_sRx),
+    .async_shim_error ()
   );
 
-  grayscale_requestor uu_grayscale_requestor
+  hc_csr uu_hc_csr
   (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .data_in      (data_rx),
-    .valid_in     (valid_rx),
-    .ccip_rx      (ccip_rx),
-    .ccip_c0_tx   (ccip_tx.c0),
-    .ccip_c1_tx   (ccip_tx.c1),
-    .data_out     (data_tx),
-    .valid_out    (valid_tx)
+    .clk             (clk),
+    .reset           (reset),
+    .hc_control      (hc_control),
+    .hc_dsm_base     (hc_dsm_base),
+    .hc_buffer       (hc_buffer),
+    .fiu             (fiu),
+    .afu             (afu_csrs)
+  );
+
+  hc_requestor uu_hc_requestor
+  (
+    .clk           (clk),
+    .reset         (reset),
+    .start         (start),
+    .finish        (finish),
+    .hc_control    (hc_control),
+    .hc_dsm_base   (hc_dsm_base),
+    .hc_buffer     (hc_buffer),
+    .ccip_rx       (ccip_rx),
+    .ccip_c0_tx    (ccip_tx.c0),
+    .ccip_c1_tx    (ccip_tx.c1),
+    .core_buffer   (core_buffer)
   );
 
   grayscale uu_grayscale
   (
-    .clk       (clk),
-    .reset     (reset),
-    .data_in   (data_tx),
-    .valid_in  (valid_tx),
-    .data_out  (data_rx),
-    .valid_out (valid_rx)
+    .clk     (clk),
+    .reset   (reset),
+    .start   (start),
+    .finish  (finish),
+    .buffer  (core_buffer)
   );
 
 endmodule : ccip_std_afu
