@@ -34,19 +34,7 @@ RUN git clone --recursive https://www.github.com/ciroceissler/hardcloud/ /tmp/ha
   cp /tmp/hardcloud/scripts/setup.hardcloud ~/setup.hardcloud; \
   rm -rf /tmp/hardcloud
 
-# install quartus
-RUN cd tmp; \
-  curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/QuartusProSetup-17.1.0.240-linux.run \
-  chmod +x QuartusProSetup-17.1.0.240-linux.run \
-  ./QuartusProSetup-17.1.0.240-linux.run --installdir /opt/altera/17.1 --disable-components modelsim_ase --mode unattended --accept_eula 1 \
-  rm -f /tmp/QuartusProSetup-17.1.0.240-linux.run
-
-# install modelsim
-RUN cd tmp; \
-  curl --retry 999 -O http://download.altera.com/akdlm/software/acdsinst/17.1/240/ib_installers/ModelSimProSetup-17.1.0.240-linux.run \
-  chmod +x ModelSimProSetup-17.1.0.240-linux.run \
-  ./ModelSimProSetup-17.1.0.240-linux.run --installdir /opt/altera/17.1 --mode unattended --modelsim_edition modelsim_ae --accept_eula 1 \
-  rm -f ModelSimProSetup-17.1.0.240-linux.run
+# TODO(ciroceissler): install Xilinx tools
 
 # install i686 packages
 RUN yum install -y libgcc.i686 \
