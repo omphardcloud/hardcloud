@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+#
+# user configuration
+#
+
+# configure hardcloud, opae-sdk and intel-fpga-bbb
+
+export LLVM=/home/ramon/hardcloud/llvm/build
+export LD_LIBRARY_PATH=/opt/Xilinx/SDx/2017.1.op/runtime/lib/x86_64:/opt/Xilinx/SDx/2017.1.op/lib/lnx64.o:/opt/Xilinx/SDx/2017.1.op/lnx64/tools/gcc/lib64lib:/home/ramon/hardcloud/llvm/build/lib:$LD_LIBRARY_PATH
+export XCL_EMULATION_MODE=hw_emu
+export SDX_PLATFORM=xilinx:aws-vu9p-f1:4ddr-xpr-2pr:4.0
+export XILINX_SDX=/opt/Xilinx/SDx/2017.1.op/
