@@ -1,5 +1,7 @@
 #include <iostream>
-#include "harp.h"
+//#include "harp.h"
+
+#define AWSF1 9007
 
 #define CL 64                 // cache line - bytes
 #define NI 512*CL/sizeof(int) // number of itens
@@ -15,18 +17,24 @@ int main()
   for (int i = 0; i < NI; i++)
   {
     A[i] = i;
+    B[i] = 0;
   }
 
   std::cout << "[HardCloud] offload : Loopback AFU simulation\n\n";
 
-  #pragma omp target device(HARPSIM) map(to: A) map(from: B)
+  #pragma omp target device(AWSF1) map(to: A) map(from: B)
   #pragma omp parallel for use(hrw) module(loopback) check
   for (int i = 0; i < NI; i++)
   {
     B[i] = A[i];
   }
-
-  std::cout << "[HardCloud] finish  : Loopback Application\n";
+  
+  std::cout << "Result: \n";
+  for(int i = 0; i < 10; i++ )
+  {
+    std::cout << B[i] << " ";
+  }
+  std::cout << "\n[HardCloud] finish  : Loopback Application\n";
 
   return 0;
 }

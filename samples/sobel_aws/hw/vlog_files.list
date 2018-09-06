@@ -1,0 +1,16 @@
+# basic building blocks
+-F ${PWD}/../../intel-fpga-bbb/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
+-F ${PWD}/../../intel-fpga-bbb/BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
+
+# user package
+${PWD}/../../samples/${AFU}/hw/hc_user_pkg.sv
+
+# hardcloud blocks
+-F ${PWD}/../../base/hw/sim/hardcloud_sim_addenda.txt
+
+# dut
+${PWD}/../../samples/${AFU}/hw/rgb2luma.sv
+${PWD}/../../samples/${AFU}/hw/sobel_unit.sv
+${PWD}/../../samples/${AFU}/hw/sobel.sv
+${PWD}/../../samples/${AFU}/hw/sobel_wrapper.sv
+${PWD}/../../samples/${AFU}/hw/ccip_std_afu.sv
