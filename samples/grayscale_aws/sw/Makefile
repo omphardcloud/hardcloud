@@ -36,7 +36,7 @@ host:
 
 awsf1:
 	$(COMPILE) $(ARGS_AWSF1SIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_AWSF1SIM)
-	cp /home/ramon/hardcloud/base/hw/awsf1/emconfig.json build/
+	cp /home/centos/hardcloud/base/hw/awsf1/emconfig.json build/
 
 ir:
 	$(COMPILE) $(ARGS_HOST) $(INCLUDES) src/main.cpp -S -mllvm --x86-asm-syntax=intel -o build/$(TARGET).asm
