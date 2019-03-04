@@ -26,3 +26,6 @@ tags
 .gitusers
 CMakeLists.txt.user
 
+
+# install
+install

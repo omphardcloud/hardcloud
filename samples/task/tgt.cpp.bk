@@ -1,0 +1,23 @@
+#include <omp.h>
+#include <stdio.h>
+#define GPU0 0
+#define GPU1 1
+#define CPU 3
+#define N 99999
+int main(){
+    int A = 1;
+    #pragma omp parallel
+    #pragma omp single
+    {
+    	#pragma omp target device(CPU) depend(out: A)  map(tofrom:A)
+	{
+		A = 10;
+	}
+	
+    	#pragma omp target device(GPU0) depend(in: A)  map(tofrom:A)
+	{
+		A += 100 ;
+	}
+    }
+    printf("result:  %d\n", A);
+}
