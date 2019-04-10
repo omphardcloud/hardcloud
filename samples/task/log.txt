@@ -1,457 +1,231 @@
-__tgt_register_lib
+entering __tgt_register_lib
+p entering RTLsTy::LoadRTLsOnce
 Kmpc --> __kmp_get_thread_id_reg entering.
+Kmpc --> __kmp_get_thread_id_reg __kmp_init_serial = FALSE / gtid = -2.
 Kmpc --> __kmp_get_thread_id_reg before __kmp_do_serial_initialize.
 Kmpc --> kmp_do_serial_initialize entering 
-__kmp_do_serial_initialize before __kmp_register_root  T#-2107280192 6636
+Kmpc --> kmp_do_serial_initialize alloc __kmp_threas size = 576 
+__kmp_do_serial_initialize before __kmp_register_root  T#183661888 6636
 __kmp_register_root entering
-kmp_register_root before initialize_root
 __kmp_initialize_root: before __kmp_allocate_team root_team
 __kmp_allocate_team: called
-__kmp_initialize_root: after __kmp_allocate_team root_team = 0xa86b40
-__kmp_initialize_root: before __kmp_allocate_team hot_team
+__kmp_initialize_team: enter: team=0x833940
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x833940
+__kmp_init_implicit_task(enter): T#:0 team=0x833940 task=0x8344c0, reinit=FALSE
+__kmp_initialize_root: before __kmp_allocate_team hot_team 3244
 __kmp_allocate_team: called
-__kmp_initialize_root: after __kmp_allocate_team hot_team = 0xa87480
-kmp_register_root after initialize_root
+__kmp_initialize_team: enter: team=0x834600
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x834600
+__kmp_init_implicit_task(enter): T#:0 team=0x834600 task=0x8398c0, reinit=FALSE
 __kmp_register_root: before serial_team __kmp_allocate_team
 __kmp_allocate_team: called
-__kmp_register_root: after serial_team __kmp_allocate_team
-__kmp_register root: T#0 before __kmp_create_worker
-__kmp_create_worker #0
-__kmp_create_worker: uber thread (0)
-__kmp_register root: T#0 after __kmp_create_worker
-__kmp_register root: T#0 exiting
-__kmp_do_serial_initialize after __kmp_register_root  T#0 6636
+__kmp_initialize_team: enter: team=0x83a980
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x83a980
+__kmp_init_implicit_task(enter): T#:0 team=0x83a980 task=0x83b280, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#0:0 this_thread=0x839f00 curtask=(nil)
+__kmp_init_implicit_task(enter): T#:0 team=0x833940 task=0x8344c0, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x839f00 curtask=(nil) parent_task=(nil)
+__kmp_initialize_info2: T#0:0 this_thread=0x839f00 curtask=0x8344c0
 Kmpc --> __kmp_do_serial_initialize: exit
 Kmpc --> __kmp_get_thread_id_reg exiting 0.
+
+
+NUMBER OF DEVICES: 5
+
+
 Kmpc --> kmpc_fork_call entering
 Kmpc --> __kmp_get_thread_id_reg entering.
+*** __kmp_get_global_thread_id_reg: using TDATA
 Kmpc --> __kmp_get_thread_id_reg exiting 0.
 __kmp_fork_call: enter T#0
 Kmpc --> __kmp_get_thread_id_reg entering.
+*** __kmp_get_global_thread_id_reg: using TDATA
 Kmpc --> __kmp_get_thread_id_reg exiting 0.
 __kmp_fork_call: before __kmp_allocate_team
 __kmp_allocate_team: called
-__kmp_allocate_thread: T#0
 __kmp_allocate_thread: before __kmp_allocate_team th_serial/serial_team
 __kmp_allocate_team: called
-__kmp_allocate_thread: before __kmp_create_worker: 0xa8ee00
-__kmp_create_worker #1
-__kmp_create_worker: try to create thread (1)
-__kmp_create_worker: T#1, default stacksize = 4194304 bytes, __kmp_stksize = 4194304 bytes, final stacksize = 4194432 bytes
-__kmp_create_worker: done creating thread (1)
-__kmp_allocate_thread: T#0
-__kmp_allocate_thread: before __kmp_allocate_team th_serial/serial_team
-__kmp_allocate_team: called
-__kmp_allocate_thread: before __kmp_create_worker: 0xa91cc0
-__kmp_create_worker #2
-__kmp_create_worker: try to create thread (2)
-__kmp_create_worker: T#2, default stacksize = 4194304 bytes, __kmp_stksize = 4194304 bytes, final stacksize = 4194560 bytes
-__kmp_launch_worker
-__kmp_create_worker: done creating thread (2)
-__kmp_allocate_thread: T#0
-__kmp_allocate_thread: before __kmp_allocate_team th_serial/serial_team
-__kmp_allocate_team: called
-__kmp_launch_worker
-__kmp_allocate_thread: before __kmp_create_worker: 0xa94bc0
-__kmp_create_worker #3
-__kmp_create_worker: try to create thread (3)
-__kmp_create_worker: T#3, default stacksize = 4194304 bytes, __kmp_stksize = 4194304 bytes, final stacksize = 4194688 bytes
-__kmp_launch_worker before __kmp_launch_thread
-__kmp_launch_thread: T#1 start
-__kmp_launch_thread: T#1 waiting for work
-__kmp_fork_barrier: T#1(-1:-2) has arrived
-__kmp_hyper_barrier_release: T#1 wait go(0xa8f0b0) == 4
-kmp_flag_64->wait T#1
-__kmp_wait_sleep: T#1 waiting for flag(0x7f1f7f175c98)
-__kmp_wait_sleep: T#1 Setup for waiting
-__kmp_wait_sleep: T#1 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#1 KMP_USE_MONITOR NOT DEFINED
-__kmp_wait_sleep: T#1 suspend time reached
-__kmp_create_worker: done creating thread (3)
-__kmp_launch_worker before __kmp_launch_thread
-__kmp_launch_thread: T#2 start
-__kmp_launch_thread: T#2 waiting for work
-__kmp_fork_barrier: T#2(-1:-2) has arrived
-__kmp_hyper_barrier_release: T#2 wait go(0xa91f70) == 4
-kmp_flag_64->wait T#2
-__kmp_wait_sleep: T#2 waiting for flag(0x7f1f7ed74cd8)
-__kmp_wait_sleep: T#2 Setup for waiting
-__kmp_wait_sleep: T#2 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#2 KMP_USE_MONITOR NOT DEFINED
-__kmp_wait_sleep: T#2 suspend time reached
-__kmp_fork_team_threads: new_nprocs = 4
-Kmpc --> __kmp_fork_call OMP_40_ENABLED . 
+__kmp_initialize_team: enter: team=0x83d400
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x83d400
+__kmp_init_implicit_task(enter): T#:0 team=0x83d400 task=0x83c880, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#1:1 this_thread=0x83ce40 curtask=(nil)
+__kmp_init_implicit_task(enter): T#:1 team=0x834600 task=0x839980, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x83ce40 curtask=(nil) parent_task=(nil)
+__kmp_initialize_info2: T#1:1 this_thread=0x83ce40 curtask=0x839980
+__kmp_initialize_team: enter: team=0x834600
+__kmp_reinitialize_team: enter this_thread=0x839f00 team=0x834600
+__kmp_init_implicit_task(enter): T#:0 team=0x834600 task=0x8398c0, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#0:0 this_thread=0x839f00 curtask=0x8344c0
+__kmp_init_implicit_task(enter): T#:0 team=0x834600 task=0x8398c0, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x839f00 curtask=0x8344c0 parent_task=(nil)
+__kmp_initialize_info2: T#0:0 this_thread=0x839f00 curtask=0x8398c0
+__kmp_initialize_info
+__kmp_initialize_info1: T#1:1 this_thread=0x83ce40 curtask=0x839980
+__kmp_init_implicit_task(enter): T#:1 team=0x834600 task=0x839980, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x83ce40 curtask=0x839980 parent_task=(nil)
+__kmp_initialize_info2: T#1:1 this_thread=0x83ce40 curtask=0x839980
+__kmp_fork_call: T#0(-1:0)->(-1:0) created a team of 2 threads
+__kmp_internal_fork : root=0x832f40, team=0x834600, master_th=0x839f00, gtid=0
 Kmpc --> __kmp_fork_call internal fork before. 
-__kmp_internal_fork
-__kmp_fork_barrier: T#0(-1:0) has arrived
-__kmp_fork_barrier: T#0(-1:0) checking T#1(-1:1) fork go == 1.
-__kmp_fork_barrier: T#0(-1:0) checking T#2(-1:2) fork go == 1.
-__kmp_fork_barrier: T#0(-1:0) checking T#3(-1:3) fork go == 0.
-__kmp_hyper_barrier_release: T#0(-1:0) master enter for barrier type 1
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#3(-1:3)go(0xa94e70): 0 => 4
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#2(-1:2)go(0xa91f70): 1 => 5
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0xa8f0b0): 1 => 5
+__kmp_task_team_setup
+__kmp_allocate_task_team: T#0 entering; team = 0x834600
+__kmp_allocate_task_team: T#0 entering; team = 0x834600
+__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x83d0f0): 0 => 4
 __kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 1
-__kmp_wait_sleep: T#2 returning.
-__kmp_fork_barrier: T#0(-1:0) is leaving
-__kmp_internal_fork : after : root=0xa80e40, team=0xa87480, master_th=0xa8c180, gtid=0
-__kmp_fork_call: T#0(-1:0) invoke microtask = 0x400d30
-__kmp_wait_sleep: T#1 returning.
-__kmp_hyper_barrier_release: T#1(-1:1) set go(0xa8f0b0) = 0
-Kmpc --> __kmp_get_thread_id_reg entering.
-__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 1
-Kmpc --> __kmp_get_thread_id_reg exiting 0.
-__kmp_hyper_barrier_release: T#2(-1:2) set go(0xa91f70) = 0
-__kmp_hyper_barrier_release: T#2(-1:2) exit for barrier type 1
-__kmp_fork_barrier: T#2(-1:2) is leaving
-__kmp_launch_thread: T#2(-1:2) invoke microtask = 0x400d30
-Kmpc --> __kmp_get_thread_id_reg entering.
-Kmpc --> __kmp_get_thread_id_reg exiting 2.
-__kmpc_global_thread_num: T#2
-__kmpc_global_thread_num: T#0
-I am thread 2.
-I am thread 0.
-__kmpc_single enter T#2
-__kmp_launch_worker
-__kmpc_single enter T#0
-__kmpc_single exiting T#2
-__kmpc_single exiting T#0
-__kmp_barrier: T#0(-1:0) has arrived
-__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 0
-Libomptarget --> __kmpc_omp_target_task_alloc entering. 
-__kmp_fork_barrier: T#1(-1:1) is leaving
-__kmp_launch_thread: T#1(-1:1) invoke microtask = 0x400d30
-Kmpc --> __kmp_get_thread_id_reg entering.
-Kmpc --> __kmp_get_thread_id_reg exiting 1.
-__kmpc_global_thread_num: T#1
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0xa8f000) == 4
-kmp_flag_64->wait T#0
-__kmp_wait_sleep: T#0 waiting for flag(0x7ffd94bbaff0)
-__kmp_wait_sleep: T#0 Setup for waiting
-__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
-I am thread 1.
-__kmpc_single enter T#1
-__kmpc_single exiting T#1
-__kmp_launch_worker before __kmp_launch_thread
-__kmp_barrier: T#1(-1:1) has arrived
-__kmp_launch_thread: T#3 start
-__kmp_launch_thread: T#3 waiting for work
-__kmp_fork_barrier: T#3(-1:-2) has arrived
-__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 0
-__kmp_hyper_barrier_release: T#3 wait go(0xa94e70) == 4
-__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0xa8f000): 0 => 4
-__kmp_wait_sleep: T#0 returning.
-__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 0
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#2(-1:2) arrived(0xa91ec0) == 4
-kmp_flag_64->wait T#0
-__kmp_wait_sleep: T#0 waiting for flag(0x7ffd94bbaff0)
-__kmp_wait_sleep: T#0 Setup for waiting
-__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
-kmp_flag_64->wait T#3
-__kmp_hyper_barrier_release: T#3(-1:3) set go(0xa94e70) = 0
-__kmp_hyper_barrier_release: T#3(-1:3) exit for barrier type 1
-__kmp_fork_barrier: T#3(-1:3) is leaving
-__kmp_launch_thread: T#3(-1:3) invoke microtask = 0x400d30
-__kmp_barrier: T#1 returning from __kmp_hyper_barrier 
-Kmpc --> __kmp_get_thread_id_reg entering.
-Kmpc --> __kmp_get_thread_id_reg exiting 3.
-__kmpc_global_thread_num: T#3
-I am thread 3.
-__kmp_barrier: T#1 bd_hyper_bar switch
-__kmpc_single enter T#3
-__kmp_hyper_barrier_release: T#1 wait go(0xa8eff0) == 4
-__kmpc_single exiting T#3
+__kmp_task_team_sync
+__kmp_internal_fork : after : root=0x832f40, team=0x834600, master_th=0x839f00, gtid=0
+__kmp_fork_call: T#0(-1:0) invoke microtask = 0x400b40
+__kmp_hyper_barrier_release: T#1 wait go(0x83d0f0) == 4
+ Wait for parent thread to release us
 kmp_flag_64->wait T#1
-__kmp_wait_sleep: T#1 waiting for flag(0x7f1f7f1759b8)
-__kmp_barrier: T#3(-1:3) has arrived
-__kmp_wait_sleep: T#1 Setup for waiting
-__kmp_hyper_barrier_gather: T#3(-1:3) enter for barrier type 0
-__kmp_wait_sleep: T#1 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_hyper_barrier_gather: T#3(-1:3) releasing T#0(-1:0) arrived(0xa94dc0): 0 => 4
-__kmp_hyper_barrier_gather: T#3(-1:3) exit for barrier type 0
-__kmp_barrier: T#3 returning from __kmp_hyper_barrier 
-__kmp_barrier: T#3 bd_hyper_bar switch
-__kmp_hyper_barrier_release: T#3 wait go(0xa94db0) == 4
-kmp_flag_64->wait T#3
-__kmp_wait_sleep: T#3 waiting for flag(0x7f1f7e973a38)
-__kmp_wait_sleep: T#3 Setup for waiting
-__kmp_wait_sleep: T#3 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#1 KMP_USE_MONITOR NOT DEFINED
-__kmp_wait_sleep: T#3 KMP_USE_MONITOR NOT DEFINED
-Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 3
-Kmpc --> __kmpc_omp_task_alloc says OMP_45_ENABLED defined 3
-__kmpc_omp_task_alloc(enter): T#2 loc=0x401438, flags=(tied   ) sizeof_task=80 sizeof_shared=8 entry=0x4010f0
-Kmpc --> __kmp_task_alloc(enter): T#2 loc=0x401438, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x4010f0
-Kmpc --> __kmp_task_alloc says: OMP_45_ENABLED defined
-Kmpc --> __kmp_task_alloc: T#2 First malloc size: 272
-Kmpc --> __kmp_task_alloc: T#2 Second malloc size: 8
-Kmpc --> __kmp_task_alloc says: USE_FAST_MEMORY defined
-Kmpc --> __kmp_task_alloc says: ARCH OR QUAD defined
-Kmpc --> __kmp_task_alloc says: OMP_40_ENABLED defined
-Kmpc --> __kmp_task_alloc(exit): T#2 created task 0x7f1f70102600 parent=0xa89280
-Kmpc -->  __kmpc_omp_task_alloc(exit): T#2 retval 0x7f1f701026c0
-kmpc --> kmpc_task_alloc (exit) isDev: 1 / devId: 3
-Libomptarget --> __kmpc_omp_target_task_alloc exiting. 
-Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 3 / ndeps 1 / ndeps_noalias 0
-kmpc --> __kmpc_omp_task_with_deps(enter): T#2 loc=0x401438 task=0x7f1f70102600
-kmpc --> __kmpc_omp_task_with_deps current task: 0 / new task: 1 
-kmpc --> __kmpc_omp_task_with_deps OMP_45_ENABLED defined
-Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
-__kmp_init_node entering
-__kmp_init_node KMP_SUPPORT_GRAPH_OUTPUT NOT DEFINED
-__kmp_check_deps: T#2 checking dependencies for task 0x7f1f70102600 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
-__kmp_process_deps<1>: T#2 processing 1 dependencies : dep_barrier = 0
-__kmp_process_deps<1>: T#2 found 0 predecessors
-__kmp_process_deps<0>: T#2 processing 0 dependencies : dep_barrier = 0
-__kmp_process_deps<0>: T#2 found 0 predecessors
-__kmp_check_deps: T#2 found 0 predecessors for task 0x7f1f70102600 
-Kmpc --> __kmpc_omp_task_with_deps(exit): T#2 task had no blocking dependencies : loc=0x401438 task=0x7f1f70102600, transferring to __kmpc_omp_task
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x83d0f0) == 4
+__kmp_hyper_barrier_release: T#1(-1:1) set go(0x83d0f0) = 0
+__kmp_init_implicit_task(enter): T#:1 team=0x834600 task=0x839980, reinit=FALSE
+__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 1
+__kmp_task_team_sync
+__kmpc_barrier: called T#1
+__kmp_barrier: T#1(-1:1) has arrived
+__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 0
+__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x83d040): 0 => 4
+__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 0
+__kmp_barrier: T#1 returning from __kmp_hyper_barrier 
+__kmp_barrier: T#1 bd_hyper_bar switch
+__kmp_hyper_barrier_release: T#1 wait go(0x83d030) == 4
+ Wait for parent thread to release us
+kmp_flag_64->wait T#1
+Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 0
+Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x401148, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x400e40
+Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 0 / ndeps 1 / ndeps_noalias 0
+kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x401148 task=0xe1db80
+__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
+__kmp_check_deps: T#0 checking dependencies for task 0xe1db80 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
+__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
+__kmp_process_deps deb_barrier ELSE
+__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
+__kmp_check_deps: T#0 found 0 predecessors for task 0xe1db80 
+Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had no blocking dependencies : loc=0x401148 task=0xe1db80, transferring to __kmpc_omp_task
 Kmpc --> __kmpc_omp_task entering. 
 Kmpc --> __kmp_omp_task entering. 
 Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
-__kmp_push_task: T#2 #TID=2 trying to push task 0x7f1f70102600.
-__kmp_push_task: T#2 before __kmp_enable_tasking 
-__kmp_enable_tasking(enter): T#2
-__kmp_enable_tasking: T#2 don't wake up thread T#0
-__kmp_enable_tasking: T#2 don't wake up thread T#1
-__kmp_enable_tasking: T#2 don't wake up thread T#3
-__kmp_enable_tasking(exit): T#2
-Kmpc --> __kmp_push_task: T#2 returning TASK_SCCESSFULLY_PUSHED: task=0x7f1f70102600 ntask=1 head=0 tail=1.
+__kmp_push_task: T#0 #TID=0 trying to push task 0xe1db80.
+__kmp_push_task: T#0 before __kmp_enable_tasking 
+Kmpc --> __kmp_enable_tasking(enter): T#0
+__kmp_enable_tasking(enter): T#0
+Kmpc --> __kmp_realloc_task_threads_data entering
+__kmp_enable_tasking: T#0 don't wake up thread T#1
+__kmp_alloc_task_deque: T#0 allocating deque[256] for thread_data 0xd0dcc0
+Kmpc --> __kmp_push_task: T#0 returning TASK_SCCESSFULLY_PUSHED: task=0xe1db80 ntask=1 head=0 tail=1.
 Kmpc --> __kmp_omp_task exiting. 
-Kmpc --> __kmpc_omp_task exitting. 
-Libomptarget --> __kmpc_omp_target_task_alloc entering. 
-Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=0
-Kmpc --> template calling __kmp_invoke_task. T#1
-__kmp_invoke_task(enter): T#1 invoking task 0x7f1f70102600, current_task=0xa891c0
+__kmp_invoke_task(enter): T#1 invoking task 0xe1db80, current_task=0x839980
+__kmp_task_start(enter): T#1 starting task 0xe1db80: current_task=0x839980
 
 
- __tgt_target_nowait: htask isDev= 1, devId= 3
-Find the table information in the map or look it up in the translation tables.
-We don't have a map. So search all the registered libraries.
-get the translation table (which contains all the good info)
-iterate over all the host table entries to see if we can locate the host_ptr.
-we got a match, now fill the HostPtrToTableMap so that we may avoid this search next time.
-target flag = 0
-Obtained target argument 0x00007f1f78000ac0 from host pointer 0x00007ffd94bbb8f8
-Launching target execution __omp_offloading_37_4109189_main_l15 with pointer 0x00007f1f7e373790 (index=0).
-target before Device.run_region
-Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 0
-Kmpc --> __kmpc_omp_task_alloc says OMP_45_ENABLED defined 0
-__kmpc_omp_task_alloc(enter): T#2 loc=0x401438, flags=(tied   ) sizeof_task=80 sizeof_shared=8 entry=0x401240
-Kmpc --> __kmp_task_alloc(enter): T#2 loc=0x401438, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x401240
-Kmpc --> __kmp_task_alloc says: OMP_45_ENABLED defined
-Kmpc --> __kmp_task_alloc: T#2 First malloc size: 272
-Kmpc --> __kmp_task_alloc: T#2 Second malloc size: 8
-Kmpc --> __kmp_task_alloc says: USE_FAST_MEMORY defined
-Kmpc --> __kmp_task_alloc says: ARCH OR QUAD defined
-Kmpc --> __kmp_task_alloc says: OMP_40_ENABLED defined
-Kmpc --> __kmp_task_alloc(exit): T#2 created task 0x7f1f700fff00 parent=0xa89280
-Kmpc -->  __kmpc_omp_task_alloc(exit): T#2 retval 0x7f1f700fffc0
-kmpc --> kmpc_task_alloc (exit) isDev: 1 / devId: 0
-Libomptarget --> __kmpc_omp_target_task_alloc exiting. 
-Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 0 / ndeps 1 / ndeps_noalias 0
-kmpc --> __kmpc_omp_task_with_deps(enter): T#2 loc=0x401438 task=0x7f1f700fff00
-kmpc --> __kmpc_omp_task_with_deps current task: 0 / new task: 1 
-kmpc --> __kmpc_omp_task_with_deps OMP_45_ENABLED defined
-Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
-__kmp_init_node entering
-__kmp_init_node KMP_SUPPORT_GRAPH_OUTPUT NOT DEFINED
-__kmp_check_deps: T#2 checking dependencies for task 0x7f1f700fff00 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
-__kmp_process_deps<1>: T#2 processing 1 dependencies : dep_barrier = 0
-__kmp_process_deps<1> second: T#2 adding dependence from 0x7f1f70102600 to 0x7f1f700fff00 flag=1
-__kmp_process_deps<1>: T#2 found 1 predecessors
-__kmp_process_deps<0>: T#2 processing 0 dependencies : dep_barrier = 0
-__kmp_process_deps<0>: T#2 found 0 predecessors
-__kmp_check_deps: T#2 found 1 predecessors for task 0x7f1f700fff00 
-Kmpc --> __kmpc_omp_task_with_deps(exit): T#2 task had blocking dependencies: loc=0x401438 task=0x7f1f700fff00, return: TASK_CURRENT_NOT_QUEUED
-Kmpc --> __kmp_get_thread_id_reg entering.
-Kmpc --> __kmp_get_thread_id_reg exiting 2.
+
+ OMPTARGET BASE : da0c14dc 
 
 
-Number of threads 4
+Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 1
+Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x401148, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x400f90
+Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 1 / ndeps 1 / ndeps_noalias 0
+kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x401148 task=0xe1b480
+__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
+__kmp_check_deps: T#0 checking dependencies for task 0xe1b480 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
+__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
 
-__kmp_barrier: T#2(-1:2) has arrived
-__kmp_hyper_barrier_gather: T#2(-1:2) enter for barrier type 0
-__kmp_hyper_barrier_gather: T#2(-1:2) releasing T#0(-1:0) arrived(0xa91ec0): 0 => 4
-__kmp_hyper_barrier_gather: T#2(-1:2) exit for barrier type 0
-__kmp_wait_sleep: T#0 returning.
-__kmp_barrier: T#2 returning from __kmp_hyper_barrier 
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#3(-1:3) arrived(0xa94dc0) == 4
+
+ DEP: da0c14dc 
+
+__kmp_process_deps<1> second: T#0 adding dependence from 0xe1db80 to 0xe1b480 flag=1
+__kmp_process_deps deb_barrier ELSE
+__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
+__kmp_check_deps: T#0 found 1 predecessors for task 0xe1b480 
+Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had blocking dependencies: loc=0x401148 task=0xe1b480, return: TASK_CURRENT_NOT_QUEUED
+__kmpc_barrier: called T#0
+__kmp_barrier: T#0(-1:0) has arrived
+__kmp_task_team_setup
+__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 0
+__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x83d040) == 4
 kmp_flag_64->wait T#0
-__kmp_hyper_barrier_gather: T#0(-1:0) set team -1 arrived(0xa874c0) = 4
 __kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 0
 __kmp_barrier: T#0 returning from __kmp_hyper_barrier 
 __kmp_barrier: T#0 IS KMP_MASTER_TID
 __kmp_barrier: T#0 calling __kmp_task_team_wait
 __kmp_task_team_wait
-wait 32
-__kmp_barrier: T#2 bd_hyper_bar switch
-__kmp_wait_sleep: T#0 waiting for flag(0x7ffd94bbb088)
-__kmp_wait_sleep: T#0 Setup for waiting
-__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
-__kmp_hyper_barrier_release: T#2 wait go(0xa91eb0) == 4
-kmp_flag_64->wait T#2
-__kmp_wait_sleep: T#2 waiting for flag(0x7f1f7ed749b8)
-__kmp_wait_sleep: T#2 Setup for waiting
-__kmp_wait_sleep: T#2 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#2 KMP_USE_MONITOR NOT DEFINED
-target after Device.run_region
-target flag = 1target before target_data_end: tsk flag=1
-target after target_data_end
-__kmp_invoke_task T#1 calling __kmp_task_finish
-__kmp_task_finish(enter): T#1 finishing task 0x7f1f70102600 and resuming task 0xa891c0
+Obtained target argument 0x0000000507580000 from host pointer 0x00007ffeda0c14dc
+cuda plugin execute retrieve
+__kmp_task_finish(enter): T#1 finishing task 0xe1db80 and resuming task 0x839980
 __kmp_task_finish calling __kmp_release_deps
-__kmp_release_deps: T#1 notifying successors of task 0x7f1f70102600.
-__kmp_release_deps: T#1 successor 0x7f1f700fffc0 of 0x7f1f70102600 scheduled for execution.
+__kmp_release_deps: T#1 notifying successors of task 0xe1db80.
+__kmp_release_deps: T#1 successor 0xe1b540 of 0xe1db80 scheduled for execution.
 kmp_omp_release_deps calling __kmp_omp_task
+
+
+  entering __TGT_PREOFFLOAD 
+
 Kmpc --> __kmp_omp_task entering. 
 Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
-__kmp_push_task: T#1 #TID=1 trying to push task 0x7f1f700fff00.
-Kmpc --> __kmp_push_task: T#1 returning TASK_SCCESSFULLY_PUSHED: task=0x7f1f700fff00 ntask=1 head=0 tail=1.
+__kmp_push_task: T#1 #TID=1 trying to push task 0xe1b480.
+__kmp_alloc_task_deque: T#1 allocating deque[256] for thread_data 0xd0dd80
+Kmpc --> __kmp_push_task: T#1 returning TASK_SCCESSFULLY_PUSHED: task=0xe1b480 ntask=1 head=0 tail=1.
 Kmpc --> __kmp_omp_task exiting. 
-__kmp_release_deps: T#1 all successors of 0x7f1f70102600 notified of completion
-__kmp_task_finish: T#1 finished task 0x7f1f70102600, 1 incomplete children
-__kmp_task_finish(exit): T#1 finished task 0x7f1f70102600, resuming task 0xa891c0
-__kmp_invoke_task(exit): T#1 completed task 0x7f1f70102600, resuming task 0xa891c0
-Kmpc --> __kmp_execute_tasks_template(enter): T#0 final_spin=1 *thread_finished=0
-Kmpc --> template calling __kmp_invoke_task. T#0
-__kmp_invoke_task(enter): T#0 invoking task 0x7f1f700fff00, current_task=0xa89100
+__kmp_release_deps: T#1 all successors of 0xe1db80 notified of completion
+__kmp_task_finish: T#1 finished task 0xe1db80, 1 incomplete children
+__kmp_invoke_task(enter): T#0 invoking task 0xe1b480, current_task=0x8398c0
+__kmp_task_start(enter): T#0 starting task 0xe1b480: current_task=0x8398c0
+__kmp_free_task_and_ancestors(enter): T#1 task 0xe1db80 complete and freeing itself
 
 
- __tgt_target_nowait: htask isDev= 1, devId= 0
-Find the table information in the map or look it up in the translation tables.
-We don't have a map. So search all the registered libraries.
-get the translation table (which contains all the good info)
-iterate over all the host table entries to see if we can locate the host_ptr.
-we got a match, now fill the HostPtrToTableMap so that we may avoid this search next time.
-target flag = 0
-Obtained target argument 0x000000130f7c0000 from host pointer 0x00007ffd94bbb8f8
-Launching target execution __omp_offloading_37_4109189_main_l24 with pointer 0x00007f1f7060ad80 (index=1).
-target before Device.run_region
-target after Device.run_region
-target flag = 0target before target_data_end: tsk flag=0
-cuda plugin execute retrieve
-target after target_data_end
-__kmp_invoke_task T#0 calling __kmp_task_finish
-__kmp_task_finish(enter): T#0 finishing task 0x7f1f700fff00 and resuming task 0xa89100
+
+ OMPTARGET BASE : da0c14dc 
+
+
+__kmp_free_task: T#1 freeing data from task 0xe1db80
+__kmp_task_finish(exit): T#1 finished task 0xe1db80, resuming task 0x839980
+Obtained target argument 0x0000000000832650 from host pointer 0x00007ffeda0c14dc
+__kmp_task_finish(enter): T#0 finishing task 0xe1b480 and resuming task 0x8398c0
 __kmp_task_finish calling __kmp_release_deps
-__kmp_release_deps: T#0 notifying successors of task 0x7f1f700fff00.
-__kmp_release_deps: T#0 all successors of 0x7f1f700fff00 notified of completion
-__kmp_task_finish: T#0 finished task 0x7f1f700fff00, 0 incomplete children
-__kmp_task_finish(exit): T#0 finished task 0x7f1f700fff00, resuming task 0xa89100
-__kmp_invoke_task(exit): T#0 completed task 0x7f1f700fff00, resuming task 0xa89100
-__kmp_wait_sleep: T#0 returning.
-__kmp_wait_sleep: T#1 suspend time reached
+__kmp_release_deps: T#0 notifying successors of task 0xe1b480.
+__kmp_release_deps: T#0 all successors of 0xe1b480 notified of completion
+__kmp_task_finish: T#0 finished task 0xe1b480, 0 incomplete children
+__kmp_free_task_and_ancestors(enter): T#0 task 0xe1b480 complete and freeing itself
+__kmp_free_task: T#0 freeing data from task 0xe1b480
+__kmp_task_finish(exit): T#0 finished task 0xe1b480, resuming task 0x8398c0
 __kmp_barrier: T#0 bd_hyper_bar switch
-__kmp_wait_sleep: T#2 suspend time reached
-__kmp_wait_sleep: T#3 suspend time reached
-__kmp_hyper_barrier_release: T#0(-1:0) master enter for barrier type 0
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#3(-1:3)go(0xa94db0): 1 => 5
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#2(-1:2)go(0xa91eb0): 1 => 5
-__kmp_wait_sleep: T#3 returning.
-__kmp_hyper_barrier_release: T#3(-1:3) set go(0xa94db0) = 0
-__kmp_hyper_barrier_release: T#3(-1:3) exit for barrier type 0
-__kmp_wait_sleep: T#2 returning.
-__kmp_barrier: T#3 scape switch
-__kmp_hyper_barrier_release: T#2(-1:2) set go(0xa91eb0) = 0
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0xa8eff0): 1 => 5
-__kmp_barrier: T#3(-1:3) is leaving with return value 1
+__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x83d030): 0 => 4
 __kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 0
 __kmp_barrier: T#0 scape switch
-__kmp_hyper_barrier_release: T#2(-1:2) exit for barrier type 0
+__kmp_task_team_sync
 __kmp_barrier: T#0(-1:0) is leaving with return value 0
-__kmp_fork_call: T#0(-1:0) done microtask = 0x400d30
-__kmp_launch_thread: T#3(-1:3) done microtask = 0x400d30
+__kmp_fork_call: T#0(-1:0) done microtask = 0x400b40
 __kmp_fork_call: parallel exit 2295 T#0
-__kmp_barrier: T#2 scape switch
-__kmp_join_barrier: T#3(-1:3) arrived at join barrier
-__kmp_barrier: T#2(-1:2) is leaving with return value 1
-__kmp_join_barrier: T#3, old team = -1, old task_team = 0xa98040, th_task_team = 0xa98040
-__kmp_hyper_barrier_gather: T#3(-1:3) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#3(-1:3) releasing T#0(-1:0) arrived(0xa94e80): 0 => 4
-__kmp_hyper_barrier_gather: T#3(-1:3) exit for barrier type 1
-__kmp_join_barrier: T#3(-1:3) leaving
-__kmp_join_barrier: T#0(-1:0) arrived at join barrier
-__kmp_launch_thread: T#2(-1:2) done microtask = 0x400d30
-__kmp_join_barrier: T#2(-1:2) arrived at join barrier
-__kmp_join_barrier: T#2, old team = -1, old task_team = 0xa98040, th_task_team = 0xa98040
-__kmp_join_barrier: T#0, old team = -1, old task_team = 0xa98040, th_task_team = 0xa98040
 __kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0xa8f0c0) == 4
+__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x83d100) == 4
 kmp_flag_64->wait T#0
-__kmp_wait_sleep: T#1 returning.
-__kmp_launch_thread: T#3 waiting for work
-__kmp_fork_barrier: T#3(-1:-2) has arrived
-__kmp_hyper_barrier_release: T#3 wait go(0xa94e70) == 4
-kmp_flag_64->wait T#3
-__kmp_wait_sleep: T#3 waiting for flag(0x7f1f7e973d18)
-__kmp_wait_sleep: T#3 Setup for waiting
-__kmp_wait_sleep: T#3 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#3 KMP_USE_MONITOR NOT DEFINED
-__kmp_hyper_barrier_release: T#1(-1:1) set go(0xa8eff0) = 0
-__kmp_wait_sleep: T#0 waiting for flag(0x7ffd94bbb450)
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x83d030) == 4
+__kmp_hyper_barrier_release: T#1(-1:1) set go(0x83d030) = 0
 __kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 0
-__kmp_wait_sleep: T#0 Setup for waiting
 __kmp_barrier: T#1 scape switch
-__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
+__kmp_task_team_sync
 __kmp_barrier: T#1(-1:1) is leaving with return value 1
-__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
-__kmp_launch_thread: T#1(-1:1) done microtask = 0x400d30
-__kmp_join_barrier: T#1(-1:1) arrived at join barrier
-__kmp_join_barrier: T#1, old team = -1, old task_team = 0xa98040, th_task_team = 0xa98040
 __kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0xa8f0c0): 0 => 4
+__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x83d100): 0 => 4
 __kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 1
-__kmp_wait_sleep: T#0 returning.
-__kmp_hyper_barrier_gather: T#2(-1:2) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#2(-1:2) arrived(0xa91f80) == 4
-kmp_flag_64->wait T#0
-__kmp_wait_sleep: T#0 waiting for flag(0x7ffd94bbb450)
-__kmp_wait_sleep: T#0 Setup for waiting
-__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_hyper_barrier_gather: T#2(-1:2) releasing T#0(-1:0) arrived(0xa91f80): 0 => 4
-__kmp_hyper_barrier_gather: T#2(-1:2) exit for barrier type 1
-__kmp_join_barrier: T#2(-1:2) leaving
-__kmp_launch_thread: T#2 waiting for work
-__kmp_fork_barrier: T#2(-1:-2) has arrived
-__kmp_hyper_barrier_release: T#2 wait go(0xa91f70) == 4
-kmp_flag_64->wait T#2
-__kmp_wait_sleep: T#2 waiting for flag(0x7f1f7ed74cd8)
-__kmp_wait_sleep: T#2 Setup for waiting
-__kmp_wait_sleep: T#2 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#2 KMP_USE_MONITOR NOT DEFINED
-__kmp_join_barrier: T#1(-1:1) leaving
-__kmp_launch_thread: T#1 waiting for work
-__kmp_fork_barrier: T#1(-1:-2) has arrived
-__kmp_hyper_barrier_release: T#1 wait go(0xa8f0b0) == 4
-kmp_flag_64->wait T#1
-__kmp_wait_sleep: T#1 waiting for flag(0x7f1f7f175c98)
-__kmp_wait_sleep: T#1 Setup for waiting
-__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
-__kmp_wait_sleep: T#1 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
-__kmp_wait_sleep: T#0 returning.
-__kmp_wait_sleep: T#1 KMP_USE_MONITOR NOT DEFINED
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#3(-1:3) arrived(0xa94e80) == 4
-kmp_flag_64->wait T#0
-__kmp_hyper_barrier_gather: T#0(-1:0) set team -1 arrived(0xa87500) = 4
 __kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 1
+__kmp_hyper_barrier_release: T#1 wait go(0x83d0f0) == 4
 __kmp_task_team_wait
-__kmp_join_barrier: T#0(-1:0) says all 4 team threads arrived
-__kmp_join_barrier: T#0(-1:0) leaving
+ Wait for parent thread to release us
+__kmp_pop_current_task_from_thread(enter): T#0 this_thread=0x839f00, curtask=0x8398c0, curtask_parent=0x8344c0
 Kmpc --> kmpc_fork_call exiting
-result:  110 110
-__kmp_wait_sleep: T#1 returning.
-__kmp_wait_sleep: T#3 returning.
-__kmp_fork_barrier: T#3 is leaving early
-__kmp_launch_thread: T#3 done
-__kmp_launch_worker done
-__kmp_fork_barrier: T#1 is leaving early
-__kmp_launch_thread: T#1 done
-__kmp_wait_sleep: T#2 returning.
-__kmp_launch_worker done
-__kmp_fork_barrier: T#2 is leaving early
-__kmp_launch_thread: T#2 done
-__kmp_launch_worker done
+result:  1665 
+kmp_flag_64->wait T#1
+__kmp_free_task_team: T#-1 task_team = 0x83fdc0
+__kmp_free_task_team: T#-1 task_team = 0x83ff00
+__kmp_wait_to_unref_task_teams
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x83d0f0) == 4
+__kmp_reap_task_teams
+__kmp_free_task_threads_data
+Kmpc --> __kmp_free_task_deque entering
+Kmpc --> __kmp_free_task_deque entering

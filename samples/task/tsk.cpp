@@ -3,7 +3,7 @@
 #define GPU0 0
 #define GPU1 1
 #define CPU 3
-#define N 99999
+#define N 99
 int main(){
     int A[2] = {1,2};
     omp_set_num_threads(4);

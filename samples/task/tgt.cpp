@@ -3,7 +3,7 @@
 #define GPU0 0
 #define GPU1 1
 #define CPU 3
-#define N 99999
+#define N 999
 int main(){
     int A[2] = {1,2};
     omp_set_num_threads(4);
@@ -12,7 +12,7 @@ int main(){
     printf("I am thread %d.\n", omp_get_thread_num());
     #pragma omp single
     {
-    	#pragma omp target device(CPU) depend(out: A[:2]) map(to:A[:2]) nowait
+    	#pragma omp target device(CPU) depend(out: A[:2]) map(tofrom:A[:2]) nowait
 	    
 	{
 		for(int i = 0; i < N; i++)
@@ -21,7 +21,7 @@ int main(){
 			  A[1] = 10;
 	}
 	
-    	#pragma omp target device(GPU0) depend(in: A[:2]) map(from: A[:2]) nowait
+    	#pragma omp target device(GPU0) depend(in: A[:2]) map(tofrom: A[:2]) nowait
 	{
 		A[0] += 100 ;
 		A[1] += 100 ;

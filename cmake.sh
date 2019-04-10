@@ -1,0 +1,15 @@
+CC=clang CXX=clang++ cmake ../llvm       \
+    -GNinja                              \
+    -DLLVM_PARALLEL_LINK_JOBS=2          \
+    -DLLVM_TARGETS_TO_BUILD="X86;NVPTX"        \
+    -DLLVM_OPTIMIZED_TABLEGEN=true       \
+    -DCMAKE_BUILD_TYPE=Debug        \
+    -DCMAKE_INSTALL_PREFIX=/home/ramon/hardcloud/install \
+    -DBUILD_SHARED_LIBS=true             \
+    -DLLVM_ENABLE_CXX1Y=true             \
+    -DOPENMP_ENABLE_LIBOMPTARGET=ON     \
+    -DCMAKE_C_FLAGS='-DOPENMP_NVPTX_COMPUTE_CAPABILITY=50'   \
+    -DCMAKE_CXX_FLAGS='-DOPENMP_NVPTX_COMPUTE_CAPABILITY=50'     \
+    -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=50  \
+    -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_50      \
+    -DPYTHON_EXECUTABLE=$(which python3)

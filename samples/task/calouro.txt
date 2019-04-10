@@ -1,0 +1,255 @@
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x1ee27c0
+__kmp_init_implicit_task(enter): T#:0 team=0x1ee27c0 task=0x1ee32c0, reinit=FALSE
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x1ee8cc0
+__kmp_init_implicit_task(enter): T#:0 team=0x1ee8cc0 task=0x1ee95c0, reinit=FALSE
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x1eea680
+__kmp_init_implicit_task(enter): T#:0 team=0x1eea680 task=0x1eeafc0, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#0:0 this_thread=0x1ee9c40 curtask=(nil)
+__kmp_init_implicit_task(enter): T#:0 team=0x1ee27c0 task=0x1ee32c0, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x1ee9c40 curtask=(nil) parent_task=(nil)
+__kmp_initialize_info2: T#0:0 this_thread=0x1ee9c40 curtask=0x1ee32c0
+__kmp_reinitialize_team: enter this_thread=(nil) team=0x1eed240
+__kmp_init_implicit_task(enter): T#:0 team=0x1eed240 task=0x1eec6c0, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#1:1 this_thread=0x1eecc80 curtask=(nil)
+__kmp_init_implicit_task(enter): T#:1 team=0x1ee8cc0 task=0x1ee9680, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x1eecc80 curtask=(nil) parent_task=(nil)
+__kmp_initialize_info2: T#1:1 this_thread=0x1eecc80 curtask=0x1ee9680
+__kmp_reinitialize_team: enter this_thread=0x1ee9c40 team=0x1ee8cc0
+__kmp_init_implicit_task(enter): T#:0 team=0x1ee8cc0 task=0x1ee95c0, reinit=FALSE
+__kmp_initialize_info
+__kmp_initialize_info1: T#0:0 this_thread=0x1ee9c40 curtask=0x1ee32c0
+__kmp_init_implicit_task(enter): T#:0 team=0x1ee8cc0 task=0x1ee95c0, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x1ee9c40 curtask=0x1ee32c0 parent_task=(nil)
+__kmp_initialize_info2: T#0:0 this_thread=0x1ee9c40 curtask=0x1ee95c0
+__kmp_initialize_info
+__kmp_initialize_info1: T#1:1 this_thread=0x1eecc80 curtask=0x1ee9680
+__kmp_init_implicit_task(enter): T#:1 team=0x1ee8cc0 task=0x1ee9680, reinit=TRUE
+__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x1eecc80 curtask=0x1ee9680 parent_task=(nil)
+__kmp_initialize_info2: T#1:1 this_thread=0x1eecc80 curtask=0x1ee9680
+__kmp_task_team_setup
+__kmp_allocate_task_team: T#0 entering; team = 0x1ee8cc0
+__kmp_allocate_task_team: T#0 entering; team = 0x1ee8cc0
+__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x1eecf30): 0 => 4
+__kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 1
+__kmp_task_team_sync
+Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 0 on device 0
+Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x400dd8, flags=(0x1) sizeof_task=56 sizeof_shared=8 entry=0x400bf0
+Kmpc --> __kmpc_omp_task_with_deps says: isDev: 0 / devId: 0 / ndeps 1 / ndeps_noalias 0
+kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x400dd8 task=0x1fefd00
+__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
+__kmp_check_deps: T#0 checking dependencies for task 0x1fefd00 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
+__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
+__kmp_process_deps deb_barrier ELSE
+__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
+__kmp_check_deps: T#0 found 0 predecessors for task 0x1fefd00 
+Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had no blocking dependencies : loc=0x400dd8 task=0x1fefd00, transferring to __kmpc_omp_task
+Kmpc --> __kmpc_omp_task entering. 
+Kmpc --> __kmp_omp_task entering. 
+Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
+__kmp_push_task: T#0 #TID=0 trying to push task 0x1fefd00.
+__kmp_push_task: T#0 before __kmp_enable_tasking 
+Kmpc --> __kmp_enable_tasking(enter): T#0
+__kmp_enable_tasking(enter): T#0
+Kmpc --> __kmp_realloc_task_threads_data entering
+__kmp_enable_tasking: T#0 don't wake up thread T#1
+__kmp_alloc_task_deque: T#0 allocating deque[256] for thread_data 0x1fefec0
+__kmp_hyper_barrier_release: T#1 wait go(0x1eecf30) == 4
+ Wait for parent thread to release us
+kmp_flag_64->wait T#1
+Kmpc --> __kmp_push_task: T#0 returning TASK_SCCESSFULLY_PUSHED: task=0x1fefd00 ntask=1 head=0 tail=1.
+Kmpc --> __kmp_omp_task exiting. 
+Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 0 on device 0
+Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x400dd8, flags=(0x1) sizeof_task=56 sizeof_shared=8 entry=0x400c70
+Kmpc --> __kmpc_omp_task_with_deps says: isDev: 0 / devId: 0 / ndeps 1 / ndeps_noalias 0
+kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x400dd8 task=0x1fed580
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x1eecf30) == 4
+__kmp_hyper_barrier_release: T#1(-1:1) set go(0x1eecf30) = 0
+__kmp_init_implicit_task(enter): T#:1 team=0x1ee8cc0 task=0x1ee9680, reinit=FALSE
+__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 1
+__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0__kmp_task_team_sync
+Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
+__kmp_check_deps: T#0 checking dependencies for task 0x1fed580 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
+__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
+__kmp_process_deps<1> first: T#0 adding dependence from 0x1fefd00 to 0x1fed580
+__kmp_process_deps deb_barrier ELSE
+__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
+__kmp_check_deps: T#0 found 1 predecessors for task 0x1fed580 
+__kmpc_barrier: called T#1
+Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had blocking dependencies: loc=0x400dd8 task=0x1fed580, return: TASK_CURRENT_NOT_QUEUED
+__kmp_barrier: T#1(-1:1) has arrived
+__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 0
+__kmpc_barrier: called T#0
+__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x1eece80): 0 => 4
+__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 0
+__kmp_barrier: T#1 returning from __kmp_hyper_barrier 
+__kmp_barrier: T#1 bd_hyper_bar switch
+__kmp_hyper_barrier_release: T#1 wait go(0x1eece70) == 4
+__kmp_barrier: T#0(-1:0) has arrived
+__kmp_task_team_setup
+__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 0
+__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x1eece80) == 4
+kmp_flag_64->wait T#0
+ Wait for parent thread to release us
+__kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 0
+__kmp_barrier: T#0 returning from __kmp_hyper_barrier 
+__kmp_barrier: T#0 IS KMP_MASTER_TID
+kmp_flag_64->wait T#1
+__kmp_barrier: T#0 calling __kmp_task_team_wait
+__kmp_wait_sleep: T#1 waiting for flag(0x7f3b24fc39e8)
+__kmp_task_team_wait
+__kmp_wait_sleep: T#1 Setup for waiting
+__kmp_wait_sleep: T#1 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
+__kmp_wait_sleep: T#0 waiting for flag(0x7fffdfc83c38)
+__kmp_wait_sleep: T#1 KMP_USE_MONITOR NOT DEFINED
+__kmp_wait_sleep: T#0 Setup for waiting
+Kmpc --> __kmp_execute_tasks_64. thread T#1.
+__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
+__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
+Kmpc --> __kmp_execute_tasks_32. thread T#0.
+Kmpc --> __kmp_execute_tasks_template(enter): T#0 final_spin=1 *thread_finished=0
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_remove_my_task(enter) T#0 ntasks=0 head=33488576 tail=1768300645
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=0
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_remove_my_task(enter) T#1 ntasks=1 head=33488768 tail=1768300645
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_execute_tasks_template(enter): T#0 final_spin=1 *thread_finished=0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+Kmpc --> __kmp_steal_task(exit #1): T#1 could not steal from T#0: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+Kmpc --> template calling __kmp_invoke_task. T#0
+Kmpc --> __kmp_execute_tasks_64. thread T#1.
+__kmp_invoke_task(enter): T#0 invoking task 0x1fefd00, current_task=0x1ee95c0
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=1
+__kmp_task_start(enter): T#0 starting task 0x1fefd00: current_task=0x1ee95c0
+Primeiro valor de A=1__kmp_task_finish(enter): T#0 finishing task 0x1fefd00 and resuming task 0x1ee95c0
+__kmp_task_finish calling __kmp_release_deps
+__kmp_release_deps: T#0 notifying successors of task 0x1fefd00.
+__kmp_release_deps: T#0 successor 0x1fed640 of 0x1fefd00 scheduled for execution.
+kmp_omp_release_deps calling __kmp_omp_task
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_omp_task entering. 
+Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
+__kmp_push_task: T#0 #TID=0 trying to push task 0x1fed580.
+Kmpc --> __kmp_remove_my_task(enter) T#1 ntasks=1 head=33488768 tail=1768300645
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=1 head=0 tail=1
+Kmpc --> __kmp_push_task: T#0 returning TASK_SCCESSFULLY_PUSHED: task=0x1fed580 ntask=1 head=0 tail=1.
+Kmpc --> __kmp_omp_task exiting. 
+__kmp_steal_task: T#1 inc unfinished_threads to 2: task_team=0x1eefd40
+__kmp_steal_task(exit #3): T#1 stole task 0x1fed580 from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=0
+__kmp_release_deps: T#0 all successors of 0x1fefd00 notified of completion
+Kmpc --> template calling __kmp_invoke_task. T#1
+__kmp_task_finish: T#0 finished task 0x1fefd00, 1 incomplete children
+__kmp_free_task_and_ancestors(enter): T#0 task 0x1fefd00 complete and freeing itself
+__kmp_invoke_task(enter): T#1 invoking task 0x1fed580, current_task=0x1ee9680
+__kmp_task_start(enter): T#1 starting task 0x1fed580: current_task=0x1ee9680
+Secundo valor de A=1__kmp_task_finish(enter): T#1 finishing task 0x1fed580 and resuming task 0x1ee9680
+__kmp_task_finish calling __kmp_release_deps
+__kmp_release_deps: T#1 notifying successors of task 0x1fed580.
+__kmp_free_task: T#0 freeing data from task 0x1fefd00
+__kmp_release_deps: T#1 all successors of 0x1fed580 notified of completion
+__kmp_task_finish(exit): T#0 finished task 0x1fefd00, resuming task 0x1ee95c0
+__kmp_task_finish: T#1 finished task 0x1fed580, 0 incomplete children
+__kmp_free_task_and_ancestors(enter): T#1 task 0x1fed580 complete and freeing itself
+__kmp_free_task: T#1 freeing data from task 0x1fed580
+__kmp_task_finish(exit): T#1 finished task 0x1fed580, resuming task 0x1ee9680
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_remove_my_task(enter) T#0 ntasks=0 head=33488576 tail=1768300645
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#0 
+ We have a victim to try to steal from 1
+__kmp_execute_tasks_template: Steal a task
+Kmpc --> __kmp_steal_task(enter): T#0 try to steal from T#1: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_steal_task(exit #1): T#0 could not steal from T#1: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_execute_tasks_32. thread T#0.
+Kmpc --> __kmp_steal_task(exit #1): T#1 could not steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_execute_tasks_64. thread T#1.
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=1
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_remove_my_task(enter) T#1 ntasks=1 head=33488768 tail=1768300645
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_steal_task(exit #1): T#1 could not steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_execute_tasks_64. thread T#1.
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=1
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_remove_my_task(enter) T#1 ntasks=1 head=33488768 tail=1768300645
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_steal_task(exit #1): T#1 could not steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_execute_tasks_template(enter): T#0 final_spin=1 *thread_finished=1
+Kmpc --> __kmp_execute_tasks_64. thread T#1.
+__kmp_execute_tasks_template: check on own queue first
+Kmpc --> __kmp_execute_tasks_template(enter): T#1 final_spin=1 *thread_finished=1
+Kmpc --> __kmp_remove_my_task(enter) T#0 ntasks=0 head=33488576 tail=1768300645
+__kmp_execute_tasks_template: check on own queue first
+__kmp_execute_tasks_template: Steal a task
+__kmp_execute_tasks_template: T#0 
+ We have a victim to try to steal from 1
+Kmpc --> __kmp_remove_my_task(enter) T#1 ntasks=1 head=33488768 tail=1768300645
+Kmpc --> __kmp_steal_task(enter): T#0 try to steal from T#1: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+Kmpc --> __kmp_steal_task(exit #1): T#0 could not steal from T#1: task_team=0x1eefd40 ntasks=0 head=0 tail=0
+__kmp_wait_sleep: T#0 returning.
+__kmp_barrier: T#0 bd_hyper_bar switch
+__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x1eece70): 0 => 4
+__kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 0
+__kmp_execute_tasks_template: Steal a task
+__kmp_barrier: T#0 scape switch
+__kmp_task_team_sync
+__kmp_barrier: T#0(-1:0) is leaving with return value 0
+__kmp_execute_tasks_template: T#1 
+ We have a victim to try to steal from 0
+Kmpc --> __kmp_steal_task(enter): T#1 try to steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+Kmpc --> __kmp_steal_task(exit #1): T#1 could not steal from T#0: task_team=0x1eefd40 ntasks=0 head=1 tail=1
+__kmp_wait_sleep: T#1 returning.
+__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 1
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x1eece70) == 4
+__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x1eecf40) == 4
+__kmp_hyper_barrier_release: T#1(-1:1) set go(0x1eece70) = 0
+__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 0
+__kmp_barrier: T#1 scape switch
+__kmp_task_team_sync
+kmp_flag_64->wait T#0
+__kmp_barrier: T#1(-1:1) is leaving with return value 1
+__kmp_wait_sleep: T#0 waiting for flag(0x7fffdfc83f50)
+__kmp_wait_sleep: T#0 Setup for waiting
+__kmp_wait_sleep: T#0 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
+__kmp_wait_sleep: T#0 KMP_USE_MONITOR NOT DEFINED
+__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 1
+__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x1eecf40): 0 => 4
+__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 1
+__kmp_hyper_barrier_release: T#1 wait go(0x1eecf30) == 4
+ Wait for parent thread to release us
+kmp_flag_64->wait T#1
+__kmp_wait_sleep: T#1 waiting for flag(0x7f3b24fc3ce8)
+__kmp_wait_sleep: T#0 returning.
+__kmp_wait_sleep: T#1 Setup for waiting
+__kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 1
+__kmp_task_team_wait
+__kmp_wait_sleep: T#1 __kmp_dflt_blocktime != KMP_MAX_BLOCKTIME
+__kmp_pop_current_task_from_thread(enter): T#0 this_thread=0x1ee9c40, curtask=0x1ee95c0, curtask_parent=0x1ee32c0
+__kmp_wait_sleep: T#1 KMP_USE_MONITOR NOT DEFINED
+__kmp_free_task_team: T#-1 task_team = 0x1eefbc0
+__kmp_free_task_team: T#-1 task_team = 0x1eefd40
+__kmp_wait_to_unref_task_teams
+__kmp_wait_sleep: T#1 main wait spin recently transferred from team to pool
+__kmp_wait_sleep: T#1 returning.
+__kmp_hyper_barrier_release: AFTER T#1 wait go(0x1eecf30) == 4
+__kmp_reap_task_teams
+__kmp_free_task_threads_data
+Kmpc --> __kmp_free_task_deque entering
+Kmpc --> __kmp_free_task_deque entering

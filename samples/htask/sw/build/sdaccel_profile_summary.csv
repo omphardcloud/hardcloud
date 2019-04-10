@@ -1,0 +1,79 @@
+SDAccel Profile Summary
+Generated on: 2018-10-26 14:56:13
+Msec since Epoch: 1540576573769
+Profiled application: htask
+Target platform: Xilinx
+Tool version: 2017.4
+Target devices: xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0
+Flow mode: Hardware Emulation
+
+OpenCL API Calls
+API Name,Number Of Calls,Total Time (ms),Minimum Time (ms),Average Time (ms),Maximum Time (ms),
+clFinish,2,66051.2,0.001971,33025.6,66051.2,
+clCreateProgramWithBinary,1,463.841,463.841,463.841,463.841,
+clEnqueueReadBuffer,1,24.2728,24.2728,24.2728,24.2728,
+clEnqueueTask,1,2.30951,2.30951,2.30951,2.30951,
+clCreateBuffer,2,2.24125,0.969896,1.12062,1.27135,
+clEnqueueWriteBuffer,1,0.525924,0.525924,0.525924,0.525924,
+clSetKernelArg,4,0.007976,0.000935,0.001994,0.004435,
+clBuildProgram,1,0.00642,0.00642,0.00642,0.00642,
+clCreateKernel,1,0.006104,0.006104,0.006104,0.006104,
+clWaitForEvents,1,0.005192,0.005192,0.005192,0.005192,
+clGetPlatformIDs,1,0.002938,0.002938,0.002938,0.002938,
+clCreateContext,1,0.002568,0.002568,0.002568,0.002568,
+clCreateCommandQueue,1,0.002107,0.002107,0.002107,0.002107,
+clGetPlatformInfo,1,0.001991,0.001991,0.001991,0.001991,
+clGetDeviceIDs,1,0.00188,0.00188,0.00188,0.00188,
+clGetDeviceInfo,1,0.001857,0.001857,0.001857,0.001857,
+
+
+Kernel Execution (includes estimated device times)
+Kernel,Number Of Enqueues,Total Time (ms),Minimum Time (ms),Average Time (ms),Maximum Time (ms),
+image_0,1,0.178552,0.178552,0.178552,0.178552,
+
+
+Compute Unit Utilization (includes estimated device times)
+Device,Compute Unit,Kernel,Global Work Size,Local Work Size,Number Of Calls,Total Time (ms),Minimum Time (ms),Average Time (ms),Maximum Time (ms),Clock Frequency (MHz),
+xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,image_0_1,image_0,1:1:1,1:1:1,1,0.178542,0.178542,0.178542,0.178542,300,
+
+
+Data Transfer: Host and Global Memory
+Context:Number of Devices,Transfer Type,Number Of Transfers,Transfer Rate (MB/s),Average Bandwidth Utilization (%),Average Size (KB),Total Time (ms),Average Time (ms),
+context0:1,READ,1,N/A,N/A,1048.58,N/A,N/A,
+context0:1,WRITE,1,N/A,N/A,2097.15,N/A,N/A,
+
+
+Data Transfer: Kernels and Global Memory
+Device,Compute Unit/Port Name,Kernel Arguments,DDR Bank,Transfer Type,Number Of Transfers,Transfer Rate (MB/s),Average Bandwidth Utilization (%),Average Size (KB),Average Latency (ns),
+xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,All,All,0,READ,256,5872.66,50.978,4.096,3637.46,
+xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,All,All,0,WRITE,256,5872.66,50.978,4.096,9021,
+
+
+Top Data Transfer: Kernels and Global Memory
+Device,Compute Unit,Number of Transfers,Average Bytes per Transfer,Transfer Efficiency (%),Total Data Transfer (MB),Total Write (MB),Total Read (MB),Transfer Rate (MB/s),Average Bandwidth Utilization (%),
+xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,All,512,4096,100,2.09715,1.04858,1.04858,11745.3,100,
+
+
+Top Kernel Execution
+Kernel Instance Address,Kernel,Context ID,Command Queue ID,Device,Start Time (ms),Duration (ms),Global Work Size,Local Work Size,
+28972352,image_0,0,0,xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,0.000104,0.178552,1:1:1,1:1:1,
+
+
+Top Buffer Writes
+Buffer Address,Context ID,Command Queue ID,Start Time (ms),Duration (ms),Buffer Size (KB),Writing Rate(MB/s),
+0,0,0,806.82,N/A,2097.15,N/A,
+
+
+Top Buffer Reads
+Buffer Address,Context ID,Command Queue ID,Start Time (ms),Duration (ms),Buffer Size (KB),Reading Rate(MB/s),
+0,0,0,66863,N/A,1048.58,N/A,
+
+
+PRC Parameters
+Parameter,Element,Value,
+DEVICE_EXEC_TIME,xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,0.178552,
+CU_CALLS,xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0|image_0_1,1,
+CU_CALLS,xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0|image_1_1,0,
+MEMORY_BIT_WIDTH,xilinx_aws-vu9p-f1-04261818_dynamic_5_0-0,512,
+
+

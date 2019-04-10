@@ -5,11 +5,11 @@
 #
 
 # configure hardcloud, opae-sdk and intel-fpga-bbb
-export LLVM=/home/ramon.nepomuceno/hardcloud/install
-export XILINX_SDX=/opt/Xilinx/SDx/2017.4.op/
+export LLVM=/home/ramon/hardcloud/install
+export XILINX_SDX=/opt/Xilinx/SDx/2017.1.op/
 export LD_LIBRARY_PATH=$XILINX_SDX/runtime/lib/x86_64:$XILINX_SDX/lib/lnx64.o:$LLVM/lib:usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export LIBRARY_PATH=$XILINX_SDX/runtime/lib/x86_64:$XILINX_SDX/lib/lnx64.o:$LLVM/lib:usr/local/cuda/lib64:$LIBRARY_PATH
 export XCL_EMULATION_MODE=hw
 export SDX_PLATFORM=xilinx_aws-vu9p-f1-04261818_dynamic_5_0
 
-export PATH=/home/ramon.nepomuceno/hardcloud/install/bin:/usr/local/cuda/bin:$PATH
+export PATH=/home/ramon/hardcloud/install/bin:/usr/local/cuda/bin:$PATH

@@ -29,3 +29,5 @@ CMakeLists.txt.user
 
 # install
 install
+
+.vscode
