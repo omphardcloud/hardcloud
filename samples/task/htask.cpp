@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "image.h"
+#include <omp.h>
 #define TRLOW 0
 #define TGLOW 0
 #define TBLOW 150
 #define TRHIGH 100
 #define TGHIGH 100
 #define TBHIGH 254
-
+#define N  10
 
 int main()
 {
@@ -20,15 +21,15 @@ int main()
   unsigned int size = image.height*image.width;
   unsigned int x = image.width;
   unsigned int y = image.height;
+  unsigned int acx=1, acy=1, tx=1, ty=1, avgx, avgy;
   unsigned int* image_in  = image.array_in;
   unsigned int* image_out = image.array_out;
   unsigned int* band_to_cent = (unsigned int*)malloc(sizeof(unsigned int)*size);
   printf("Execute Bandpass SIZE = %d\n", size);
-
-  // Bandpass Threshold
+    #pragma omp parallel 
   {
-//          #pragma omp target  map(to:image_in[:size]) map(from:band_to_cent[:size]) teams distribute
-	#pragma omp target teams distribute parallel for map(to:image_in[:size]) map(from:band_to_cent[:size])
+  {
+	#pragma omp target teams distribute parallel for map(to:image_in[:size]) map(from:band_to_cent[:size]) depend(out: band_to_cent[:size])
 	  for(int i = 0; i < size; i++){
 	  	unsigned r, g, b, gray, tr, tg, tb;
 	
@@ -48,13 +49,11 @@ int main()
 		}
 	  }
   }
-
+  }
   int scan;
 
   printf("Execute centroid x=%d, y=%d\n", x, y);
-  // centroid
-  unsigned int acx = 1, acy = 1, tx=1, ty=1;
-#pragma omp target teams distribute parallel for collapse(2) map(tofrom:band_to_cent[:size]) map(from:acx,acy,tx,ty)
+#pragma omp target teams distribute parallel for collapse(2) map(tofrom:band_to_cent[:size], acx, acy, tx, ty)
   for(int i = 0; i < y; i++){
 	  for(int j = 0; j < x; j++){	
 		  if(band_to_cent[i*x+j] == 0xffffff){
@@ -67,13 +66,13 @@ int main()
 	  }
   }
   printf("acx=%u, acy=%u, tx=%u, ty=%u", acx, acy, tx, ty);
-  int avgx  = acx/tx;
-  int avgy  = acy/ty;
+  avgx  = acx/tx;
+  avgy  = acy/ty;
 
   //crosshair
 
   printf("crosshair\n");
- #pragma omp target teams distribute parallel for collapse(2) map(to:image_in[:size]) map(from:image_out[:size])
+ #pragma omp target teams distribute parallel for collapse(2) map(to:image_in[:size], avgx, avgy) map(from:image_out[:size])
   for(int i = 0; i < y; i++){
 	  for(int j = 0; j < x; j++){
 		  if(((i <= avgy + 10) && (i > avgy - 10)) || ((j <= avgx + 10) && (j > avgx - 10) )){
@@ -86,6 +85,7 @@ int main()
   
   }
 
+  
   image.map_back();
 
   image.write_png_file(file_output);

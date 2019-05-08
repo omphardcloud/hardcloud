@@ -1,242 +1,589 @@
-entering __tgt_register_lib
-p entering RTLsTy::LoadRTLsOnce
-Kmpc --> __kmp_get_thread_id_reg entering.
-Kmpc --> __kmp_get_thread_id_reg __kmp_init_serial = FALSE / gtid = -2.
-Kmpc --> __kmp_get_thread_id_reg before __kmp_do_serial_initialize.
-Kmpc --> kmp_do_serial_initialize entering 
-Kmpc --> kmp_do_serial_initialize alloc __kmp_threas size = 576 
-__kmp_do_serial_initialize before __kmp_register_root  T#-1936251584 6636
-__kmp_register_root entering
-__kmp_initialize_root: before __kmp_allocate_team root_team
-__kmp_allocate_team: called
-__kmp_initialize_team: enter: team=0x212af40
-__kmp_reinitialize_team: enter this_thread=(nil) team=0x212af40
-__kmp_init_implicit_task(enter): T#:0 team=0x212af40 task=0x212b880, reinit=FALSE
-__kmp_initialize_root: before __kmp_allocate_team hot_team 3244
-__kmp_allocate_team: called
-__kmp_initialize_team: enter: team=0x212b980
-__kmp_reinitialize_team: enter this_thread=(nil) team=0x212b980
-__kmp_init_implicit_task(enter): T#:0 team=0x212b980 task=0x2130e00, reinit=FALSE
-__kmp_register_root: before serial_team __kmp_allocate_team
-__kmp_allocate_team: called
-__kmp_initialize_team: enter: team=0x2131a40
-__kmp_reinitialize_team: enter this_thread=(nil) team=0x2131a40
-__kmp_init_implicit_task(enter): T#:0 team=0x2131a40 task=0x2132580, reinit=FALSE
-__kmp_initialize_info
-__kmp_initialize_info1: T#0:0 this_thread=0x2131480 curtask=(nil)
-__kmp_init_implicit_task(enter): T#:0 team=0x212af40 task=0x212b880, reinit=TRUE
-__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x2131480 curtask=(nil) parent_task=(nil)
-__kmp_initialize_info2: T#0:0 this_thread=0x2131480 curtask=0x212b880
-Kmpc --> __kmp_do_serial_initialize: exit
-Kmpc --> __kmp_get_thread_id_reg exiting 0.
+GenerateOpenMPCapturedStmtFunction
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+emitInlinedDirective
 
 
-NUMBER OF DEVICES: 5
-
-
-Kmpc --> kmpc_fork_call entering
-Kmpc --> __kmp_get_thread_id_reg entering.
-*** __kmp_get_global_thread_id_reg: using TDATA
-Kmpc --> __kmp_get_thread_id_reg exiting 0.
-__kmp_fork_call: enter T#0
-Kmpc --> __kmp_get_thread_id_reg entering.
-*** __kmp_get_global_thread_id_reg: using TDATA
-Kmpc --> __kmp_get_thread_id_reg exiting 0.
-__kmp_fork_call: before __kmp_allocate_team
-__kmp_allocate_team: called
-__kmp_allocate_thread: before __kmp_allocate_team th_serial/serial_team
-__kmp_allocate_team: called
-__kmp_initialize_team: enter: team=0x2134800
-__kmp_reinitialize_team: enter this_thread=(nil) team=0x2134800
-__kmp_init_implicit_task(enter): T#:0 team=0x2134800 task=0x2133c80, reinit=FALSE
-__kmp_initialize_info
-__kmp_initialize_info1: T#1:1 this_thread=0x2134240 curtask=(nil)
-__kmp_init_implicit_task(enter): T#:1 team=0x212b980 task=0x2130ec0, reinit=TRUE
-__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x2134240 curtask=(nil) parent_task=(nil)
-__kmp_initialize_info2: T#1:1 this_thread=0x2134240 curtask=0x2130ec0
-__kmp_initialize_team: enter: team=0x212b980
-__kmp_reinitialize_team: enter this_thread=0x2131480 team=0x212b980
-__kmp_init_implicit_task(enter): T#:0 team=0x212b980 task=0x2130e00, reinit=FALSE
-__kmp_initialize_info
-__kmp_initialize_info1: T#0:0 this_thread=0x2131480 curtask=0x212b880
-__kmp_init_implicit_task(enter): T#:0 team=0x212b980 task=0x2130e00, reinit=TRUE
-__kmp_push_current_task_to_thread(enter): T#0 this_thread=0x2131480 curtask=0x212b880 parent_task=(nil)
-__kmp_initialize_info2: T#0:0 this_thread=0x2131480 curtask=0x2130e00
-__kmp_initialize_info
-__kmp_initialize_info1: T#1:1 this_thread=0x2134240 curtask=0x2130ec0
-__kmp_init_implicit_task(enter): T#:1 team=0x212b980 task=0x2130ec0, reinit=TRUE
-__kmp_push_current_task_to_thread(enter): T#1 this_thread=0x2134240 curtask=0x2130ec0 parent_task=(nil)
-__kmp_initialize_info2: T#1:1 this_thread=0x2134240 curtask=0x2130ec0
-__kmp_fork_call: T#0(-1:0)->(-1:0) created a team of 2 threads
-__kmp_internal_fork : root=0x212ae00, team=0x212b980, master_th=0x2131480, gtid=0
-Kmpc --> __kmp_fork_call internal fork before. 
-__kmp_task_team_setup
-__kmp_allocate_task_team: T#0 entering; team = 0x212b980
-__kmp_allocate_task_team: T#0 entering; team = 0x212b980
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x21344f0): 0 => 4
-__kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 1
-__kmp_task_team_sync
-__kmp_internal_fork : after : root=0x212ae00, team=0x212b980, master_th=0x2131480, gtid=0
-__kmp_fork_call: T#0(-1:0) invoke microtask = 0x400b40
-__kmp_hyper_barrier_release: T#1 wait go(0x21344f0) == 4
- Wait for parent thread to release us
-kmp_flag_64->wait T#1
-__kmp_hyper_barrier_release: AFTER T#1 wait go(0x21344f0) == 4
-__kmp_hyper_barrier_release: T#1(-1:1) set go(0x21344f0) = 0
-__kmp_init_implicit_task(enter): T#:1 team=0x212b980 task=0x2130ec0, reinit=FALSE
-__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 1
-__kmp_task_team_sync
-__kmpc_barrier: called T#1
-__kmp_barrier: T#1(-1:1) has arrived
-__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 0
-__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x2134440): 0 => 4
-__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 0
-__kmp_barrier: T#1 returning from __kmp_hyper_barrier 
-__kmp_barrier: T#1 bd_hyper_bar switch
-__kmp_hyper_barrier_release: T#1 wait go(0x2134430) == 4
- Wait for parent thread to release us
-kmp_flag_64->wait T#1
-Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 0
-Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x401148, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x400e40
-Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 0 / ndeps 1 / ndeps_noalias 0
-kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x401148 task=0x2238e80
-__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
-__kmp_check_deps: T#0 checking dependencies for task 0x2238e80 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
-__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
-__kmp_process_deps deb_barrier ELSE
-__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
-__kmp_check_deps: T#0 found 0 predecessors for task 0x2238e80 
-Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had no blocking dependencies : loc=0x401148 task=0x2238e80, transferring to __kmpc_omp_task
-Kmpc --> __kmpc_omp_task entering. 
-Kmpc --> __kmp_omp_task entering. 
-Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
-__kmp_push_task: T#0 #TID=0 trying to push task 0x2238e80.
-__kmp_push_task: T#0 before __kmp_enable_tasking 
-Kmpc --> __kmp_enable_tasking(enter): T#0
-__kmp_enable_tasking(enter): T#0
-Kmpc --> __kmp_realloc_task_threads_data entering
-__kmp_enable_tasking: T#0 don't wake up thread T#1
-__kmp_alloc_task_deque: T#0 allocating deque[256] for thread_data 0x2137480
-Kmpc --> __kmp_push_task: T#0 returning TASK_SCCESSFULLY_PUSHED: task=0x2238e80 ntask=1 head=0 tail=1.
-Kmpc --> __kmp_omp_task exiting. 
-__kmp_invoke_task(enter): T#1 invoking task 0x2238e80, current_task=0x2130ec0
-__kmp_task_start(enter): T#1 starting task 0x2238e80: current_task=0x2130ec0
+entering CodeGenFunction::EmitRuntimeCall
 
 
 
- OMPTARGET BASE : afce116c 
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+EmitOMPTargetDirective
+emitInlinedDirective
+generateCapturedVarsAndMapArrays
+EmitOMPTargetDirective calling emitCommonOMPTargtDirective 1
+emitCommonOMPTargetDirective
+emitTargetOutlinedFunction
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+emitTargetCall func: .omp_outlined.
 
 
-Kmpc --> __kmpc_omp_task_alloc says (enter): Execute task isDev 1 on device 1
-Kmpc --> __kmp_task_alloc(enter): T#0 loc=0x401148, flags=(0x1) sizeof_task=80 sizeof_shared=8 entry=0x400f90
-Kmpc --> __kmpc_omp_task_with_deps says: isDev: 1 / devId: 1 / ndeps 1 / ndeps_noalias 0
-kmpc --> __kmpc_omp_task_with_deps(enter): T#0 loc=0x401148 task=0x2236780
-__kmpc_omp_task_with_deps !serial = 1, ndeps = 1, ndeps_noalias=0Kmpc --> __kmpc_omp_task_with_deps says: if no dependencies have been tracked yet, create the dependence hash
-__kmp_check_deps: T#0 checking dependencies for task 0x2236780 : 1 possibly aliased dependencies, 0 non-aliased depedencies : dep_barrier=0 .
-__kmp_process_deps<1>: T#0 processing 1 dependencies : dep_barrier = 0
-
-
- DEP: afce116c 
-
-__kmp_process_deps<1> second: T#0 adding dependence from 0x2238e80 to 0x2236780 flag=1
-__kmp_process_deps deb_barrier ELSE
-__kmp_process_deps<0>: T#0 processing 0 dependencies : dep_barrier = 0
-__kmp_check_deps: T#0 found 1 predecessors for task 0x2236780 
-Kmpc --> __kmpc_omp_task_with_deps(exit): T#0 task had blocking dependencies: loc=0x401148 task=0x2236780, return: TASK_CURRENT_NOT_QUEUED
-__kmpc_barrier: called T#0
-__kmp_barrier: T#0(-1:0) has arrived
-Obtained target argument 0x00007f2c84000a80 from host pointer 0x00007ffdafce116c
-__kmp_task_team_setup
-__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 0
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x2134440) == 4
-kmp_flag_64->wait T#0
-__kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 0
-__kmp_barrier: T#0 returning from __kmp_hyper_barrier 
-__kmp_barrier: T#0 IS KMP_MASTER_TID
-__kmp_barrier: T#0 calling __kmp_task_team_wait
-__kmp_task_team_wait
-__kmp_task_finish(enter): T#1 finishing task 0x2238e80 and resuming task 0x2130ec0
-__kmp_task_finish calling __kmp_release_deps
-__kmp_release_deps: T#1 notifying successors of task 0x2238e80.
-__kmp_release_deps: T#1 notifying successors of task 0x2238e80.
-Sucessors isDev = 1, devId = 1, my devID = 0
-
- Candidate to preoffloading 
+ DEBUG AFTER ThenGen
 
 
 
+ DEBUG AFTER LAMBDA 
+
+DEBUG OutlindedFnID
+DEBUG else
+EmitOMPTaskBasedDirective
+#-emitOutlinedFunctionCall-# func = .omp_outlined..1
+
+
+entering CodeGenFunction::EmitRuntimeCall
 
 
 
- DO THE PRE OFFLOAD
+DEGUB CodeGenFunction::EmitRuntimeCall
 
 
 
-  entering __TGT_PREOFFLOAD 
+ DEBUG INSIDE ThenGen
 
-__kmp_release_deps: T#1 successor 0x2236840 of 0x2238e80 scheduled for execution.
-kmp_omp_release_deps calling __kmp_omp_task
-Kmpc --> __kmp_omp_task entering. 
-Kmpc --> __kmp_omp_task OMP_45_ENABLED. 
-__kmp_push_task: T#1 #TID=1 trying to push task 0x2236780.
-__kmp_alloc_task_deque: T#1 allocating deque[256] for thread_data 0x2137540
-Kmpc --> __kmp_push_task: T#1 returning TASK_SCCESSFULLY_PUSHED: task=0x2236780 ntask=1 head=0 tail=1.
-Kmpc --> __kmp_omp_task exiting. 
-__kmp_release_deps: T#1 all successors of 0x2238e80 notified of completion
-__kmp_task_finish: T#1 finished task 0x2238e80, 1 incomplete children
-__kmp_invoke_task(enter): T#0 invoking task 0x2236780, current_task=0x2130e00
-__kmp_task_start(enter): T#0 starting task 0x2236780: current_task=0x2130e00
+emitTargetCall dumping Func name: .omp_outlined..1
+Argument name: .global_tid.
+Argument number: 0
+Argument name: .part_id.
+Argument number: 1
+Argument name: .privates.
+Argument number: 2
+Argument name: .copy_fn.
+Argument number: 3
+Argument name: .task_t.
+Argument number: 4
+Argument name: __context
+Argument number: 5
+Dump OutlinedFnID name: __omp_offloading_806_1222659_main_l12.region_id
+Creating OffloadingArgs
+
+
+ DEBUG Numteams Not Set
+
+CGOpenMPRuntime::createRuntimeFunction
+#-building __tgt_target_nowait-#
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
 
 
 
- OMPTARGET BASE : afce116c 
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+Before CurFn->dump()
+#-emitOutlinedFunctionCall-# func = .omp_outlined..1
 
 
-__kmp_free_task_and_ancestors(enter): T#1 task 0x2238e80 complete and freeing itself
-__kmp_free_task: T#1 freeing data from task 0x2238e80
-__kmp_task_finish(exit): T#1 finished task 0x2238e80, resuming task 0x2130ec0
-Obtained target argument 0x00000000021384a0 from host pointer 0x00007ffdafce116c
-__kmp_task_finish(enter): T#0 finishing task 0x2236780 and resuming task 0x2130e00
-__kmp_task_finish calling __kmp_release_deps
-__kmp_release_deps: T#0 notifying successors of task 0x2236780.
-__kmp_release_deps: T#0 all successors of 0x2236780 notified of completion
-__kmp_task_finish: T#0 finished task 0x2236780, 0 incomplete children
-__kmp_free_task_and_ancestors(enter): T#0 task 0x2236780 complete and freeing itself
-__kmp_free_task: T#0 freeing data from task 0x2236780
-__kmp_task_finish(exit): T#0 finished task 0x2236780, resuming task 0x2130e00
-__kmp_barrier: T#0 bd_hyper_bar switch
-__kmp_hyper_barrier_release: T#0(-1:0) releasing T#1(-1:1)go(0x2134430): 0 => 4
-__kmp_hyper_barrier_release: T#0(-1:0) exit for barrier type 0
-__kmp_barrier: T#0 scape switch
-__kmp_task_team_sync
-__kmp_barrier: T#0(-1:0) is leaving with return value 0
-__kmp_fork_call: T#0(-1:0) done microtask = 0x400b40
-__kmp_fork_call: parallel exit 2295 T#0
-__kmp_hyper_barrier_gather: T#0(-1:0) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#0(-1:0) wait T#1(-1:1) arrived(0x2134500) == 4
-kmp_flag_64->wait T#0
-__kmp_hyper_barrier_release: AFTER T#1 wait go(0x2134430) == 4
-__kmp_hyper_barrier_release: T#1(-1:1) set go(0x2134430) = 0
-__kmp_hyper_barrier_release: T#1(-1:1) exit for barrier type 0
-__kmp_barrier: T#1 scape switch
-__kmp_task_team_sync
-__kmp_barrier: T#1(-1:1) is leaving with return value 1
-__kmp_hyper_barrier_gather: T#1(-1:1) enter for barrier type 1
-__kmp_hyper_barrier_gather: T#1(-1:1) releasing T#0(-1:0) arrived(0x2134500): 0 => 4
-__kmp_hyper_barrier_gather: T#1(-1:1) exit for barrier type 1
-__kmp_hyper_barrier_gather: T#0(-1:0) exit for barrier type 1
-__kmp_hyper_barrier_release: T#1 wait go(0x21344f0) == 4
-__kmp_task_team_wait
- Wait for parent thread to release us
-__kmp_pop_current_task_from_thread(enter): T#0 this_thread=0x2131480, curtask=0x2130e00, curtask_parent=0x212b880
-Kmpc --> kmpc_fork_call exiting
-result:  1665 
-kmp_flag_64->wait T#1
-__kmp_free_task_team: T#-1 task_team = 0x2137180
-__kmp_free_task_team: T#-1 task_team = 0x2137300
-__kmp_wait_to_unref_task_teams
-__kmp_hyper_barrier_release: AFTER T#1 wait go(0x21344f0) == 4
-__kmp_reap_task_teams
-__kmp_free_task_threads_data
-Kmpc --> __kmp_free_task_deque entering
-Kmpc --> __kmp_free_task_deque entering
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall
+emitTaskInit
+#-emitProxyTaskFunction-#
+emitProxyTaskFunction first dumping TaskEntry
+#-emitOutlinedFunctionCall-# func = .omp_task_entry.
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitProxyTaskFunction second dumping TaskEntry
+emitTaskInit dumping TaskEntry: 
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall first dumping
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall second dumping
+EmitOMPTargetDirective
+emitInlinedDirective
+generateCapturedVarsAndMapArrays
+EmitOMPTargetDirective calling emitCommonOMPTargtDirective 1
+emitCommonOMPTargetDirective
+emitTargetOutlinedFunction
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+emitTargetCall func: .omp_outlined.
+
+
+ DEBUG AFTER ThenGen
+
+
+
+ DEBUG AFTER LAMBDA 
+
+DEBUG OutlindedFnID
+DEBUG else
+EmitOMPTaskBasedDirective
+#-emitOutlinedFunctionCall-# func = .omp_outlined..5
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+ DEBUG INSIDE ThenGen
+
+emitTargetCall dumping Func name: .omp_outlined..5
+Argument name: .global_tid.
+Argument number: 0
+Argument name: .part_id.
+Argument number: 1
+Argument name: .privates.
+Argument number: 2
+Argument name: .copy_fn.
+Argument number: 3
+Argument name: .task_t.
+Argument number: 4
+Argument name: __context
+Argument number: 5
+Dump OutlinedFnID name: __omp_offloading_806_1222659_main_l16.region_id
+Creating OffloadingArgs
+
+
+ DEBUG Numteams Not Set
+
+CGOpenMPRuntime::createRuntimeFunction
+#-building __tgt_target_nowait-#
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+Before CurFn->dump()
+#-emitOutlinedFunctionCall-# func = .omp_outlined..5
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall
+emitTaskInit
+#-emitProxyTaskFunction-#
+emitProxyTaskFunction first dumping TaskEntry
+#-emitOutlinedFunctionCall-# func = .omp_task_entry..8
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitProxyTaskFunction second dumping TaskEntry
+emitTaskInit dumping TaskEntry: 
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall first dumping
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTaskCall second dumping
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CGOpenMPRuntime::createRuntimeFunction
+CodeGenModule::CreateRuntimeFunction
+exit createRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTargetOutlinedFunction
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+emitTargetOutlinedFunction
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+#-emitOutlinedFunctionCall-# func = __omp_offloading_806_1222659_main_l12
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+emitTargetOutlinedFunctionHelper
+emitTargetOutlinedFunctionHelper exiting
+outlineTargetDirective
+GenerateOpenMPCapturedStmtFunction
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+#-emitOutlinedFunctionCall-# func = __omp_offloading_806_1222659_main_l16
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+CodeGenModule::CreateRuntimeFunction
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+
+
+
+entering CodeGenFunction::EmitRuntimeCall
+
+
+
+DEGUB CodeGenFunction::EmitRuntimeCall
+

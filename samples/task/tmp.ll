@@ -7,21 +7,21 @@ target triple = "x86_64-unknown-linux-gnu"
 
 %struct.__tgt_offload_entry = type { i8*, i8*, i8*, i64, i32, i32, i32 }
 
-@.omp_offloading.entry_name = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222644_main_l13\00"
+@.omp_offloading.entry_name = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222659_main_l12\00"
 @.omp_offloading.entry_module = internal unnamed_addr constant [1 x i8] zeroinitializer
-@.omp_offloading.entry.__omp_offloading_806_1222644_main_l13 = weak constant %struct.__tgt_offload_entry { i8* bitcast (void (i32*)* @__omp_offloading_806_1222644_main_l13 to i8*), i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
-@.omp_offloading.entry_name.1 = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222644_main_l17\00"
+@.omp_offloading.entry.__omp_offloading_806_1222659_main_l12 = weak constant %struct.__tgt_offload_entry { i8* bitcast (void ([2 x i32]*)* @__omp_offloading_806_1222659_main_l12 to i8*), i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
+@.omp_offloading.entry_name.1 = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222659_main_l16\00"
 @.omp_offloading.entry_module.2 = internal unnamed_addr constant [1 x i8] zeroinitializer
-@.omp_offloading.entry.__omp_offloading_806_1222644_main_l17 = weak constant %struct.__tgt_offload_entry { i8* bitcast (void (i32*)* @__omp_offloading_806_1222644_main_l17 to i8*), i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name.1, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module.2, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
+@.omp_offloading.entry.__omp_offloading_806_1222659_main_l16 = weak constant %struct.__tgt_offload_entry { i8* bitcast (void ([2 x i32]*)* @__omp_offloading_806_1222659_main_l16 to i8*), i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name.1, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module.2, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
 
 ; Function Attrs: noinline nounwind uwtable
-define weak void @__omp_offloading_806_1222644_main_l13(i32* dereferenceable(4) %A) #0 {
+define weak void @__omp_offloading_806_1222659_main_l12([2 x i32]* dereferenceable(8) %A) #0 {
 entry:
-  %A.addr = alloca i32*, align 8
+  %A.addr = alloca [2 x i32]*, align 8
   %i = alloca i32, align 4
   %j = alloca i32, align 4
-  store i32* %A, i32** %A.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
   store i32 0, i32* %i, align 4
   br label %for.cond
 
@@ -40,7 +40,8 @@ for.cond1:                                        ; preds = %for.inc, %for.body
   br i1 %cmp2, label %for.body3, label %for.end
 
 for.body3:                                        ; preds = %for.cond1
-  store i32 888, i32* %0, align 4
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  store i32 888, i32* %arrayidx, align 4
   br label %for.inc
 
 for.inc:                                          ; preds = %for.body3
@@ -63,14 +64,15 @@ for.end6:                                         ; preds = %for.cond
 }
 
 ; Function Attrs: noinline nounwind uwtable
-define weak void @__omp_offloading_806_1222644_main_l17(i32* dereferenceable(4) %A) #0 {
+define weak void @__omp_offloading_806_1222659_main_l16([2 x i32]* dereferenceable(8) %A) #0 {
 entry:
-  %A.addr = alloca i32*, align 8
-  store i32* %A, i32** %A.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
-  %1 = load i32, i32* %0, align 4
+  %A.addr = alloca [2 x i32]*, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  %1 = load i32, i32* %arrayidx, align 4
   %add = add nsw i32 %1, 777
-  store i32 %add, i32* %0, align 4
+  store i32 %add, i32* %arrayidx, align 4
   ret void
 }
 
@@ -80,8 +82,8 @@ attributes #0 = { noinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-ma
 !llvm.module.flags = !{!2}
 !llvm.ident = !{!3}
 
-!0 = !{i32 0, i32 2054, i32 19015236, !"main", i32 13, i32 0}
-!1 = !{i32 0, i32 2054, i32 19015236, !"main", i32 17, i32 1}
+!0 = !{i32 0, i32 2054, i32 19015257, !"main", i32 16, i32 1}
+!1 = !{i32 0, i32 2054, i32 19015257, !"main", i32 12, i32 0}
 !2 = !{i32 1, !"PIC Level", i32 2}
 !3 = !{!"clang version 4.0.0 "}
 
@@ -96,8 +98,8 @@ target triple = "nvptx64-nvidia-cuda"
 %struct.__openmp_nvptx_target_property_ty = type { i8, i32, i32 }
 %struct.__openmp_nvptx_target_property_ty.0 = type { i8, i32, i32 }
 
-@__omp_offloading_806_1222644_main_l13_property = weak constant %struct.__openmp_nvptx_target_property_ty { i8 1, i32 0, i32 0 }, align 1
-@__omp_offloading_806_1222644_main_l17_property = weak constant %struct.__openmp_nvptx_target_property_ty.0 { i8 1, i32 0, i32 0 }, align 1
+@__omp_offloading_806_1222659_main_l12_property = weak constant %struct.__openmp_nvptx_target_property_ty { i8 1, i32 0, i32 0 }, align 1
+@__omp_offloading_806_1222659_main_l16_property = weak constant %struct.__openmp_nvptx_target_property_ty.0 { i8 1, i32 0, i32 0 }, align 1
 
 declare void @__kmpc_kernel_deinit(i16)
 
@@ -105,23 +107,23 @@ declare void @__kmpc_kernel_deinit(i16)
 declare void @llvm.nvvm.barrier0() #0
 
 ; Function Attrs: noinline nounwind
-define weak void @__omp_offloading_806_1222644_main_l13(i32* dereferenceable(4) %A, i8* %scratchpad_ptr) #1 {
+define weak void @__omp_offloading_806_1222659_main_l12([2 x i32]* dereferenceable(8) %A, i8* %scratchpad_ptr) #1 {
 entry:
-  %A.addr.i = alloca i32*, align 8
+  %A.addr.i = alloca [2 x i32]*, align 8
   %i.i = alloca i32, align 4
   %j.i = alloca i32, align 4
-  %A.addr = alloca i32*, align 8
+  %A.addr = alloca [2 x i32]*, align 8
   %scratchpad_ptr.addr = alloca i8*, align 8
-  store i32* %A, i32** %A.addr, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
   store i8* %scratchpad_ptr, i8** %scratchpad_ptr.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
-  %1 = call i32 @__omp_kernel_initialization() #3
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
+  %1 = call i32 @__omp_kernel_initialization.1() #3
   %2 = icmp eq i32 %1, 1
-  br i1 %2, label %.master.i, label %__omp_offloading_806_1222644_main_l13_impl__.exit
+  br i1 %2, label %.master.i, label %__omp_offloading_806_1222659_main_l12_impl__.exit
 
 .master.i:                                        ; preds = %entry
-  store i32* %0, i32** %A.addr.i, align 8
-  %3 = load i32*, i32** %A.addr.i, align 8
+  store [2 x i32]* %0, [2 x i32]** %A.addr.i, align 8
+  %3 = load [2 x i32]*, [2 x i32]** %A.addr.i, align 8
   store i32 0, i32* %i.i, align 4
   br label %for.cond.i
 
@@ -140,7 +142,8 @@ for.cond1.i:                                      ; preds = %for.body3.i, %for.b
   br i1 %cmp2.i, label %for.body3.i, label %for.end.i
 
 for.body3.i:                                      ; preds = %for.cond1.i
-  store i32 888, i32* %3, align 4
+  %arrayidx.i = getelementptr inbounds [2 x i32], [2 x i32]* %3, i64 0, i64 0
+  store i32 888, i32* %arrayidx.i, align 4
   %6 = load i32, i32* %j.i, align 4
   %inc.i = add nsw i32 %6, 1
   store i32 %inc.i, i32* %j.i, align 4
@@ -155,38 +158,39 @@ for.end.i:                                        ; preds = %for.cond1.i
 for.end6.i:                                       ; preds = %for.cond.i
   call void @__kmpc_kernel_deinit(i16 0) #3
   call void @llvm.nvvm.barrier0() #3
-  br label %__omp_offloading_806_1222644_main_l13_impl__.exit
+  br label %__omp_offloading_806_1222659_main_l12_impl__.exit
 
-__omp_offloading_806_1222644_main_l13_impl__.exit: ; preds = %entry, %for.end6.i
+__omp_offloading_806_1222659_main_l12_impl__.exit: ; preds = %entry, %for.end6.i
   ret void
 }
 
 declare i1 @__kmpc_kernel_parallel(i8**, i16)
 
 ; Function Attrs: noinline nounwind
-define weak void @__omp_offloading_806_1222644_main_l17(i32* dereferenceable(4) %A, i8* %scratchpad_ptr) #1 {
+define weak void @__omp_offloading_806_1222659_main_l16([2 x i32]* dereferenceable(8) %A, i8* %scratchpad_ptr) #1 {
 entry:
-  %A.addr.i = alloca i32*, align 8
-  %A.addr = alloca i32*, align 8
+  %A.addr.i = alloca [2 x i32]*, align 8
+  %A.addr = alloca [2 x i32]*, align 8
   %scratchpad_ptr.addr = alloca i8*, align 8
-  store i32* %A, i32** %A.addr, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
   store i8* %scratchpad_ptr, i8** %scratchpad_ptr.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
-  %1 = call i32 @__omp_kernel_initialization.1() #3
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
+  %1 = call i32 @__omp_kernel_initialization() #3
   %2 = icmp eq i32 %1, 1
-  br i1 %2, label %.master.i, label %__omp_offloading_806_1222644_main_l17_impl__.exit
+  br i1 %2, label %.master.i, label %__omp_offloading_806_1222659_main_l16_impl__.exit
 
 .master.i:                                        ; preds = %entry
-  store i32* %0, i32** %A.addr.i, align 8
-  %3 = load i32*, i32** %A.addr.i, align 8
-  %4 = load i32, i32* %3, align 4
+  store [2 x i32]* %0, [2 x i32]** %A.addr.i, align 8
+  %3 = load [2 x i32]*, [2 x i32]** %A.addr.i, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i32], [2 x i32]* %3, i64 0, i64 0
+  %4 = load i32, i32* %arrayidx.i, align 4
   %add.i = add nsw i32 %4, 777
-  store i32 %add.i, i32* %3, align 4
+  store i32 %add.i, i32* %arrayidx.i, align 4
   call void @__kmpc_kernel_deinit(i16 0) #3
   call void @llvm.nvvm.barrier0() #3
-  br label %__omp_offloading_806_1222644_main_l17_impl__.exit
+  br label %__omp_offloading_806_1222659_main_l16_impl__.exit
 
-__omp_offloading_806_1222644_main_l17_impl__.exit: ; preds = %entry, %.master.i
+__omp_offloading_806_1222659_main_l16_impl__.exit: ; preds = %entry, %.master.i
   ret void
 }
 
@@ -228,7 +232,7 @@ entry:
   store i8 %6, i8* %exec_status.i, align 1
   %7 = load volatile i8*, i8** %work_fn.i, align 8
   %should_terminate.i = icmp eq i8* %7, null
-  br i1 %should_terminate.i, label %__omp_offloading_806_1222644_main_l13_worker.exit, label %.select.workers.i
+  br i1 %should_terminate.i, label %__omp_offloading_806_1222659_main_l16_worker.exit, label %.select.workers.i
 
 .select.workers.i:                                ; preds = %.await.work.i
   %8 = load i8, i8* %exec_status.i, align 1
@@ -242,10 +246,10 @@ entry:
   call void @llvm.nvvm.barrier0() #3
   br label %.await.work.i
 
-__omp_offloading_806_1222644_main_l13_worker.exit: ; preds = %.await.work.i
+__omp_offloading_806_1222659_main_l16_worker.exit: ; preds = %.await.work.i
   br label %.exit
 
-.exit:                                            ; preds = %__omp_offloading_806_1222644_main_l13_worker.exit, %entry
+.exit:                                            ; preds = %__omp_offloading_806_1222659_main_l16_worker.exit, %entry
   %9 = load i32, i32* %retval, align 4
   ret i32 %9
 }
@@ -299,7 +303,7 @@ entry:
   store i8 %6, i8* %exec_status.i, align 1
   %7 = load volatile i8*, i8** %work_fn.i, align 8
   %should_terminate.i = icmp eq i8* %7, null
-  br i1 %should_terminate.i, label %__omp_offloading_806_1222644_main_l17_worker.exit, label %.select.workers.i
+  br i1 %should_terminate.i, label %__omp_offloading_806_1222659_main_l12_worker.exit, label %.select.workers.i
 
 .select.workers.i:                                ; preds = %.await.work.i
   %8 = load i8, i8* %exec_status.i, align 1
@@ -313,10 +317,10 @@ entry:
   call void @llvm.nvvm.barrier0() #3
   br label %.await.work.i
 
-__omp_offloading_806_1222644_main_l17_worker.exit: ; preds = %.await.work.i
+__omp_offloading_806_1222659_main_l12_worker.exit: ; preds = %.await.work.i
   br label %.exit
 
-.exit:                                            ; preds = %__omp_offloading_806_1222644_main_l17_worker.exit, %entry
+.exit:                                            ; preds = %__omp_offloading_806_1222659_main_l12_worker.exit, %entry
   %9 = load i32, i32* %retval, align 4
   ret i32 %9
 }
@@ -333,10 +337,10 @@ attributes #3 = { nounwind }
 !nvvm.internalize.after.link = !{}
 !nvvmir.version = !{!10}
 
-!0 = !{i32 0, i32 2054, i32 19015236, !"main", i32 13, i32 0}
-!1 = !{i32 0, i32 2054, i32 19015236, !"main", i32 17, i32 1}
-!2 = !{void (i32*, i8*)* @__omp_offloading_806_1222644_main_l13, !"kernel", i32 1}
-!3 = !{void (i32*, i8*)* @__omp_offloading_806_1222644_main_l17, !"kernel", i32 1}
+!0 = !{i32 0, i32 2054, i32 19015257, !"main", i32 16, i32 1}
+!1 = !{i32 0, i32 2054, i32 19015257, !"main", i32 12, i32 0}
+!2 = !{void ([2 x i32]*, i8*)* @__omp_offloading_806_1222659_main_l12, !"kernel", i32 1}
+!3 = !{void ([2 x i32]*, i8*)* @__omp_offloading_806_1222659_main_l16, !"kernel", i32 1}
 !4 = !{null, !"align", i32 8}
 !5 = !{null, !"align", i32 8, !"align", i32 65544, !"align", i32 131080}
 !6 = !{null, !"align", i32 16}
@@ -351,7 +355,7 @@ attributes #3 = { nounwind }
 ; __CLANG_OFFLOAD_BUNDLE____END__ openmp-nvptx64-nvidia-cuda
 
 ; __CLANG_OFFLOAD_BUNDLE____START__ host-x86_64-unknown-linux-gnu
-; ModuleID = '/tmp/tmp-5e3454.bc'
+; ModuleID = '/tmp/tmp-5326bf.bc'
 source_filename = "tmp.cpp"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
@@ -360,9 +364,9 @@ target triple = "x86_64-unknown-linux-gnu"
 %struct.__tgt_offload_entry = type { i8*, i8*, i8*, i64, i32, i32, i32 }
 %struct.__tgt_device_image = type { i8*, i8*, %struct.__tgt_offload_entry*, %struct.__tgt_offload_entry* }
 %struct.__tgt_bin_desc = type { i32, %struct.__tgt_device_image*, %struct.__tgt_offload_entry*, %struct.__tgt_offload_entry* }
-%struct.anon = type { i32* }
+%struct.anon = type { [2 x i32]* }
 %struct.kmp_depend_info = type { i64, i64, i8 }
-%struct.anon.0 = type { i32* }
+%struct.anon.0 = type { [2 x i32]* }
 %struct.kmp_task_t_with_privates = type { %struct.kmp_task_t, %struct..kmp_privates.t }
 %struct.kmp_task_t = type { i8*, i32 (i32, i8*)*, i32, %union.kmp_cmplrdata_t, %union.kmp_cmplrdata_t, i32, i32, i32 }
 %union.kmp_cmplrdata_t = type { i32 (i32, i8*)* }
@@ -372,25 +376,24 @@ target triple = "x86_64-unknown-linux-gnu"
 
 $.omp_offloading.descriptor_reg = comdat any
 
-@.str = private unnamed_addr constant [27 x i8] c"\0A\0ANUMBER OF DEVICES: %d\0A\0A\0A\00", align 1
-@.str.1 = private unnamed_addr constant [23 x i8] c";unknown;unknown;0;0;;\00", align 1
-@0 = private unnamed_addr constant %ident_t { i32 0, i32 2, i32 0, i32 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i32 0, i32 0) }, align 8
-@__omp_offloading_806_1222644_main_l13.region_id = weak constant i8 0
-@.offload_sizes = private unnamed_addr constant [1 x i64] [i64 4]
+@.str = private unnamed_addr constant [23 x i8] c";unknown;unknown;0;0;;\00", align 1
+@0 = private unnamed_addr constant %ident_t { i32 0, i32 2, i32 0, i32 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str, i32 0, i32 0) }, align 8
+@__omp_offloading_806_1222659_main_l12.region_id = weak constant i8 0
+@.offload_sizes = private unnamed_addr constant [1 x i64] [i64 8]
 @.offload_maptypes = private unnamed_addr constant [1 x i64] [i64 35]
-@.offload_maptypes.3 = private unnamed_addr constant [1 x i64] [i64 35]
-@__omp_offloading_806_1222644_main_l17.region_id = weak constant i8 0
-@.offload_sizes.4 = private unnamed_addr constant [1 x i64] [i64 4]
-@.offload_maptypes.5 = private unnamed_addr constant [1 x i64] [i64 35]
-@.offload_maptypes.7 = private unnamed_addr constant [1 x i64] [i64 35]
-@1 = private unnamed_addr constant %ident_t { i32 0, i32 322, i32 0, i32 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i32 0, i32 0) }, align 8
-@.str.10 = private unnamed_addr constant [14 x i8] c"result:  %d \0A\00", align 1
-@.omp_offloading.entry_name = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222644_main_l13\00"
+@.offload_maptypes.2 = private unnamed_addr constant [1 x i64] [i64 35]
+@__omp_offloading_806_1222659_main_l16.region_id = weak constant i8 0
+@.offload_sizes.3 = private unnamed_addr constant [1 x i64] [i64 8]
+@.offload_maptypes.4 = private unnamed_addr constant [1 x i64] [i64 35]
+@.offload_maptypes.6 = private unnamed_addr constant [1 x i64] [i64 35]
+@1 = private unnamed_addr constant %ident_t { i32 0, i32 322, i32 0, i32 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str, i32 0, i32 0) }, align 8
+@.str.9 = private unnamed_addr constant [14 x i8] c"result:  %d \0A\00", align 1
+@.omp_offloading.entry_name = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222659_main_l12\00"
 @.omp_offloading.entry_module = internal unnamed_addr constant [1 x i8] zeroinitializer
-@.omp_offloading.entry.__omp_offloading_806_1222644_main_l13 = weak constant %struct.__tgt_offload_entry { i8* @__omp_offloading_806_1222644_main_l13.region_id, i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
-@.omp_offloading.entry_name.11 = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222644_main_l17\00"
-@.omp_offloading.entry_module.12 = internal unnamed_addr constant [1 x i8] zeroinitializer
-@.omp_offloading.entry.__omp_offloading_806_1222644_main_l17 = weak constant %struct.__tgt_offload_entry { i8* @__omp_offloading_806_1222644_main_l17.region_id, i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name.11, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module.12, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
+@.omp_offloading.entry.__omp_offloading_806_1222659_main_l12 = weak constant %struct.__tgt_offload_entry { i8* @__omp_offloading_806_1222659_main_l12.region_id, i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
+@.omp_offloading.entry_name.10 = internal unnamed_addr constant [38 x i8] c"__omp_offloading_806_1222659_main_l16\00"
+@.omp_offloading.entry_module.11 = internal unnamed_addr constant [1 x i8] zeroinitializer
+@.omp_offloading.entry.__omp_offloading_806_1222659_main_l16 = weak constant %struct.__tgt_offload_entry { i8* @__omp_offloading_806_1222659_main_l16.region_id, i8* getelementptr inbounds ([38 x i8], [38 x i8]* @.omp_offloading.entry_name.10, i32 0, i32 0), i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.omp_offloading.entry_module.11, i32 0, i32 0), i64 0, i32 0, i32 0, i32 0 }, section ".omp_offloading.entries", align 1
 @.omp_offloading.entries_begin = external constant %struct.__tgt_offload_entry
 @.omp_offloading.entries_end = external constant %struct.__tgt_offload_entry
 @.omp_offloading.img_start.x86_64-unknown-linux-gnu = external constant i8
@@ -405,40 +408,32 @@ $.omp_offloading.descriptor_reg = comdat any
 ; Function Attrs: noinline norecurse uwtable
 define i32 @main() #0 {
 entry:
-  %A = alloca i32, align 4
-  call void @omp_set_num_threads(i32 2)
-  %call = call i32 @omp_get_num_devices()
-  %call1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([27 x i8], [27 x i8]* @.str, i32 0, i32 0), i32 %call)
-  call void (%ident_t*, i32, void (i32*, i32*, ...)*, ...) @__kmpc_fork_call(%ident_t* @0, i32 1, void (i32*, i32*, ...)* bitcast (void (i32*, i32*, i32*)* @.omp_outlined. to void (i32*, i32*, ...)*), i32* %A)
-  %0 = load i32, i32* %A, align 4
-  %call2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @.str.10, i32 0, i32 0), i32 %0)
+  %A = alloca [2 x i32], align 4
+  call void (%ident_t*, i32, void (i32*, i32*, ...)*, ...) @__kmpc_fork_call(%ident_t* @0, i32 1, void (i32*, i32*, ...)* bitcast (void (i32*, i32*, [2 x i32]*)* @.omp_outlined. to void (i32*, i32*, ...)*), [2 x i32]* %A)
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %A, i64 0, i64 0
+  %0 = load i32, i32* %arrayidx, align 4
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @.str.9, i32 0, i32 0), i32 %0)
   ret i32 0
 }
 
-declare void @omp_set_num_threads(i32) #1
-
-declare i32 @printf(i8*, ...) #1
-
-declare i32 @omp_get_num_devices() #1
-
 ; Function Attrs: noinline nounwind uwtable
-define internal void @.omp_outlined.(i32* noalias %.global_tid., i32* noalias %.bound_tid., i32* dereferenceable(4) %A) #2 {
+define internal void @.omp_outlined.(i32* noalias %.global_tid., i32* noalias %.bound_tid., [2 x i32]* dereferenceable(8) %A) #1 {
 entry:
   %.global_tid..addr = alloca i32*, align 8
   %.bound_tid..addr = alloca i32*, align 8
-  %A.addr = alloca i32*, align 8
+  %A.addr = alloca [2 x i32]*, align 8
   %.offload_baseptrs = alloca [1 x i8*], align 8
   %.offload_ptrs = alloca [1 x i8*], align 8
   %agg.captured = alloca %struct.anon, align 8
   %.dep.arr.addr = alloca [1 x %struct.kmp_depend_info], align 8
-  %.offload_baseptrs1 = alloca [1 x i8*], align 8
-  %.offload_ptrs2 = alloca [1 x i8*], align 8
-  %agg.captured3 = alloca %struct.anon.0, align 8
-  %.dep.arr.addr4 = alloca [1 x %struct.kmp_depend_info], align 8
+  %.offload_baseptrs4 = alloca [1 x i8*], align 8
+  %.offload_ptrs5 = alloca [1 x i8*], align 8
+  %agg.captured6 = alloca %struct.anon.0, align 8
+  %.dep.arr.addr7 = alloca [1 x %struct.kmp_depend_info], align 8
   store i32* %.global_tid., i32** %.global_tid..addr, align 8
   store i32* %.bound_tid., i32** %.bound_tid..addr, align 8
-  store i32* %A, i32** %A.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
   %1 = load i32*, i32** %.global_tid..addr, align 8
   %2 = load i32, i32* %1, align 4
   %3 = call i32 @__kmpc_single(%ident_t* @0, i32 %2)
@@ -446,17 +441,18 @@ entry:
   br i1 %4, label %omp_if.then, label %omp_if.end
 
 omp_if.then:                                      ; preds = %entry
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
   %5 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs, i32 0, i32 0
-  %6 = bitcast i8** %5 to i32**
-  store i32* %0, i32** %6, align 8
+  %6 = bitcast i8** %5 to [2 x i32]**
+  store [2 x i32]* %0, [2 x i32]** %6, align 8
   %7 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs, i32 0, i32 0
   %8 = bitcast i8** %7 to i32**
-  store i32* %0, i32** %8, align 8
+  store i32* %arrayidx, i32** %8, align 8
   %9 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs, i32 0, i32 0
   %10 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs, i32 0, i32 0
   %11 = getelementptr inbounds %struct.anon, %struct.anon* %agg.captured, i32 0, i32 0
-  store i32* %0, i32** %11, align 8
-  %12 = call i8* @__kmpc_omp_target_task_alloc(%ident_t* @0, i32 %2, i32 1, i64 80, i64 8, i32 (i32, i8*)* bitcast (i32 (i32, %struct.kmp_task_t_with_privates*)* @.omp_task_entry. to i32 (i32, i8*)*), i64 0)
+  store [2 x i32]* %0, [2 x i32]** %11, align 8
+  %12 = call i8* @__kmpc_omp_target_task_alloc(%ident_t* @0, i32 %2, i32 1, i64 80, i64 8, i32 (i32, i8*)* bitcast (i32 (i32, %struct.kmp_task_t_with_privates*)* @.omp_task_entry. to i32 (i32, i8*)*), i64 0, i32 1, i8** %9, i8** %10, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_sizes, i32 0, i32 0), i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes, i32 0, i32 0))
   %13 = bitcast i8* %12 to %struct.kmp_task_t_with_privates*
   %14 = getelementptr inbounds %struct.kmp_task_t_with_privates, %struct.kmp_task_t_with_privates* %13, i32 0, i32 0
   %15 = getelementptr inbounds %struct.kmp_task_t, %struct.kmp_task_t* %14, i32 0, i32 0
@@ -476,58 +472,71 @@ omp_if.then:                                      ; preds = %entry
   %26 = getelementptr inbounds %struct..kmp_privates.t, %struct..kmp_privates.t* %18, i32 0, i32 2
   %27 = bitcast [1 x i64]* %26 to i8*
   call void @llvm.memcpy.p0i8.p0i8.i64(i8* %27, i8* bitcast ([1 x i64]* @.offload_sizes to i8*), i64 8, i32 8, i1 false)
-  %28 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr, i64 0, i64 0
-  %29 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %28, i32 0, i32 0
-  %30 = ptrtoint i32* %0 to i64
-  store i64 %30, i64* %29, align 8
-  %31 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %28, i32 0, i32 1
-  store i64 4, i64* %31, align 8
-  %32 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %28, i32 0, i32 2
-  store i8 3, i8* %32, align 8
-  %33 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr, i32 0, i32 0
-  %34 = bitcast %struct.kmp_depend_info* %33 to i8*
-  %35 = call i32 @__kmpc_omp_task_with_deps(%ident_t* @0, i32 %2, i8* %12, i32 1, i8* %34, i32 0, i8* null)
-  %36 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs1, i32 0, i32 0
-  %37 = bitcast i8** %36 to i32**
-  store i32* %0, i32** %37, align 8
-  %38 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs2, i32 0, i32 0
-  %39 = bitcast i8** %38 to i32**
-  store i32* %0, i32** %39, align 8
-  %40 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs1, i32 0, i32 0
-  %41 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs2, i32 0, i32 0
-  %42 = getelementptr inbounds %struct.anon.0, %struct.anon.0* %agg.captured3, i32 0, i32 0
-  store i32* %0, i32** %42, align 8
-  %43 = call i8* @__kmpc_omp_target_task_alloc(%ident_t* @0, i32 %2, i32 1, i64 80, i64 8, i32 (i32, i8*)* bitcast (i32 (i32, %struct.kmp_task_t_with_privates.1*)* @.omp_task_entry..9 to i32 (i32, i8*)*), i64 1)
-  %44 = bitcast i8* %43 to %struct.kmp_task_t_with_privates.1*
-  %45 = getelementptr inbounds %struct.kmp_task_t_with_privates.1, %struct.kmp_task_t_with_privates.1* %44, i32 0, i32 0
-  %46 = getelementptr inbounds %struct.kmp_task_t, %struct.kmp_task_t* %45, i32 0, i32 0
-  %47 = load i8*, i8** %46, align 8
-  %48 = bitcast %struct.anon.0* %agg.captured3 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %47, i8* %48, i64 8, i32 8, i1 false)
-  %49 = getelementptr inbounds %struct.kmp_task_t_with_privates.1, %struct.kmp_task_t_with_privates.1* %44, i32 0, i32 1
-  %50 = bitcast i8* %47 to %struct.anon.0*
-  %51 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %49, i32 0, i32 0
-  %52 = bitcast [1 x i8*]* %51 to i8*
-  %53 = bitcast i8** %40 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %52, i8* %53, i64 8, i32 8, i1 false)
-  %54 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %49, i32 0, i32 1
-  %55 = bitcast [1 x i8*]* %54 to i8*
-  %56 = bitcast i8** %41 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %55, i8* %56, i64 8, i32 8, i1 false)
-  %57 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %49, i32 0, i32 2
-  %58 = bitcast [1 x i64]* %57 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %58, i8* bitcast ([1 x i64]* @.offload_sizes.4 to i8*), i64 8, i32 8, i1 false)
-  %59 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr4, i64 0, i64 0
-  %60 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %59, i32 0, i32 0
-  %61 = ptrtoint i32* %0 to i64
-  store i64 %61, i64* %60, align 8
-  %62 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %59, i32 0, i32 1
-  store i64 4, i64* %62, align 8
-  %63 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %59, i32 0, i32 2
-  store i8 1, i8* %63, align 8
-  %64 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr4, i32 0, i32 0
-  %65 = bitcast %struct.kmp_depend_info* %64 to i8*
-  %66 = call i32 @__kmpc_omp_task_with_deps(%ident_t* @0, i32 %2, i8* %43, i32 1, i8* %65, i32 0, i8* null)
+  %arrayidx1 = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  %arrayidx2 = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 1
+  %28 = getelementptr i32, i32* %arrayidx2, i32 1
+  %29 = ptrtoint i32* %arrayidx1 to i64
+  %30 = ptrtoint i32* %28 to i64
+  %31 = sub nuw i64 %30, %29
+  %32 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr, i64 0, i64 0
+  %33 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %32, i32 0, i32 0
+  %34 = ptrtoint i32* %arrayidx1 to i64
+  store i64 %34, i64* %33, align 8
+  %35 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %32, i32 0, i32 1
+  store i64 %31, i64* %35, align 8
+  %36 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %32, i32 0, i32 2
+  store i8 3, i8* %36, align 8
+  %37 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr, i32 0, i32 0
+  %38 = bitcast %struct.kmp_depend_info* %37 to i8*
+  %39 = call i32 @__kmpc_omp_task_with_deps(%ident_t* @0, i32 %2, i8* %12, i32 1, i8* %38, i32 0, i8* null)
+  %arrayidx3 = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  %40 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs4, i32 0, i32 0
+  %41 = bitcast i8** %40 to [2 x i32]**
+  store [2 x i32]* %0, [2 x i32]** %41, align 8
+  %42 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs5, i32 0, i32 0
+  %43 = bitcast i8** %42 to i32**
+  store i32* %arrayidx3, i32** %43, align 8
+  %44 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_baseptrs4, i32 0, i32 0
+  %45 = getelementptr inbounds [1 x i8*], [1 x i8*]* %.offload_ptrs5, i32 0, i32 0
+  %46 = getelementptr inbounds %struct.anon.0, %struct.anon.0* %agg.captured6, i32 0, i32 0
+  store [2 x i32]* %0, [2 x i32]** %46, align 8
+  %47 = call i8* @__kmpc_omp_target_task_alloc(%ident_t* @0, i32 %2, i32 1, i64 80, i64 8, i32 (i32, i8*)* bitcast (i32 (i32, %struct.kmp_task_t_with_privates.1*)* @.omp_task_entry..8 to i32 (i32, i8*)*), i64 1, i32 1, i8** %44, i8** %45, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_sizes.3, i32 0, i32 0), i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes.4, i32 0, i32 0))
+  %48 = bitcast i8* %47 to %struct.kmp_task_t_with_privates.1*
+  %49 = getelementptr inbounds %struct.kmp_task_t_with_privates.1, %struct.kmp_task_t_with_privates.1* %48, i32 0, i32 0
+  %50 = getelementptr inbounds %struct.kmp_task_t, %struct.kmp_task_t* %49, i32 0, i32 0
+  %51 = load i8*, i8** %50, align 8
+  %52 = bitcast %struct.anon.0* %agg.captured6 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %51, i8* %52, i64 8, i32 8, i1 false)
+  %53 = getelementptr inbounds %struct.kmp_task_t_with_privates.1, %struct.kmp_task_t_with_privates.1* %48, i32 0, i32 1
+  %54 = bitcast i8* %51 to %struct.anon.0*
+  %55 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %53, i32 0, i32 0
+  %56 = bitcast [1 x i8*]* %55 to i8*
+  %57 = bitcast i8** %44 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %56, i8* %57, i64 8, i32 8, i1 false)
+  %58 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %53, i32 0, i32 1
+  %59 = bitcast [1 x i8*]* %58 to i8*
+  %60 = bitcast i8** %45 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %59, i8* %60, i64 8, i32 8, i1 false)
+  %61 = getelementptr inbounds %struct..kmp_privates.t.2, %struct..kmp_privates.t.2* %53, i32 0, i32 2
+  %62 = bitcast [1 x i64]* %61 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %62, i8* bitcast ([1 x i64]* @.offload_sizes.3 to i8*), i64 8, i32 8, i1 false)
+  %arrayidx8 = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  %arrayidx9 = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 1
+  %63 = getelementptr i32, i32* %arrayidx9, i32 1
+  %64 = ptrtoint i32* %arrayidx8 to i64
+  %65 = ptrtoint i32* %63 to i64
+  %66 = sub nuw i64 %65, %64
+  %67 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr7, i64 0, i64 0
+  %68 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %67, i32 0, i32 0
+  %69 = ptrtoint i32* %arrayidx8 to i64
+  store i64 %69, i64* %68, align 8
+  %70 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %67, i32 0, i32 1
+  store i64 %66, i64* %70, align 8
+  %71 = getelementptr inbounds %struct.kmp_depend_info, %struct.kmp_depend_info* %67, i32 0, i32 2
+  store i8 1, i8* %71, align 8
+  %72 = getelementptr inbounds [1 x %struct.kmp_depend_info], [1 x %struct.kmp_depend_info]* %.dep.arr.addr7, i32 0, i32 0
+  %73 = bitcast %struct.kmp_depend_info* %72 to i8*
+  %74 = call i32 @__kmpc_omp_task_with_deps(%ident_t* @0, i32 %2, i8* %47, i32 1, i8* %73, i32 0, i8* null)
   call void @__kmpc_end_single(%ident_t* @0, i32 %2)
   br label %omp_if.end
 
@@ -541,13 +550,13 @@ declare i32 @__kmpc_single(%ident_t*, i32)
 declare void @__kmpc_end_single(%ident_t*, i32)
 
 ; Function Attrs: noinline nounwind uwtable
-define internal void @__omp_offloading_806_1222644_main_l13(i32* dereferenceable(4) %A) #2 {
+define internal void @__omp_offloading_806_1222659_main_l12([2 x i32]* dereferenceable(8) %A) #1 {
 entry:
-  %A.addr = alloca i32*, align 8
+  %A.addr = alloca [2 x i32]*, align 8
   %i = alloca i32, align 4
   %j = alloca i32, align 4
-  store i32* %A, i32** %A.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
   store i32 0, i32* %i, align 4
   br label %for.cond
 
@@ -566,7 +575,8 @@ for.cond1:                                        ; preds = %for.inc, %for.body
   br i1 %cmp2, label %for.body3, label %for.end
 
 for.body3:                                        ; preds = %for.cond1
-  store i32 888, i32* %0, align 4
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  store i32 888, i32* %arrayidx, align 4
   br label %for.inc
 
 for.inc:                                          ; preds = %for.body3
@@ -591,7 +601,7 @@ for.end6:                                         ; preds = %for.cond
 declare i32 @__tgt_target_nowait(i64, i8*, i32, i8**, i8**, i64*, i64*, i8*)
 
 ; Function Attrs: alwaysinline uwtable
-define internal void @.omp_task_privates_map.(%struct..kmp_privates.t* noalias, [1 x i8*]** noalias, [1 x i8*]** noalias, [1 x i64]** noalias) #3 {
+define internal void @.omp_task_privates_map.(%struct..kmp_privates.t* noalias, [1 x i8*]** noalias, [1 x i8*]** noalias, [1 x i64]** noalias) #2 {
 entry:
   %.addr = alloca %struct..kmp_privates.t*, align 8
   %.addr1 = alloca [1 x i8*]**, align 8
@@ -615,7 +625,7 @@ entry:
 }
 
 ; Function Attrs: noinline uwtable
-define internal i32 @.omp_task_entry.(i32, %struct.kmp_task_t_with_privates* noalias) #4 {
+define internal i32 @.omp_task_entry.(i32, %struct.kmp_task_t_with_privates* noalias) #3 {
 entry:
   %.global_tid..addr.i = alloca i32, align 4
   %.part_id..addr.i = alloca i32*, align 8
@@ -651,46 +661,48 @@ entry:
   %17 = load i8*, i8** %.privates..addr.i, align 8
   call void (i8*, ...) %16(i8* %17, [1 x i8*]** %2, [1 x i8*]** %3, [1 x i64]** %4) #6
   %18 = getelementptr inbounds %struct.anon, %struct.anon* %15, i32 0, i32 0
-  %ref.i = load i32*, i32** %18, align 8
+  %ref.i = load [2 x i32]*, [2 x i32]** %18, align 8
   %19 = load [1 x i8*]*, [1 x i8*]** %2, align 8
   %20 = load [1 x i8*]*, [1 x i8*]** %3, align 8
   %21 = load [1 x i64]*, [1 x i64]** %4, align 8
   %22 = getelementptr inbounds [1 x i8*], [1 x i8*]* %19, i64 0, i64 0
   %23 = getelementptr inbounds [1 x i8*], [1 x i8*]* %20, i64 0, i64 0
   %24 = getelementptr inbounds [1 x i64], [1 x i64]* %21, i64 0, i64 0
-  %25 = call i32 @__tgt_target_nowait(i64 0, i8* @__omp_offloading_806_1222644_main_l13.region_id, i32 1, i8** %22, i8** %23, i64* %24, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes.3, i32 0, i32 0), i8* %14) #6
+  %25 = call i32 @__tgt_target_nowait(i64 0, i8* @__omp_offloading_806_1222659_main_l12.region_id, i32 1, i8** %22, i8** %23, i64* %24, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes.2, i32 0, i32 0), i8* %14) #6
   %26 = icmp ne i32 %25, 0
-  br i1 %26, label %omp_offload.failed.i, label %.omp_outlined..2.exit
+  br i1 %26, label %omp_offload.failed.i, label %.omp_outlined..1.exit
 
 omp_offload.failed.i:                             ; preds = %entry
-  call void @__omp_offloading_806_1222644_main_l13(i32* %ref.i) #6
-  br label %.omp_outlined..2.exit
+  %arrayidx.i = getelementptr inbounds [2 x i32], [2 x i32]* %ref.i, i64 0, i64 0
+  call void @__omp_offloading_806_1222659_main_l12([2 x i32]* %ref.i) #6
+  br label %.omp_outlined..1.exit
 
-.omp_outlined..2.exit:                            ; preds = %entry, %omp_offload.failed.i
+.omp_outlined..1.exit:                            ; preds = %entry, %omp_offload.failed.i
   ret i32 0
 }
 
-declare i8* @__kmpc_omp_target_task_alloc(%ident_t*, i32, i32, i64, i64, i32 (i32, i8*)*, i64)
+declare i8* @__kmpc_omp_target_task_alloc(%ident_t*, i32, i32, i64, i64, i32 (i32, i8*)*, i64, i32, i8**, i8**, i64*, i64*)
 
 ; Function Attrs: argmemonly nounwind
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i32, i1) #5
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i32, i1) #4
 
 declare i32 @__kmpc_omp_task_with_deps(%ident_t*, i32, i8*, i32, i8*, i32, i8*)
 
 ; Function Attrs: noinline nounwind uwtable
-define internal void @__omp_offloading_806_1222644_main_l17(i32* dereferenceable(4) %A) #2 {
+define internal void @__omp_offloading_806_1222659_main_l16([2 x i32]* dereferenceable(8) %A) #1 {
 entry:
-  %A.addr = alloca i32*, align 8
-  store i32* %A, i32** %A.addr, align 8
-  %0 = load i32*, i32** %A.addr, align 8
-  %1 = load i32, i32* %0, align 4
+  %A.addr = alloca [2 x i32]*, align 8
+  store [2 x i32]* %A, [2 x i32]** %A.addr, align 8
+  %0 = load [2 x i32]*, [2 x i32]** %A.addr, align 8
+  %arrayidx = getelementptr inbounds [2 x i32], [2 x i32]* %0, i64 0, i64 0
+  %1 = load i32, i32* %arrayidx, align 4
   %add = add nsw i32 %1, 777
-  store i32 %add, i32* %0, align 4
+  store i32 %add, i32* %arrayidx, align 4
   ret void
 }
 
 ; Function Attrs: alwaysinline uwtable
-define internal void @.omp_task_privates_map..8(%struct..kmp_privates.t.2* noalias, [1 x i8*]** noalias, [1 x i8*]** noalias, [1 x i64]** noalias) #3 {
+define internal void @.omp_task_privates_map..7(%struct..kmp_privates.t.2* noalias, [1 x i8*]** noalias, [1 x i8*]** noalias, [1 x i64]** noalias) #2 {
 entry:
   %.addr = alloca %struct..kmp_privates.t.2*, align 8
   %.addr1 = alloca [1 x i8*]**, align 8
@@ -714,7 +726,7 @@ entry:
 }
 
 ; Function Attrs: noinline uwtable
-define internal i32 @.omp_task_entry..9(i32, %struct.kmp_task_t_with_privates.1* noalias) #4 {
+define internal i32 @.omp_task_entry..8(i32, %struct.kmp_task_t_with_privates.1* noalias) #3 {
 entry:
   %.global_tid..addr.i = alloca i32, align 4
   %.part_id..addr.i = alloca i32*, align 8
@@ -742,7 +754,7 @@ entry:
   store i32 %5, i32* %.global_tid..addr.i, align 4
   store i32* %8, i32** %.part_id..addr.i, align 8
   store i8* %13, i8** %.privates..addr.i, align 8
-  store void (i8*, ...)* bitcast (void (%struct..kmp_privates.t.2*, [1 x i8*]**, [1 x i8*]**, [1 x i64]**)* @.omp_task_privates_map..8 to void (i8*, ...)*), void (i8*, ...)** %.copy_fn..addr.i, align 8
+  store void (i8*, ...)* bitcast (void (%struct..kmp_privates.t.2*, [1 x i8*]**, [1 x i8*]**, [1 x i64]**)* @.omp_task_privates_map..7 to void (i8*, ...)*), void (i8*, ...)** %.copy_fn..addr.i, align 8
   store i8* %14, i8** %.task_t..addr.i, align 8
   store %struct.anon.0* %11, %struct.anon.0** %__context.addr.i, align 8
   %15 = load %struct.anon.0*, %struct.anon.0** %__context.addr.i, align 8
@@ -750,22 +762,23 @@ entry:
   %17 = load i8*, i8** %.privates..addr.i, align 8
   call void (i8*, ...) %16(i8* %17, [1 x i8*]** %2, [1 x i8*]** %3, [1 x i64]** %4) #6
   %18 = getelementptr inbounds %struct.anon.0, %struct.anon.0* %15, i32 0, i32 0
-  %ref.i = load i32*, i32** %18, align 8
+  %ref.i = load [2 x i32]*, [2 x i32]** %18, align 8
   %19 = load [1 x i8*]*, [1 x i8*]** %2, align 8
   %20 = load [1 x i8*]*, [1 x i8*]** %3, align 8
   %21 = load [1 x i64]*, [1 x i64]** %4, align 8
   %22 = getelementptr inbounds [1 x i8*], [1 x i8*]* %19, i64 0, i64 0
   %23 = getelementptr inbounds [1 x i8*], [1 x i8*]* %20, i64 0, i64 0
   %24 = getelementptr inbounds [1 x i64], [1 x i64]* %21, i64 0, i64 0
-  %25 = call i32 @__tgt_target_nowait(i64 1, i8* @__omp_offloading_806_1222644_main_l17.region_id, i32 1, i8** %22, i8** %23, i64* %24, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes.7, i32 0, i32 0), i8* %14) #6
+  %25 = call i32 @__tgt_target_nowait(i64 1, i8* @__omp_offloading_806_1222659_main_l16.region_id, i32 1, i8** %22, i8** %23, i64* %24, i64* getelementptr inbounds ([1 x i64], [1 x i64]* @.offload_maptypes.6, i32 0, i32 0), i8* %14) #6
   %26 = icmp ne i32 %25, 0
-  br i1 %26, label %omp_offload.failed.i, label %.omp_outlined..6.exit
+  br i1 %26, label %omp_offload.failed.i, label %.omp_outlined..5.exit
 
 omp_offload.failed.i:                             ; preds = %entry
-  call void @__omp_offloading_806_1222644_main_l17(i32* %ref.i) #6
-  br label %.omp_outlined..6.exit
+  %arrayidx.i = getelementptr inbounds [2 x i32], [2 x i32]* %ref.i, i64 0, i64 0
+  call void @__omp_offloading_806_1222659_main_l16([2 x i32]* %ref.i) #6
+  br label %.omp_outlined..5.exit
 
-.omp_outlined..6.exit:                            ; preds = %entry, %omp_offload.failed.i
+.omp_outlined..5.exit:                            ; preds = %entry, %omp_offload.failed.i
   ret i32 0
 }
 
@@ -773,8 +786,10 @@ declare void @__kmpc_barrier(%ident_t*, i32)
 
 declare void @__kmpc_fork_call(%ident_t*, i32, void (i32*, i32*, ...)*, ...)
 
+declare i32 @printf(i8*, ...) #5
+
 ; Function Attrs: noinline uwtable
-define internal void @.omp_offloading.descriptor_unreg(i8*) #4 section ".text.startup" comdat($.omp_offloading.descriptor_reg) {
+define internal void @.omp_offloading.descriptor_unreg(i8*) #3 section ".text.startup" comdat($.omp_offloading.descriptor_reg) {
 entry:
   %.addr = alloca i8*, align 8
   store i8* %0, i8** %.addr, align 8
@@ -785,7 +800,7 @@ entry:
 declare i32 @__tgt_unregister_lib(%struct.__tgt_bin_desc*)
 
 ; Function Attrs: noinline uwtable
-define linkonce hidden void @.omp_offloading.descriptor_reg() #4 section ".text.startup" comdat {
+define linkonce hidden void @.omp_offloading.descriptor_reg() #3 section ".text.startup" comdat {
 entry:
   %0 = call i32 @__tgt_register_lib(%struct.__tgt_bin_desc* @.omp_offloading.descriptor)
   %1 = call i32 @__cxa_atexit(void (i8*)* @.omp_offloading.descriptor_unreg, i8* bitcast (%struct.__tgt_bin_desc* @.omp_offloading.descriptor to i8*), i8* @__dso_handle) #6
@@ -798,18 +813,18 @@ declare i32 @__tgt_register_lib(%struct.__tgt_bin_desc*)
 declare i32 @__cxa_atexit(void (i8*)*, i8*, i8*) #6
 
 attributes #0 = { noinline norecurse uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #1 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #2 = { noinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #3 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { noinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #5 = { argmemonly nounwind }
+attributes #1 = { noinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { noinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { argmemonly nounwind }
+attributes #5 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #6 = { nounwind }
 
 !omp_offload.info = !{!0, !1}
 !llvm.ident = !{!2}
 
-!0 = !{i32 0, i32 2054, i32 19015236, !"main", i32 13, i32 0}
-!1 = !{i32 0, i32 2054, i32 19015236, !"main", i32 17, i32 1}
+!0 = !{i32 0, i32 2054, i32 19015257, !"main", i32 16, i32 1}
+!1 = !{i32 0, i32 2054, i32 19015257, !"main", i32 12, i32 0}
 !2 = !{!"clang version 4.0.0 "}
 
 ; __CLANG_OFFLOAD_BUNDLE____END__ host-x86_64-unknown-linux-gnu
