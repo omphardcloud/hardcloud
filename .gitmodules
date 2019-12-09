@@ -1,11 +1,12 @@
 [submodule "llvm"]
   path = llvm
   url = https://github.com/lsc-openmp/llvm
+  branch = feature-alveo
 [submodule "openmp"]
   path = openmp
   url = https://github.com/lsc-openmp/openmp
-  branch = feature-fpga
+  branch = feature-alveo
 [submodule "clang"]
   path = clang
   url = https://github.com/lsc-openmp/clang
-  branch = feature-parallel-hrw
+  branch = feature-alveo
