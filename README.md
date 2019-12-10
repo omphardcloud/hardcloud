@@ -127,8 +127,8 @@ $ source $INSTALL_PATH/setup.alveo
 ```
 
 To create a new Hardcloud project with the SDAccel and HardCloud shell,
-just call the encapsulation script, the alias hardcloud, with the argument
-new_project and choose the project name (PROJECT_NAME).
+just call the encapsulation script, it uses the alias **hardcloud**, with the argument
+new_project and choose the project name.
 
 ```
 $ hardcloud --new_project PROJECT_NAME
@@ -139,18 +139,18 @@ Now, enter the path <i>rtl_kernel/src/</i> and start the development of the Hard
 This directory contains a single SystemVerilog file, <i>hip.sv</i>, with a loopback example.
 The module HIP has the control ports - clk, reset, start and done - and 
 the buffer interface - master Hardcloud interface (HIF). The hardware designer could add more SystemVerilog/Verilog
-files to the path for more complex designs, the script will deal with new files automatically.
+files for more complex designs to the path, the script will arrange with new files automatically.
 
 After create the HIP, the next step is to create a binary that encapsulates the whole project.
-The binary could created to two targets: hardware emulation and FPGA. The command line below
-shows an example how to create the hardware emulation:
+The binary could be created for two targets: hardware emulation and FPGA. The command line below
+shows an example how to build for the hardware emulation:
 
 ```
 $ hardcloud --build --target=emulation
 ```
 
 This command will create a new path, called <i>output</i>. Inside the directory, the binary file
-will be available with the filename: <i>binary_container.xclbin</i>
+will be available with the filename: <i>PROJECT_NAME.xclbin</i>
 
 In a similar way, the following command will generate the binary to the FPGA:
 
@@ -158,14 +158,14 @@ In a similar way, the following command will generate the binary to the FPGA:
 $ hardcloud --build --target=FPGA
 ```
 
-Thus, move the binary output/PROJECT_NAME.xclbin to the place where it will occurs the program execution.
+Thus, move the binary <i>output/PROJECT_NAME.xclbin</i> to the place where it will occurs the program execution.
 
 ## How to create your software
 
 The project path provides a software template in the directory <i>sw</i>.
 There are two files inside this folder. The first - <i>emconfig.json</i> - contains
 the emulation configuration for the platform that the project uses.
-The second file, <i>src/main.cpp</i>, is loopback software example.
+The second file, <i>src/main.cpp</i>, is a loopback software example.
 
 To compile this code inside the <i>sw</i> path, follow the instructions hereafter:
 
