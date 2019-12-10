@@ -20,6 +20,13 @@ class Hardcloud:
       os.system('cp -r ' + \
           self.base_path + '/template_rtl_kernel/ ' + \
           project + '/rtl_kernel/')
+
+      os.system('cp -r ' + \
+          self.base_path + '/template_sw/ ' + \
+          project + '/sw/')
+
+      os.system('sed -i s/loopback/' + project + '/g ' + project + '/sw/src/main.cpp')
+
     except Exception as e:
       print("[hardcloud][error] " + str(e))
 
