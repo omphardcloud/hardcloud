@@ -38,6 +38,7 @@ Install the following libraries dependencies:
 * boost_program_options
 * libelf
 * libffi
+* Python 3.6.8
 * Xilinx SDx 2018.3
 * Xilinx Vivado 2018.3
 * Xilinx runtime (XRT)
@@ -76,9 +77,9 @@ $ cd $WORKSPACE/hardcloud/llvm/build
 
 $ cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON      \
   -DCMAKE_BUILD_TYPE="release"               \
-  -DXILINX_VIVADO=/opt/Xilinx/Vivado/2018.3  \
-  -DXILINX_SDX=/opt/Xilinx/SDx/2018.3        \
-  -DXILINX_XRT=/opt/Xilinx/xrt               \
+  -DXILINX_VIVADO=/tools/Xilinx/Vivado/2018.3  \
+  -DXILINX_SDX=/tools/Xilinx/SDx/2018.3        \
+  -DXILINX_XRT=/opt/xilinx/xrt               \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 
 $ make -j8
@@ -92,16 +93,16 @@ with support to HardCloud</a>.
 
 ### Configure
 
-Create the following script,  $WORKSPACE/setup.alveo, to configure the
+Create the following script,  ${INSTALL_PATH}/setup.alveo, to configure the
 environment:
 
 ```
 #!/usr/bin/env bash
 
 # configure xilinx tools and runtime
-source /opt/Xilinx/Vivado/2018.3/settings64.sh
-source /opt/Xilinx/SDx/2018.3/settings64.sh
-source /opt/Xilinx/xrt/setup.sh
+source /tools/Xilinx/Vivado/2018.3/settings64.sh
+source /tools/Xilinx/SDx/2018.3/settings64.sh
+source /opt/xilinx/xrt/setup.sh
 
 # configure llvm
 export LLVM=${INSTALL_PATH}
@@ -111,5 +112,32 @@ export LD_LIBRARY_PATH=${LLVM}/lib:$LD_LIBRARY_PATH
 
 # set path
 export PATH="${LLVM}/bin:${PATH}"
+
+# create HardCloud alias
+alias hardcloud='/usr/bin/python3 $WORKSPACE/hardcloud/scripts/sdx/hardcloud.py'
 ```
+
+## How to create your hardware
+
+```
+$ source $INSTALL_PATH/setup.alveo
+$ hardcloud --new_project PROJECT_NAME
+$ cd PROJECT_NAME/
+```
+
+### Emulation
+
+```
+$ hardcloud --build --target=emulation
+```
+
+### Generate the binary to the FPGA
+
+```
+$ hardcloud --build --target=FPGA
+```
+
+The output binary ...
+
+## How to create your software
 
