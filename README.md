@@ -326,3 +326,64 @@ instructions hereafter:
 ```
 $ clang++ -std=c++11 -fopenmp -fopenmp-targets=alveo src/main.cpp -o main
 ```
+
+### 3.1. Using OpenMP <i>parallel for</i> directive
+
+```c
+#pragma omp target device(ALVEO) implements(loopback) map(to: A) map(from: B)
+#pragma omp parallel for
+// Software version of the loopback hardware module.
+for (int i = 0; i < NI; i++) {
+    B[i] = A[i];
+}
+```
+
+<p align="justify">
+The   example  above   shows  the   syntax  that   was  adopted.   The
+<b>map(:to)</b>  clause  indicates  the  data that  will  be  sent  to
+the  accelerator,  while  the  <b>map(:from)</b>  indicates  the  data
+that  will  be  received  from   the  accelerator  as  a  result.  The
+clause <b>implements(loopback)</b>  specifies that the  annotated code
+block  will  use  the  loopback   pre-designed  hardware,  to  do  the
+computation  instead  of the  C  code  following the  annotation.  The
+<b>device(ALVEO)</b>  clause  indicates  that the  execution  will  be
+performed by the Xilinx Alveo U200/U250 hardware emulator or the FPGA.
+</p>
+
+### 3.2. Using Multiple Variables
+
+```c
+#pragma omp target device(ALVEO) implements(kernel) map(to: A, B, C) map(from: D, E, F, G, H)
+#pragma omp parallel for
+for (int i = 0; i < NI; i++) {
+    D[i] = A[i];
+    E[i] = B[i];
+    F[i] = C[i];
+    G[i] = A[i] + B[i] + C[i];
+    H[i] = A[i] * B[i] * C[i];
+}
+```
+
+<p align="justify">
+This example  shows the possibility  to work with  multiple variables.
+The <b>map(:to)</b>, in this case, has three variables to be offloaded
+to the  FPGA. Next,  the result  will be mapped  to five  variables as
+specified in the <b>map(:from)</b>.
+</p>
+
+### 3.3. Using OpenMP <i>parallel</i> directive
+
+```c
+#pragma omp target device(ALVEO) implements(loopback) map(to: A) map(from: B)
+#pragma omp parallel
+{
+    loopback(A, &B);
+}
+```
+<p align="justify">
+Another  feature of  HardCloud is  the use  of OpenMP  <i>parallel</i>
+directive.  Instead of  a <i>for</i>  loop,  the block  of code  above
+contains a call to a C  function that executes the loopback operation,
+writing the values from variable A to B.
+</p>
+
