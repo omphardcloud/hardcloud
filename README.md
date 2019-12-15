@@ -23,10 +23,12 @@ for (int i = 0; i < NI; i++) {
 
 ## 1. Install and Configure
 
+<p align="justify">
 The following tutorial considers  that $WORKSPACE environment variable
 contains the path to the folder  you want to work in and $INSTALL_PATH
 the  installation path.  Also,  the $PROJECT_NAME_PATH  points to  the
 project base path.
+</p>
 
 ### 1.1. Library/Tools Dependency
 
@@ -50,20 +52,18 @@ Clone the HardCloud Alveo repository with all dependencies:
 
 ```
 $ cd ${WORKSPACE}
-$ git clone git@github.com:omphardcloud/hardcloud.git --recursive
+$ git clone --branch dev-alveo git@github.com:omphardcloud/hardcloud.git --recursive
 ```
 
 ### 1.3. Install LLVM/Clang LSC-OpenMP
 
 <p align="justify">
-
 The  LLVM/Clang  LSC-OpenMP is  a  version  of the  original  compiler
 that works  with OpenMP  offloading library, called  libomptarget. The
 libomptarget  handles the  OpenMP  4.x <i>target</i>  directive in  an
 agnostic manner. Moreover, the Xilinx  FPGA selection is identified by
 the <i>device</i> directive  that will execute a  specific plugin that
 manages the communication via the SDAccel.
-
 </p>
 
 ```
@@ -74,29 +74,36 @@ $ mkdir -p $WORKSPACE/hardcloud/llvm/build
 
 $ cd $WORKSPACE/hardcloud/llvm/build
 
-$ cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON      \
-  -DCMAKE_BUILD_TYPE="release"               \
-  -DXILINX_VIVADO=/tools/Xilinx/Vivado/2018.3  \
-  -DXILINX_SDX=/tools/Xilinx/SDx/2018.3        \
-  -DXILINX_XRT=/opt/xilinx/xrt               \
+$ cmake -DOPENMP_ENABLE_LIBOMPTARGET=ON       \
+  -DCMAKE_BUILD_TYPE="release"                \
+  -DXILINX_VIVADO=/tools/Xilinx/Vivado/2018.3 \
+  -DXILINX_SDX=/tools/Xilinx/SDx/2018.3       \
+  -DXILINX_XRT=/opt/xilinx/xrt                \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} ..
 
 $ make -j8
 $ make install
 ```
 
+<p align="justify">
 For           more           information,          access           <a
 href="https://llvm.org/docs/CMake.html">Building  LLVM with  CMake</a>
 and <a  href="https://github.com/LSC-OpenMP/">repository to LLVM/CLang
 with support to HardCloud</a>.
+</p>
 
 ### 1.4. Configure
 
+<p align="justify">
 Create the following script, ${INSTALL_PATH}/setup.alveo, to configure
 the environment:
+</p>
 
 ```
 #!/usr/bin/env bash
+
+# configure license
+export LM_LICENSE_FILE=PORT@URL
 
 # configure xilinx tools and runtime
 source /tools/Xilinx/Vivado/2018.3/settings64.sh
@@ -118,23 +125,28 @@ alias hardcloud='/usr/bin/python3 $WORKSPACE/hardcloud/scripts/sdx/hardcloud.py'
 
 ## 2. How to create your hardware
 
+<p align="justify">
 First, setup the  environment with the script created  in the previous
 section.
+</p>
 
 ```
 $ source $INSTALL_PATH/setup.alveo
 ```
 
+<p align="justify">
 To  create a  new Hardcloud  project  with the  SDAccel and  HardCloud
 shell,  just  call  the  encapsulation   script,  it  uses  the  alias
 **hardcloud**, with  the argument  new_project and choose  the project
 name.
+</p>
 
 ```
 $ hardcloud --new_project PROJECT_NAME
 $ cd PROJECT_NAME/
 ```
 
+<p align="justify">
 Now, enter  the path <i>rtl_kernel/src/</i> and  start the development
 of  the  Hardcloud   IP  (HIP).  This  directory   contains  a  single
 SystemVerilog file, <i>hip.sv</i>, with a loopback example. The module
@@ -143,6 +155,7 @@ buffer  interface -  master  Hardcloud Interface  (HIF). The  hardware
 designer could  add more SystemVerilog/Verilog files  for more complex
 designs to the path, the  script will arrange new files automatically.
 The next code presents a stub for the HIP module.
+</p>
 
 ```
 module HIP
@@ -160,39 +173,54 @@ module HIP
 endmodule : HIP
 ```
 
+<p align="justify">
 The **start** port  informs that hardware configuration  has been done
 and now the computation could start. The **done** port is used to send
 this signal to  the software, setting it to high.  The **buffer** port
 is a  SystemVerilog interface  and comprehends several  functions that
 enable the user to retrieve or send data, in an effortless way.
+</p>
 
+<p align="justify">
 After  create the  HIP,  the next  step  is to  create  a binary  that
 encapsulates the  whole project. The  binary could be created  for two
 targets: hardware emulation and FPGA.  The command line below shows an
 example how to build for the hardware emulation:
+</p>
+
 
 ```
 $ hardcloud --build --target=emulation
+
+$ export XCL_EMULATION_MODE=hw_emu
 ```
 
+<p align="justify">
 This command will create a  new path, called <i>output</i>. Inside the
 directory,  the  binary file  will  be  available with  the  filename:
 <i>PROJECT_NAME.xclbin</i>
+</p>
 
+<p align="justify">
 In a  similar way, the following  command will generate the  binary to
 the FPGA:
+</p>
 
 ```
 $ hardcloud --build --target=FPGA
 ```
 
+<p align="justify">
 Thus, move  the binary <i>output/PROJECT_NAME.xclbin</i> to  the place
 where it will occurs the program execution.
+</p>
 
 ### 2.1. The HardCloud Interface (HIF)
 
+<p align="justify">
 The HIF provides to the user  read or write operations. Each operation
 has separated address and data phases.
+</p>
 
 The read operation encloses the subsequent functions:
 
@@ -314,11 +342,13 @@ end
 
 ## 3. How to create your software
 
+<p align="justify">
 The  project  path  provides  a software  template  in  the  directory
 <i>sw</i>.  There  are two  files  inside  this  folder. The  first  -
 <i>emconfig.json</i> -  contains the  emulation configuration  for the
 platform that the project  uses. The second file, <i>src/main.cpp</i>,
 is a loopback software example.
+</p>
 
 To  compile   this  code  inside   the  <i>sw</i>  path,   follow  the
 instructions hereafter:
