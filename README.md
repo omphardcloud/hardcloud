@@ -6,7 +6,7 @@ to improve performance and energy efficiency in modern cloud clusters.
 Unfortunately, using  such FPGA  clusters is a  very hard  and complex
 task.  In  this context,  we  present  HardCloud  a novel  and  simple
 mechanism to offload computation to  the FPGAs available in the Xilinx
-Alveo U200/U250 platform. HardCloud  extends OpenMP directives in such
+Alveo U200 platform. HardCloud  extends OpenMP directives in such
 a way  that the FPGA  becomes just another OpenMP  acceleration device
 that can  be used directly  from any  user program. The  example below
 shows a simple use of the syntax that was adopted.
@@ -43,8 +43,8 @@ Install the following libraries dependencies:
 * Xilinx SDx 2018.3
 * Xilinx Vivado 2018.3
 * Xilinx runtime (XRT)
-* Xilinx Alveo U200/U250 Deployment Target Platform
-* Xilinx Alveo U200/U250 Development Target Platform
+* Xilinx Alveo U200 Deployment Target Platform
+* Xilinx Alveo U200 Development Target Platform
 
 ### 1.2. Repository
 
@@ -377,7 +377,7 @@ clause <b>implements(loopback)</b>  specifies that the  annotated code
 block  will  use  the  loopback   pre-designed  hardware,  to  do  the
 computation  instead  of the  C  code  following the  annotation.  The
 <b>device(ALVEO)</b>  clause  indicates  that the  execution  will  be
-performed by the Xilinx Alveo U200/U250 hardware emulator or the FPGA.
+performed by the Xilinx Alveo U200 hardware emulator or the FPGA.
 </p>
 
 ### 3.2. Using Multiple Variables
