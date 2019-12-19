@@ -52,7 +52,7 @@ Clone the HardCloud Alveo repository with all dependencies:
 
 ```
 $ cd ${WORKSPACE}
-$ git clone --branch dev-alveo git@github.com:omphardcloud/hardcloud.git --recursive
+$ git clone --branch dev-alveo https://github.com/omphardcloud/hardcloud.git --recursive
 ```
 
 ### 1.3. Install LLVM/Clang LSC-OpenMP
