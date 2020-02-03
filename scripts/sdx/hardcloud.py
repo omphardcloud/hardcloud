@@ -6,8 +6,9 @@ import argparse
 
 class Hardcloud:
 
-  def __init__(self, target):
+  def __init__(self, target, level):
     self.target    = target
+    self.level     = level
     self.base_path = os.path.abspath(os.path.dirname(__file__))
     self.project   = os.getcwd().split('/')[-1]
 
@@ -22,6 +23,10 @@ class Hardcloud:
           project + '/rtl_kernel/')
 
       os.system('cp -r ' + \
+          self.base_path + '/template_hls_kernel/ ' + \
+          project + '/hls_kernel/')
+
+      os.system('cp -r ' + \
           self.base_path + '/template_sw/ ' + \
           project + '/sw/')
 
@@ -29,6 +34,20 @@ class Hardcloud:
 
     except Exception as e:
       print("[hardcloud][error] " + str(e))
+
+  def compile_rtl(self):
+    os.system('cp rtl_kernel/config/link.ini tmp/link.ini')
+
+    os.system('vivado -mode tcl -source rtl_kernel/config/generate.tcl')
+
+  def compile_hls(self):
+    os.system('cp hls_kernel/config/link.ini tmp/link.ini')
+
+    os.system('v++ --target ' + self.target + ' \
+        --compile \
+        -I"hls_kernel/src/" \
+        --config hls_kernel/config/compile.ini \
+        -o "tmp/hardcloud_top.xo" hls_kernel/src/hardcloud_top.cpp')
 
   def build(self):
     os.system('rm -rf tmp/')
@@ -41,26 +60,14 @@ class Hardcloud:
         'rtl_kernel/src/* ' + \
         'rtl_kernel/hardcloud_top_ex/imports')
 
-    os.system('vivado -mode tcl -source rtl_kernel/generate.tcl')
+    if self.level == 'rtl':
+      self.compile_rtl()
+    elif self.level == 'hls':
+      self.compile_hls()
 
-    target = 'hw_emu'
-
-    if self.target == "FPGA":
-      target = 'hw'
-
-    os.system('xocc -t ' + target + ' \
-        --platform xilinx_u200_xdma_201830_2 \
-        --sp hardcloud_top_1.m00_axi:DDR[0] \
-        --sp hardcloud_top_1.m01_axi:DDR[1] \
-        --save-temps \
-        -l \
-        --nk hardcloud_top:1 \
-        -g \
-        --messageDb tmp/binary_container_1.mdb \
-        --xp misc:solution_name=link \
-        --temp_dir tmp/binary_container_1 \
-        --report_dir output/reports \
-        --log_dir output/logs \
+    os.system('v++ --target ' + self.target + ' \
+        --config tmp/link.ini \
+        --link \
         --remote_ip_cache tmp/ip_cache \
         -o "output/' + self.project + '.xclbin" tmp/hardcloud_top.xo')
 
@@ -70,7 +77,8 @@ if __name__ == '__main__':
 
   parser.add_argument('--new_project', help='create new project')
   parser.add_argument('--build'      , action='store_true', help='build system')
-  parser.add_argument('--target'     , choices=['FPGA', 'emulation'], help='set configuration')
+  parser.add_argument('--target'     , choices=['hw', 'hw_emu', 'sw_emu'], help='set target')
+  parser.add_argument('--level'      , choices=['rtl', 'hls'], help='set level')
 
   args = parser.parse_args()
 
@@ -78,7 +86,7 @@ if __name__ == '__main__':
     parser.print_help()
     parser.exit()
 
-  obj = Hardcloud(args.target)
+  obj = Hardcloud(args.target, args.level)
 
   if args.new_project is not None:
     obj.new_project(args.new_project)
